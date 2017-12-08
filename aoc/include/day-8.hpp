@@ -50,9 +50,10 @@ struct advent_8 : problem
 			return gte;
 		} else if(s == "==") {
 			return eq;
-		} else {
+		} else if(s == "!=") {
 			return ne;
 		}
+		__assume(0);
 	}
 
 	std::unordered_map<comparison, std::function<bool(std::ptrdiff_t, std::ptrdiff_t)>> comparisons{
@@ -77,12 +78,7 @@ struct advent_8 : problem
 		for(std::string line; std::getline(fin, line);) {
 			std::vector<std::string> fragments;
 			boost::split(fragments, line, [](char c) { return c == ' '; });
-			instructions.push_back(instruction{ fragments[0],
-			                                    str_to_op(fragments[1]),
-			                                    std::stoll(fragments[2]),
-			                                    fragments[4],
-			                                    str_to_comp(fragments[5]),
-			                                    stoll(fragments[6]) });
+			instructions.push_back(instruction{ fragments[0], str_to_op(fragments[1]), std::stoll(fragments[2]), fragments[4], str_to_comp(fragments[5]), stoll(fragments[6]) });
 		}
 	}
 

@@ -39,8 +39,7 @@ protected:
 	}
 
 	gsl::not_null<node*> find_bad_node(gsl::not_null<node*> n) {
-		auto odd_one = find_odd_one_out(
-		std::begin(n->child_nodes), std::end(n->child_nodes), [](gsl::not_null<node*> lhs, gsl::not_null<node*> rhs) {
+		auto odd_one = find_odd_one_out(std::begin(n->child_nodes), std::end(n->child_nodes), [](gsl::not_null<node*> lhs, gsl::not_null<node*> rhs) {
 			return lhs->total_weight == rhs->total_weight;
 		});
 		if(odd_one != std::end(n->child_nodes)) {
@@ -71,7 +70,8 @@ protected:
 		for(auto it = std::begin(nodes); it != std::end(nodes); ++it) {
 			for(auto& child_name : it->second.children) {
 				const gsl::not_null<node*> child = &nodes[child_name];
-				child->parent                    = &it->second;
+
+				child->parent = &it->second;
 				it->second.child_nodes.push_back(child);
 			}
 		}
@@ -91,10 +91,8 @@ protected:
 		const std::size_t bad_total         = bad_node->total_weight;
 		for(const gsl::not_null<const node*> sib : bad_node->parent->child_nodes) {
 			if(sib->total_weight != bad_total) {
-				const std::ptrdiff_t discrepancy
-				= gsl::narrow<std::ptrdiff_t>(sib->total_weight) - gsl::narrow<std::ptrdiff_t>(bad_total);
-				const std::size_t correct_weight
-				= gsl::narrow<std::size_t>(gsl::narrow<std::ptrdiff_t>(bad_node->weight) + discrepancy);
+				const std::ptrdiff_t discrepancy = gsl::narrow<std::ptrdiff_t>(sib->total_weight) - gsl::narrow<std::ptrdiff_t>(bad_total);
+				const std::size_t correct_weight = gsl::narrow<std::size_t>(gsl::narrow<std::ptrdiff_t>(bad_node->weight) + discrepancy);
 				return std::to_string(correct_weight);
 			}
 		}

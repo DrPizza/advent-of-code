@@ -49,6 +49,7 @@ ContinuationIndentWidth: 0
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
+ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: false
 ForEachMacros: ['BOOST_FOREACH']
 # IncludeBlocks: Preserve
@@ -59,6 +60,7 @@ IndentWrappedFunctionNames: false
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
+PenaltyExcessCharacter: 0
 PointerAlignment: Left
 ReflowComments: false
 SortIncludes: true
