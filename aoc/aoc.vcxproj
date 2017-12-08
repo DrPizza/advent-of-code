@@ -82,8 +82,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\day-1.hpp" />
+    <ClInclude Include="include\day-2.hpp" />
+    <ClInclude Include="include\day-3.hpp" />
+    <ClInclude Include="include\day-4.hpp" />
+    <ClInclude Include="include\day-5.hpp" />
+    <ClInclude Include="include\day-6.hpp" />
+    <ClInclude Include="include\day-7.hpp" />
+    <ClInclude Include="include\day-8.hpp" />
+    <ClInclude Include="include\problem.hpp" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="include\utility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aoc.cpp" />
