@@ -33,4 +33,14 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="day-8.txt" />
+    <Text Include="day-7.txt" />
+    <Text Include="day-1.txt" />
+    <Text Include="day-2.txt" />
+    <Text Include="day-3.txt" />
+    <Text Include="day-4.txt" />
+    <Text Include="day-5.txt" />
+    <Text Include="day-6.txt" />
+  </ItemGroup>
 </Project>
