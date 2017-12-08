@@ -6,11 +6,12 @@
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_2 : problem {
+struct advent_2 : problem
+{
 	advent_2() noexcept : problem(2) {
 	}
 
-	using row = std::vector<std::size_t>;
+	using row         = std::vector<std::size_t>;
 	using spreadsheet = std::vector<row>;
 
 protected:

@@ -3,10 +3,11 @@
 #include "problem.hpp"
 
 #include <fstream>
-#include <utility>
 #include <unordered_map>
+#include <utility>
 
-struct advent_3 : problem {
+struct advent_3 : problem
+{
 	advent_3() noexcept : problem(3) {
 	}
 
@@ -24,7 +25,7 @@ protected:
 	void spiral_iterate(F&& fn) noexcept {
 		std::ptrdiff_t dx = 1;
 		std::ptrdiff_t dy = 0;
-		for(std::ptrdiff_t size = 1; ; ++size) {
+		for(std::ptrdiff_t size = 1; true; ++size) {
 			for(std::ptrdiff_t y = dy; y < dx; ++y) {
 				if(!fn(dx, y)) {
 					return;
@@ -57,7 +58,7 @@ protected:
 		// the solution between parts 1 and parts 2. Badly designed question, IMO; the natural solution for the first
 		// part is algebraic, rather than the brute force of the second part.
 
-		std::ptrdiff_t current = 1;
+		std::ptrdiff_t current  = 1;
 		std::ptrdiff_t distance = 0;
 		spiral_iterate([&](std::ptrdiff_t x, std::ptrdiff_t y) {
 			if(++current == target) {
@@ -71,7 +72,8 @@ protected:
 
 	using coordinate = std::pair<std::ptrdiff_t, std::ptrdiff_t>;
 
-	struct coordinate_hash {
+	struct coordinate_hash
+	{
 		std::size_t operator()(const coordinate& c) const noexcept {
 			return std::hash<std::ptrdiff_t>{}(c.first) | std::hash<std::ptrdiff_t>{}(c.second);
 		}
@@ -81,16 +83,18 @@ protected:
 
 	std::ptrdiff_t sum_neighbours(const visited_map& visited, std::ptrdiff_t x, std::ptrdiff_t y) {
 		const auto end = visited.end();
-		auto it = visited.end();
-		const std::ptrdiff_t sum = ((it = visited.find({ x - 1, y - 1 })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x - 1, y     })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x - 1, y + 1 })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x    , y - 1 })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x    , y + 1 })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x + 1, y - 1 })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x + 1, y     })) != end ? it->second : 0)
-		                         + ((it = visited.find({ x + 1, y + 1 })) != end ? it->second : 0)
-		;
+		auto it        = visited.end();
+
+		// clang-format off
+		const std::ptrdiff_t sum = ((it = visited.find({x - 1, y - 1})) != end ? it->second : 0)
+		                         + ((it = visited.find({x - 1, y    })) != end ? it->second : 0)
+		                         + ((it = visited.find({x - 1, y + 1})) != end ? it->second : 0)
+		                         + ((it = visited.find({x    , y - 1})) != end ? it->second : 0)
+		                         + ((it = visited.find({x    , y + 1})) != end ? it->second : 0)
+		                         + ((it = visited.find({x + 1, y - 1})) != end ? it->second : 0)
+		                         + ((it = visited.find({x + 1, y    })) != end ? it->second : 0)
+		                         + ((it = visited.find({x + 1, y + 1})) != end ? it->second : 0);
+		// clang-format on
 		return sum;
 	}
 

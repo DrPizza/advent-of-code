@@ -1,10 +1,11 @@
 #pragma once
 
+#include <gsl/gsl>
 #include <iostream>
 #include <string>
-#include <gsl/gsl>
 
-struct problem {
+struct problem
+{
 	void solve() {
 		prepare_input();
 		precompute();
@@ -17,27 +18,26 @@ struct problem {
 	}
 
 	problem(const problem&) = default;
-	problem(problem&&) = default;
+	problem(problem&&)      = default;
 	problem& operator=(const problem&) = default;
 	problem& operator=(problem&&) = default;
-	virtual ~problem() = default;
+	virtual ~problem()            = default;
 
 protected:
-	[[gsl::suppress(f.6)]]
+	[[gsl::suppress(f .6)]]
 	virtual void prepare_input() {
 	}
 
-	[[gsl::suppress(f.6)]]
+	[[gsl::suppress(f .6)]]
 	virtual void precompute() {
 	}
 
-	[[gsl::suppress(f.6)]]
+	[[gsl::suppress(f .6)]]
 	virtual std::string part_1() {
 		return "";
 	}
 
-	[[gsl::suppress(f.6)]]
-	virtual std::string part_2() {
+	[[gsl::suppress(f .6)]] virtual std::string part_2() {
 		return "";
 	}
 

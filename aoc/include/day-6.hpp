@@ -3,12 +3,13 @@
 #include "problem.hpp"
 
 #include <fstream>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_6 : problem {
+struct advent_6 : problem
+{
 	advent_6() noexcept : problem(6) {
 	}
 
@@ -30,14 +31,14 @@ protected:
 	}
 
 	std::size_t rebalance_iterations = 0;
-	std::size_t cycle_length = 0;
+	std::size_t cycle_length         = 0;
 
 	void precompute() override {
 		memory_type my_memory(memory);
 		std::vector<memory_type> previous_configurations;
 		for(;;) {
 			++rebalance_iterations;
-			auto highest = std::max_element(std::begin(my_memory), std::end(my_memory));
+			auto highest       = std::max_element(std::begin(my_memory), std::end(my_memory));
 			std::size_t blocks = std::exchange(*highest, 0);
 			for(auto it = ++highest; blocks != 0; ++it) {
 				if(it == std::end(my_memory)) {
@@ -46,7 +47,8 @@ protected:
 				*it += 1;
 				--blocks;
 			}
-			if(auto it = std::find(std::begin(previous_configurations), std::end(previous_configurations), my_memory); it != previous_configurations.end()) {
+			if(auto it = std::find(std::begin(previous_configurations), std::end(previous_configurations), my_memory);
+			   it != previous_configurations.end()) {
 				cycle_length = gsl::narrow<std::size_t>(std::distance(it, std::end(previous_configurations)));
 				break;
 			} else {

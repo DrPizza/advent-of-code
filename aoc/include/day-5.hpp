@@ -5,7 +5,8 @@
 #include <fstream>
 #include <vector>
 
-struct advent_5 : problem {
+struct advent_5 : problem
+{
 	advent_5() noexcept : problem(5) {
 	}
 

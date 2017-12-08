@@ -4,7 +4,8 @@
 
 #include <fstream>
 
-struct advent_1 : problem {
+struct advent_1 : problem
+{
 	advent_1() noexcept : problem(1) {
 	}
 
@@ -17,7 +18,7 @@ protected:
 	}
 
 	size_t core(size_t offset) {
-		size_t total = 0;
+		size_t total          = 0;
 		const std::size_t end = code.size();
 		for(size_t current = 0, next = offset; current != end; ++current, ++next) {
 			if(next == end) {

@@ -5,8 +5,8 @@ It find_odd_one_out(It begin, It end, Pred p) {
 	if(begin == end) {
 		return end;
 	}
-	auto candidate = *begin;
-	std::size_t times_seen = 0;
+	auto candidate          = *begin;
+	std::size_t times_seen  = 0;
 	auto candidate_position = end;
 
 	for(auto it = begin; it != end; ++it) {

@@ -7,7 +7,8 @@
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_4 : problem {
+struct advent_4 : problem
+{
 	advent_4() noexcept : problem(4) {
 	}
 
