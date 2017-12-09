@@ -90,6 +90,7 @@
     <ClInclude Include="include\day-6.hpp" />
     <ClInclude Include="include\day-7.hpp" />
     <ClInclude Include="include\day-8.hpp" />
+    <ClInclude Include="include\day-9.hpp" />
     <ClInclude Include="include\problem.hpp" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
@@ -114,6 +115,8 @@
     <Text Include="day-6.txt" />
     <Text Include="day-7.txt" />
     <Text Include="day-8.txt" />
+    <Text Include="day-9.txt" />
+    <Text Include="include\day-9.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
