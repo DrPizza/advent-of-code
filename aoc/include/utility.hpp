@@ -48,6 +48,20 @@ struct cyclic_iterator
 	constexpr cyclic_iterator(underlying_iterator first_, underlying_iterator last_) noexcept : first(first_), last(last_), current(first_) {
 	}
 
+	constexpr cyclic_iterator(underlying_iterator pos_, underlying_iterator first_, underlying_iterator last_) noexcept : first(first_), last(last_), current(pos_) {
+		if(current == last) {
+			current = first;
+		}
+	}
+
+	constexpr my_type& operator=(const underlying_iterator& rhs) noexcept {
+		current = rhs;
+		if(current == last) {
+			current = first;
+		}
+		return *this;
+	}
+
 	constexpr bool operator==(const my_type& rhs) const noexcept {
 		return current == rhs.current;
 	}

@@ -12,7 +12,7 @@
 
 struct advent_10 : problem
 {
-	advent_10() noexcept : problem(8) {
+	advent_10() noexcept : problem(10) {
 	}
 
 	std::string raw_input;

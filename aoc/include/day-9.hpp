@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 struct advent_9 : problem {
-	advent_9() noexcept : problem(8) {
+	advent_9() noexcept : problem(9) {
 	}
 
 	std::string stream;

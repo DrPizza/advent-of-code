@@ -1,6 +1,7 @@
 #pragma once
 
 #include "problem.hpp"
+#include "utility.hpp"
 
 #include <fstream>
 #include <utility>
@@ -35,16 +36,14 @@ protected:
 
 	void precompute() override {
 		memory_type my_memory(memory);
+		using cyc_it = cyclic_iterator<memory_type::iterator>;
 		std::vector<memory_type> previous_configurations;
 		for(;;) {
 			++rebalance_iterations;
 			auto highest       = std::max_element(std::begin(my_memory), std::end(my_memory));
 			std::size_t blocks = std::exchange(*highest, 0);
-			for(auto it = ++highest; blocks != 0; ++it) {
-				if(it == std::end(my_memory)) {
-					it = std::begin(my_memory);
-				}
-				*it += 1;
+			for(cyc_it mem_cyc(++highest, std::begin(my_memory), std::end(my_memory)); blocks != 0; ++mem_cyc) {
+				*mem_cyc += 1;
 				--blocks;
 			}
 			if(auto it = std::find(std::begin(previous_configurations), std::end(previous_configurations), my_memory);
