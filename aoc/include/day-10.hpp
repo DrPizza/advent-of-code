@@ -1,9 +1,13 @@
 #pragma once
 
 #include "problem.hpp"
+#include "utility.hpp"
 
 #include <fstream>
 #include <sstream>
+#include <iomanip>
+#include <array>
+#include <type_traits>
 #include <boost/algorithm/string.hpp>
 
 struct advent_10 : problem
@@ -24,13 +28,17 @@ struct advent_10 : problem
 		std::size_t skip_size = 0;
 	};
 
-	void round(const std::vector<std::size_t> lengths, std::vector<std::size_t>& circle, hash_state& state) {
+	void round(const std::vector<std::size_t> lengths, std::array<std::size_t, 256>& circle, hash_state& state) noexcept {
 		for(const std::size_t length : lengths) {
-			const std::size_t first = state.current_position;
-			const std::size_t last = state.current_position + length - 1;
-			for(std::size_t i = 0; i < (length / 2); ++i) {
-				std::swap(circle[(first + i) % 256], circle[(last - i) % 256]);
-			}
+			//const std::size_t first = state.current_position;
+			//const std::size_t last = state.current_position + length - 1;
+			//for(std::size_t i = 0; i < (length / 2); ++i) {
+			//	std::swap(circle[(first + i) % 256], circle[(last - i) % 256]);
+			//}
+			using i_t = cyclic_iterator<std::array<std::size_t, 256>::iterator>;
+			const i_t first = i_t(std::begin(circle), std::end(circle));
+			std::reverse(first + gsl::narrow<std::ptrdiff_t>(state.current_position),
+			             first + gsl::narrow<std::ptrdiff_t>(state.current_position + length));
 			state.current_position += length;
 			state.current_position += state.skip_size;
 			++state.skip_size;
@@ -45,28 +53,23 @@ struct advent_10 : problem
 			return std::stoull(s);
 		});
 
-		std::vector<std::size_t> single_round;
-		single_round.resize(256);
+		std::array<std::size_t, 256> single_round;
 		std::iota(std::begin(single_round), std::end(single_round), 0);
 		hash_state state = { 0, 0 };
-
 		round(lengths, single_round, state);
 
-		std::size_t first_hash = single_round[0] * single_round[1];
+		const std::size_t first_hash = single_round[0] * single_round[1];
 		return std::to_string(first_hash);
 	}
 
 	std::string part_2() override {
 		std::vector<std::size_t> lengths;
 		std::copy(std::begin(raw_input), std::end(raw_input), std::back_inserter(lengths));
-		lengths.push_back(17);
-		lengths.push_back(31);
-		lengths.push_back(73);
-		lengths.push_back(47);
-		lengths.push_back(23);
+		for(const std::size_t l : { 17u, 31u, 73u, 47u, 23u}) {
+			lengths.push_back(l);
+		}
 
-		std::vector<std::size_t> sparse;
-		sparse.resize(256);
+		std::array<std::size_t, 256> sparse;
 		std::iota(std::begin(sparse), std::end(sparse), 0);
 		hash_state state = { 0, 0 };
 		for(std::size_t r = 0; r < 64; ++r) {
@@ -74,17 +77,16 @@ struct advent_10 : problem
 		}
 		
 		std::vector<std::size_t> dense;
-		dense.resize(16);
-		for(std::size_t i = 0; i < 16; ++i) {
-			dense[i] = std::accumulate(std::begin(sparse) + ( i      * 16),
-			                           std::begin(sparse) + ((i + 1) * 16), 0,
-			                           [](std::size_t a, std::size_t b) {
-				return a ^ b;
-			});
+		dense.reserve(16);
+		for(auto it = std::begin(sparse); it != std::end(sparse); std::advance(it, 16)) {
+			dense.push_back(std::accumulate(it,
+			                                std::next(it, 16),
+			                                0ull,
+			                                std::bit_xor<void>{}));
 		}
 		std::stringstream res;
 		for(std::size_t i = 0; i < 16; ++i) {
-			res << std::hex << dense[i];
+			res << std::setw(2) << std::hex << dense[i];
 		}
 		return res.str();
 	}
