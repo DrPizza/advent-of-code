@@ -38,7 +38,6 @@ protected:
 
 	std::string part_1() {
 		std::size_t running_checksum = 0;
-
 		for(const row& r : ss) {
 			const auto mm = std::minmax_element(begin(r), end(r));
 			running_checksum += *mm.second - *mm.first;

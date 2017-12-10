@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include "problem.hpp"
 
@@ -10,38 +9,29 @@ struct advent_9 : problem {
 	advent_9() noexcept : problem(8) {
 	}
 
-	std::string garbage;
+	std::string stream;
 
 	void prepare_input() override {
 		std::ifstream fin("day-9.txt");
-		std::getline(fin, garbage);
+		std::getline(fin, stream);
 	}
 
 	std::size_t total_group_score = 0;
 	std::size_t garbage_count = 0;
 
-	void precompute() {
+	enum state_t
+	{
+		normal,
+		garbage,
+		skip,
+	};
+
+	void precompute() noexcept override {
 		std::size_t group_score = 0;
-		bool in_garbage = false;
-		bool skip_next = false;
-		for(char ch : garbage) {
-			if(skip_next) {
-				skip_next = false;
-				continue;
-			}
-			if(in_garbage) {
-				switch(ch) {
-				case '>':
-					in_garbage = false;
-					break;
-				case '!':
-					skip_next = true;
-					break;
-				default:
-					++garbage_count;
-					break;
-				}
-			} else {
+		state_t state = normal;
+		for(const char ch : stream) {
+			switch(state) {
+			case normal:
 				switch(ch) {
 				case '{':
 					++group_score;
@@ -51,9 +41,26 @@ struct advent_9 : problem {
 					--group_score;
 					break;
 				case '<':
-					in_garbage = true;
+					state = garbage;
 					break;
 				}
+				break;
+			case garbage:
+				switch(ch) {
+				case '>':
+					state = normal;
+					break;
+				case '!':
+					state = skip;
+					break;
+				default:
+					++garbage_count;
+					break;
+				}
+				break;
+			case skip:
+				state = garbage;
+				break;
 			}
 		}
 	}
@@ -66,4 +73,3 @@ struct advent_9 : problem {
 		return std::to_string(garbage_count);
 	}
 };
-
