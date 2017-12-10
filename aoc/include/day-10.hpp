@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iomanip>
 #include <array>
+#include <functional>
+#include <vector>
 #include <type_traits>
 #include <boost/algorithm/string.hpp>
 
