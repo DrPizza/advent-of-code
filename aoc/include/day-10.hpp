@@ -22,27 +22,20 @@ struct advent_10 : problem
 		std::getline(fin, raw_input);
 	}
 
-	struct hash_state
-	{
-		std::size_t current_position = 0;
+	std::array<std::size_t, 256> partial_hash(std::size_t iterations, std::vector<std::size_t> input) noexcept {
+		std::array<std::size_t, 256> sparse;
+		std::iota(std::begin(sparse), std::end(sparse), 0);
+		using cyclic = cyclic_iterator<std::array<std::size_t, 256>::iterator>;
+		cyclic first = cyclic(std::begin(sparse), std::end(sparse));
 		std::size_t skip_size = 0;
-	};
-
-	void round(const std::vector<std::size_t> lengths, std::array<std::size_t, 256>& circle, hash_state& state) noexcept {
-		for(const std::size_t length : lengths) {
-			//const std::size_t first = state.current_position;
-			//const std::size_t last = state.current_position + length - 1;
-			//for(std::size_t i = 0; i < (length / 2); ++i) {
-			//	std::swap(circle[(first + i) % 256], circle[(last - i) % 256]);
-			//}
-			using i_t = cyclic_iterator<std::array<std::size_t, 256>::iterator>;
-			const i_t first = i_t(std::begin(circle), std::end(circle));
-			std::reverse(first + gsl::narrow<std::ptrdiff_t>(state.current_position),
-			             first + gsl::narrow<std::ptrdiff_t>(state.current_position + length));
-			state.current_position += length;
-			state.current_position += state.skip_size;
-			++state.skip_size;
+		for(std::size_t i = 0; i < iterations; ++i) {
+			for(const std::size_t length : input) {
+				std::reverse(first, first + gsl::narrow<std::ptrdiff_t>(length));
+				first += gsl::narrow<std::ptrdiff_t>(length + skip_size);
+				++skip_size;
+			}
 		}
+		return sparse;
 	}
 
 	std::string part_1() override {
@@ -53,10 +46,7 @@ struct advent_10 : problem
 			return std::stoull(s);
 		});
 
-		std::array<std::size_t, 256> single_round;
-		std::iota(std::begin(single_round), std::end(single_round), 0);
-		hash_state state = { 0, 0 };
-		round(lengths, single_round, state);
+		std::array<std::size_t, 256> single_round = partial_hash(1, lengths);
 
 		const std::size_t first_hash = single_round[0] * single_round[1];
 		return std::to_string(first_hash);
@@ -69,12 +59,7 @@ struct advent_10 : problem
 			lengths.push_back(l);
 		}
 
-		std::array<std::size_t, 256> sparse;
-		std::iota(std::begin(sparse), std::end(sparse), 0);
-		hash_state state = { 0, 0 };
-		for(std::size_t r = 0; r < 64; ++r) {
-			round(lengths, sparse, state);
-		}
+		std::array<std::size_t, 256> sparse = partial_hash(64, lengths);
 		
 		std::vector<std::size_t> dense;
 		dense.reserve(16);
@@ -86,7 +71,7 @@ struct advent_10 : problem
 		}
 		std::stringstream res;
 		for(std::size_t i = 0; i < 16; ++i) {
-			res << std::setw(2) << std::hex << dense[i];
+			res << std::setw(2) << std::setfill('0') << std::hex << dense[i];
 		}
 		return res.str();
 	}
