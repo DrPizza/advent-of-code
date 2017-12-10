@@ -30,7 +30,7 @@ struct advent_10 : problem
 		using cyclic = cyclic_iterator<std::array<std::size_t, 256>::iterator>;
 		cyclic first = cyclic(std::begin(sparse), std::end(sparse));
 		std::size_t skip_size = 0;
-		for(std::size_t i = 0; i < iterations; ++i) {
+		while(iterations--) {
 			for(const std::size_t length : input) {
 				std::reverse(first, first + gsl::narrow<std::ptrdiff_t>(length));
 				first += gsl::narrow<std::ptrdiff_t>(length + skip_size);
@@ -57,9 +57,7 @@ struct advent_10 : problem
 	std::string part_2() override {
 		std::vector<std::size_t> lengths;
 		std::copy(std::begin(raw_input), std::end(raw_input), std::back_inserter(lengths));
-		for(const std::size_t l : { 17u, 31u, 73u, 47u, 23u}) {
-			lengths.push_back(l);
-		}
+		lengths.insert(lengths.end(), { 17u, 31u, 73u, 47u, 23u });
 
 		std::array<std::size_t, 256> sparse = partial_hash(64, lengths);
 		
@@ -72,8 +70,9 @@ struct advent_10 : problem
 			                                std::bit_xor<void>{}));
 		}
 		std::stringstream res;
+		res << std::hex << std::setfill('0');
 		for(std::size_t i = 0; i < 16; ++i) {
-			res << std::setw(2) << std::setfill('0') << std::hex << dense[i];
+			res << std::setw(2) << dense[i];
 		}
 		return res.str();
 	}
