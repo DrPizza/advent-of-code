@@ -10,7 +10,7 @@ struct advent_1 : problem
 	}
 
 protected:
-	std::string code = "";
+	std::string code;
 
 	void prepare_input() {
 		std::ifstream fin("day-1.txt");

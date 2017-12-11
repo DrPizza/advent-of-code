@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="include\day-1.hpp" />
     <ClInclude Include="include\day-10.hpp" />
+    <ClInclude Include="include\day-11.hpp" />
     <ClInclude Include="include\day-2.hpp" />
     <ClInclude Include="include\day-3.hpp" />
     <ClInclude Include="include\day-4.hpp" />
@@ -110,6 +111,7 @@
   <ItemGroup>
     <Text Include="day-1.txt" />
     <Text Include="day-10.txt" />
+    <Text Include="day-11.txt" />
     <Text Include="day-2.txt" />
     <Text Include="day-3.txt" />
     <Text Include="day-4.txt" />

@@ -64,10 +64,7 @@ struct advent_10 : problem
 		std::vector<std::size_t> dense;
 		dense.reserve(16);
 		for(auto it = std::begin(sparse); it != std::end(sparse); std::advance(it, 16)) {
-			dense.push_back(std::accumulate(it,
-			                                std::next(it, 16),
-			                                0ull,
-			                                std::bit_xor<void>{}));
+			dense.push_back(std::accumulate(it, std::next(it, 16), 0ull, std::bit_xor<void>{}));
 		}
 		std::stringstream res;
 		res << std::hex << std::setfill('0');
