@@ -53,45 +53,26 @@ struct advent_11 : problem
 		});
 	}
 
-	struct cancellation
-	{
-		direction full;
-		std::array<direction, 2> semi;
-		std::array<direction, 2> net;
-	};
-
-	std::unordered_map<direction, cancellation> cancellations = {
-		{ n,  { s,  { se, sw }, { ne, nw } } },
-		{ ne, { sw, { nw, s  }, { n,  se } } },
-		{ se, { nw, { sw, n  }, { s,  ne } } },
-		{ s,  { n,  { nw, ne }, { sw, se } } },
-		{ sw, { ne, { n , se }, { nw, s  } } },
-		{ nw, { se, { s,  ne }, { sw, n  } } }
-	};
-
 	std::size_t greatest_distance = 0;
 	std::size_t current_distance = 0;
 
+	std::size_t distance(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
+		return gsl::narrow<std::size_t>((std::abs(x) + std::abs(y) + std::abs(z)) / 2);
+	}
+
 	void precompute() noexcept override {
-		std::unordered_map<direction, std::size_t> counts;
+		std::ptrdiff_t x(0), y(0), z(0);
 		for(const direction d : directions) {
-			cancellation c = cancellations[d];
-			if(counts[c.full]) {
-				--counts[c.full];
-				--current_distance;
-			} else if(counts[c.semi[0]]) {
-				--counts[c.semi[0]];
-				++counts[c.net[0]];
-			} else if(counts[c.semi[1]]) {
-				--counts[c.semi[1]];
-				++counts[c.net[1]];
-			} else {
-				++counts[d];
-				++current_distance;
-				if(current_distance > greatest_distance) {
-					greatest_distance = current_distance;
-				}
+			switch(d) {
+			case n :      ++y; --z; break;
+			case ne: ++x;      --z; break;
+			case se: ++x; --y;      break;
+			case s :      --y; ++z; break;
+			case sw: --x;      ++z; break;
+			case nw: --x; ++y;      break;
 			}
+			current_distance = distance(x, y, z);
+			greatest_distance = std::max(greatest_distance, current_distance);
 		}
 	}
 
