@@ -56,24 +56,34 @@ struct advent_11 : problem
 	std::size_t greatest_distance = 0;
 	std::size_t current_distance = 0;
 
-	std::size_t distance(std::ptrdiff_t x, std::ptrdiff_t y, std::ptrdiff_t z) {
-		return gsl::narrow<std::size_t>((std::abs(x) + std::abs(y) + std::abs(z)) / 2);
-	}
+	struct hex_coord
+	{
+		std::ptrdiff_t x, y, z;
 
-	void precompute() noexcept override {
-		std::ptrdiff_t x(0), y(0), z(0);
-		for(const direction d : directions) {
+		hex_coord& operator+=(direction d) noexcept {
 			switch(d) {
-			case n :      ++y; --z; break;
+			case n:      ++y; --z; break;
 			case ne: ++x;      --z; break;
 			case se: ++x; --y;      break;
-			case s :      --y; ++z; break;
+			case s:      --y; ++z; break;
 			case sw: --x;      ++z; break;
 			case nw: --x; ++y;      break;
 			}
-			current_distance = distance(x, y, z);
-			greatest_distance = std::max(greatest_distance, current_distance);
+			return *this;
 		}
+	};
+
+	std::size_t distance_from_origin(hex_coord c) {
+		return gsl::narrow<std::size_t>((std::abs(c.x) + std::abs(c.y) + std::abs(c.z)) / 2);
+	}
+
+	void precompute() noexcept override {
+		hex_coord position{ 0, 0, 0 };
+		std::for_each(std::begin(directions), std::end(directions), [&](direction d) {
+			position += d;
+			current_distance = distance_from_origin(position);
+			greatest_distance = std::max(greatest_distance, current_distance);
+		});
 	}
 
 	std::string part_1() noexcept override {
