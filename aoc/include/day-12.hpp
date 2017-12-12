@@ -13,29 +13,25 @@ struct advent_12 : problem
 	advent_12() noexcept : problem(12) {
 	}
 
-	struct program
-	{
-		std::size_t pid;
-		std::vector<std::size_t> children;
-	};
+	std::vector<std::vector<std::size_t>> programs;
 
-	std::unordered_map<std::size_t, program> programs;
+	std::unordered_map<std::size_t, std::unordered_set<std::size_t>> groups;
 
 	void prepare_input() override {
 		std::ifstream fin("day-12.txt");
 		for(std::string line; std::getline(fin, line); ) {
 			std::vector<std::string> fragments;
 			boost::split(fragments, line, [](char c) { return c == ' '; });
-			program p = { std::stoull(fragments[0]) };
+			programs.push_back(std::vector<std::size_t>{});
+			std::vector<std::size_t>& children = programs.back();
 			for(std::size_t i = 2; i != fragments.size(); ++i) {
-				p.children.push_back(std::stoull(fragments[i].substr(0, fragments[i].find(','))));
+				children.push_back(std::stoull(fragments[i].substr(0, fragments[i].find(','))));
 			}
-			programs[p.pid] = p;
 		}
 	}
 
 	void build_group(std::size_t parent_pid, std::unordered_set<std::size_t>& visited) {
-		for(const std::size_t pid : programs[parent_pid].children) {
+		for(const std::size_t pid : programs[parent_pid]) {
 			if(visited.find(pid) == std::end(visited)) {
 				visited.insert(pid);
 				build_group(pid, visited);
@@ -43,30 +39,29 @@ struct advent_12 : problem
 		}
 	}
 
-	bool found_in_existing_groups(std::size_t pid, const std::vector<std::unordered_set<std::size_t>>& groups) {
+	bool found_in_existing_groups(std::size_t pid) {
 		for(const auto& g : groups) {
-			if(g.find(pid) != std::end(g)) {
+			if(g.second.find(pid) != std::end(g.second)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	void precompute() noexcept override {
+		for(std::size_t i = 0; i < programs.size(); ++i) {
+			if(!found_in_existing_groups(i)) {
+				std::unordered_set<std::size_t>& group = groups[i];
+				build_group(i, group);
+			}
+		}
+	}
+
 	std::string part_1() override {
-		std::unordered_set<std::size_t> group;
-		build_group(0, group);
-		return std::to_string(group.size());
+		return std::to_string(groups[0].size());
 	}
 
 	std::string part_2() override {
-		std::vector<std::unordered_set<std::size_t>> groups;
-		for(const auto& p : programs) {
-			if(!found_in_existing_groups(p.first, groups)) {
-				std::unordered_set<std::size_t> group;
-				build_group(p.first, group);
-				groups.push_back(group);
-			}
-		}
 		return std::to_string(groups.size());;
 	}
 };
