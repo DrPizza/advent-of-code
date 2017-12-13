@@ -223,3 +223,12 @@ private:
 	std::unordered_map<T, element> table;
 	std::size_t distinct_sets = 0;
 };
+
+template<typename T, typename InIt, typename Trans, typename Red>
+T transform_reduce(InIt first, InIt last, T init, Red&& red, Trans&& trans) {
+	T result{ init };
+	for(; first != last; ++first) {
+		result = std::forward<Red>(red)(result, std::forward<Trans>(trans)(*first));
+	}
+	return result;
+}

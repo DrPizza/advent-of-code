@@ -76,9 +76,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="day-8.txt" />
     <Text Include="day-7.txt" />
     <Text Include="day-1.txt" />
@@ -93,5 +90,8 @@
     <Text Include="day-11.txt" />
     <Text Include="day-12.txt" />
     <Text Include="day-13.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
