@@ -188,8 +188,8 @@ struct disjoint_set
 		if(table.find(right) == std::end(table)) {
 			insert_set(right);
 		}
-		gsl::not_null<element*> e1 = find_parent(left);
-		gsl::not_null<element*> e2 = find_parent(right);
+		const gsl::not_null<element*> e1 = find_parent(left);
+		const gsl::not_null<element*> e2 = find_parent(right);
 		if(e1 == e2) {
 			return;
 		}

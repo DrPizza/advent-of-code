@@ -12,7 +12,7 @@ struct advent_1 : problem
 protected:
 	std::string code;
 
-	void prepare_input() {
+	void prepare_input() override {
 		std::ifstream fin("day-1.txt");
 		std::getline(fin, code);
 	}
@@ -25,7 +25,7 @@ protected:
 				next = 0;
 			}
 			if(code[current] == code[next]) {
-				total += code[current] - '0';
+				total += gsl::narrow<std::size_t>(code[current]) - gsl::narrow<std::size_t>('0');
 			}
 		}
 		return total;

@@ -15,7 +15,7 @@ struct advent_4 : problem
 protected:
 	std::vector<std::string> lines;
 
-	void prepare_input() {
+	void prepare_input() override {
 		std::ifstream fin("day-4.txt");
 		for(std::string line; std::getline(fin, line);) {
 			lines.push_back(line);
@@ -31,14 +31,14 @@ protected:
 		}));
 	}
 
-	std::string part_1() {
+	std::string part_1() override {
 		return std::to_string(core([](std::vector<std::string>& words) {
 			std::sort(begin(words), end(words));
 			return end(words) == std::unique(begin(words), end(words));
 		}));
 	}
 
-	std::string part_2() {
+	std::string part_2() override {
 		return std::to_string(core([](std::vector<std::string>& words) {
 			for(std::string& word : words) {
 				std::sort(begin(word), end(word));

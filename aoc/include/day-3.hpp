@@ -14,7 +14,7 @@ struct advent_3 : problem
 protected:
 	std::ptrdiff_t target = 0;
 
-	void prepare_input() {
+	void prepare_input() override {
 		std::ifstream fin("day-3.txt");
 		std::string line;
 		std::getline(fin, line);

@@ -17,7 +17,7 @@ struct advent_2 : problem
 protected:
 	spreadsheet ss;
 
-	void prepare_input() {
+	void prepare_input() override {
 		//auto const ss = spreadsheet(
 		//        input | ranges::view::split(is_char('\n'))
 		//              | ranges::view::transform([](const std::string& line) -> row {
@@ -36,7 +36,7 @@ protected:
 		}
 	}
 
-	std::string part_1() {
+	std::string part_1() override {
 		std::size_t running_checksum = 0;
 		for(const row& r : ss) {
 			const auto mm = std::minmax_element(begin(r), end(r));
@@ -45,7 +45,7 @@ protected:
 		return std::to_string(running_checksum);
 	}
 
-	std::string part_2() {
+	std::string part_2() override {
 		std::size_t running_sum = 0;
 		for(const row& r : ss) {
 			const std::size_t end = r.size();
