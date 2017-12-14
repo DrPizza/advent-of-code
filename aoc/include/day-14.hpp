@@ -2,6 +2,7 @@
 
 #include "problem.hpp"
 #include "utility.hpp"
+#include "mdspan.hpp"
 
 #include <fstream>
 #include <utility>
@@ -23,7 +24,7 @@ struct advent_14 : problem
 		cyclic cfirst = cyclic(std::begin(sparse), std::end(sparse));
 		std::size_t skip_size = 0;
 		for(std::size_t i = 0; i < 64; ++i) {
-			auto inner_loop = [&](const uint8_t length) {
+			const auto inner_loop = [&](const uint8_t length) {
 				std::reverse(cfirst, cfirst + gsl::narrow<std::ptrdiff_t>(length));
 				cfirst += gsl::narrow<std::ptrdiff_t>(length + skip_size);
 				++skip_size;
@@ -58,23 +59,26 @@ struct advent_14 : problem
 		std::getline(fin, key_string);
 	}
 
-	std::array<std::array<uint8_t, 128>, 128> grid;
+	using grid_shape = md::extents<128, 128>;
+	using grid_type  = md::mdspan<uint8_t, grid_shape>;
+
+	std::unique_ptr<uint8_t[]> data{ std::make_unique<uint8_t[]>(128 * 128) };
+	grid_type grid{ data.get() };
 
 	void precompute() noexcept override {
 		for(std::size_t i = 0; i < 128; ++i) {
 			std::string row_input = key_string + "-" + std::to_string(i);
 			std::array<uint8_t, 16> hash = knot_hash(std::begin(row_input), std::end(row_input));
-			const uint64_t* quads = reinterpret_cast<const uint64_t*>(hash.data());
+			const gsl::span<const uint64_t> quads(reinterpret_cast<const uint64_t*>(hash.data()), 2);
 			set_bits += __popcnt64(quads[0]);
 			set_bits += __popcnt64(quads[1]);
 			for(std::size_t j = 0; j < 16; ++j) {
 				for(uint8_t k = 0; k < 8; ++k) {
 					uint8_t bit = gsl::narrow<uint8_t>((hash[j] & (1ui8 << (7 - k))) >> (7 - k));
-					grid[i][(j * 8) + k] = bit;
+					grid(i, (j * 8) + k) = bit;
 				}
 			}
 		}
-
 	}
 
 	std::string part_1() override {
@@ -82,11 +86,11 @@ struct advent_14 : problem
 	}
 
 	void flood_fill(uint8_t x, uint8_t y) {
-		if(grid[x][y] != 1) {
+		if(grid(x, y) != 1) {
 			return;
 		}
 
-		grid[x][y] = 2;
+		grid(x, y) = 2;
 		if(x != 127) {
 			flood_fill(gsl::narrow<uint8_t>(x + 1), y);
 		}
@@ -105,7 +109,7 @@ struct advent_14 : problem
 		std::size_t regions = 0;
 		for(std::uint8_t i = 0; i < 128; ++i) {
 			for(std::uint8_t j = 0; j < 128; ++j) {
-				if(grid[i][j] == 1) {
+				if(grid(i, j) == 1) {
 					++regions;
 					flood_fill(i, j);
 				}
