@@ -69,10 +69,10 @@
     <ClInclude Include="include\day-14.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\mdarray\mdspan\include\mdspan\mdspan.hpp">
+    <ClInclude Include="include\mdspan.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\mdspan.hpp">
+    <ClInclude Include="include\day-15.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,8 +100,6 @@
     <Text Include="day-12.txt" />
     <Text Include="day-13.txt" />
     <Text Include="day-14.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Text Include="day-15.txt" />
   </ItemGroup>
 </Project>
