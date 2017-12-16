@@ -7,10 +7,11 @@
 struct problem
 {
 	void solve() {
+		std::cout << "advent of code 2017 day " << day << std::endl;
 		prepare_input();
 		precompute();
-		std::cout << "advent of code 2017 day " << day << std::endl;
 		std::cout << "\tpart 1: " << part_1() << std::endl;
+		tidy_up();
 		std::cout << "\tpart 2: " << part_2() << std::endl;
 	}
 
@@ -31,6 +32,11 @@ protected:
 	[[gsl::suppress(f .6)]]
 	virtual void precompute() {
 	}
+
+	[[gsl::suppress(f .6)]]
+	virtual void tidy_up() {
+	}
+
 
 	[[gsl::suppress(f .6)]]
 	virtual std::string part_1() {

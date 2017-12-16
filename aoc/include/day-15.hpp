@@ -26,9 +26,9 @@ struct advent_15 : problem
 		generator(const std::string& name_, uint64_t seed_, uint64_t factor_) : name(name_), seed(seed_), factor(factor_), current(seed_) {
 		}
 
-		uint16_t generate(uint64_t divisor) {
+		uint16_t generate(uint64_t divisor) noexcept {
 			for(;;) {
-				uint64_t product = current * factor;
+				const uint64_t product = current * factor;
 				current = product % 2'147'483'647ui64;
 				if((current % divisor) == 0ui64) {
 					return current & 0xffff;
@@ -36,7 +36,7 @@ struct advent_15 : problem
 			}
 		}
 
-		void reset() {
+		void reset() noexcept {
 			current = seed;
 		}
 	};
@@ -58,8 +58,6 @@ struct advent_15 : problem
 	}
 
 	std::string part_1() override {
-		a->reset();
-		b->reset();
 		std::size_t pairs = 0;
 		for(std::size_t i = 0; i < 40'000'000; ++i) {
 			pairs += a->generate(1) == b->generate(1);
@@ -67,9 +65,12 @@ struct advent_15 : problem
 		return std::to_string(pairs);
 	}
 
-	std::string part_2() override {
+	virtual void tidy_up() {
 		a->reset();
 		b->reset();
+	}
+
+	std::string part_2() override {
 		std::size_t pairs = 0;
 		for(std::size_t i = 0; i < 5'000'000; ++i) {
 			pairs += a->generate(4) == b->generate(8);

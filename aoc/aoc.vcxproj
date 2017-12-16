@@ -89,6 +89,7 @@
     <ClInclude Include="include\day-13.hpp" />
     <ClInclude Include="include\day-14.hpp" />
     <ClInclude Include="include\day-15.hpp" />
+    <ClInclude Include="include\day-16.hpp" />
     <ClInclude Include="include\day-2.hpp" />
     <ClInclude Include="include\day-3.hpp" />
     <ClInclude Include="include\day-4.hpp" />
@@ -116,6 +117,7 @@
     <Text Include="day-11.txt" />
     <Text Include="day-14.txt" />
     <Text Include="day-15.txt" />
+    <Text Include="day-16.txt" />
     <Text Include="day-2.txt" />
     <Text Include="day-3.txt" />
     <Text Include="day-4.txt" />

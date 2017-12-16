@@ -205,20 +205,19 @@ namespace md
 
 			using extent_type = Dimensions;
 
-			constexpr mapping_base() noexcept                    = default;
-			constexpr mapping_base(const mapping_base&) noexcept = default;
-			constexpr mapping_base(mapping_base&&) noexcept      = default;
-			~mapping_base() noexcept                             = default;
+			constexpr mapping_base() noexcept                     = default;
+			constexpr mapping_base(const mapping_base&) noexcept  = default;
+			constexpr mapping_base(mapping_base&&) noexcept       = default;
+			~mapping_base() noexcept                              = default;
 			mapping_base& operator=(const mapping_base&) noexcept = default;
-			mapping_base& operator=(mapping_base&&) noexcept = default;
+			mapping_base& operator=(mapping_base&&) noexcept      = default;
 
 			template<typename IndexType, size_t N>
 			constexpr mapping_base(const std::array<IndexType, N>& dynamic_extents) noexcept : dimensions(dynamic_extents), strides{} {
 			}
 
 			template<typename... IndexType>
-			constexpr mapping_base(IndexType... DynamicExtents) noexcept :
-			mapping_base(std::array<index_type, sizeof...(DynamicExtents)>{ DynamicExtents... }) {
+			constexpr mapping_base(IndexType... DynamicExtents) noexcept : mapping_base(std::array<index_type, sizeof...(DynamicExtents)>{ DynamicExtents... }) {
 			}
 
 			static constexpr size_t rank() noexcept {
@@ -291,17 +290,18 @@ namespace md
 
 			constexpr mapping() noexcept : mapping(std::array<index_type, 0>{}) {
 			}
-			constexpr mapping(const mapping&) noexcept = default;
-			constexpr mapping(mapping&&) noexcept      = default;
-			~mapping() noexcept                        = default;
+
+			constexpr mapping(const mapping&) noexcept  = default;
+			constexpr mapping(mapping&&) noexcept       = default;
+			~mapping() noexcept                         = default;
 			mapping& operator=(const mapping&) noexcept = default;
-			mapping& operator=(mapping&&) noexcept = default;
+			mapping& operator=(mapping&&) noexcept      = default;
 
 			template<typename IndexType, size_t N>
 			constexpr mapping(const std::array<IndexType, N>& dynamic_extents) noexcept : base_type(dynamic_extents) {
 				size_t stride = 1;
 				for(size_t i = 0; i < base_type::rank(); ++i) {
-					size_t j         = base_type::rank() - 1 - i;
+					const size_t j   = base_type::rank() - 1 - i;
 					this->strides[j] = stride;
 					stride *= this->dimensions.extent(j);
 				}
@@ -324,11 +324,12 @@ namespace md
 
 			constexpr mapping() noexcept : mapping(std::array<index_type, 0>{}) {
 			}
-			constexpr mapping(const mapping&) noexcept = default;
-			constexpr mapping(mapping&&) noexcept      = default;
-			~mapping() noexcept                        = default;
+
+			constexpr mapping(const mapping&) noexcept  = default;
+			constexpr mapping(mapping&&) noexcept       = default;
+			~mapping() noexcept                         = default;
 			mapping& operator=(const mapping&) noexcept = default;
-			mapping& operator=(mapping&&) noexcept = default;
+			mapping& operator=(mapping&&) noexcept      = default;
 
 			template<typename IndexType, size_t N>
 			constexpr mapping(const std::array<IndexType, N>& dynamic_extents) noexcept : base_type(dynamic_extents) {

@@ -75,6 +75,9 @@
     <ClInclude Include="include\day-15.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\day-16.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\stdafx.cpp">
@@ -101,5 +104,6 @@
     <Text Include="day-13.txt" />
     <Text Include="day-14.txt" />
     <Text Include="day-15.txt" />
+    <Text Include="day-16.txt" />
   </ItemGroup>
 </Project>
