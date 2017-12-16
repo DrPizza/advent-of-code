@@ -65,7 +65,7 @@ struct advent_15 : problem
 		return std::to_string(pairs);
 	}
 
-	virtual void tidy_up() {
+	virtual void tidy_up() noexcept {
 		a->reset();
 		b->reset();
 	}

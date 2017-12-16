@@ -4,11 +4,12 @@
 #include "utility.hpp"
 
 #include <fstream>
+#include <iomanip>
 #include <regex>
 #include <utility>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
 #include <numeric>
+#include <chrono>
 #include <boost/algorithm/string.hpp>
 
 struct advent_16 : problem
@@ -19,7 +20,7 @@ struct advent_16 : problem
 	std::string dancers;
 
 	void do_spin(std::ptrdiff_t amount) {
-		std::rotate(std::rbegin(dancers), std::rbegin(dancers) + amount, std::rend(dancers));
+		std::rotate(std::begin(dancers), std::end(dancers) - amount, std::end(dancers));
 	}
 
 	void do_exchange(std::size_t a, std::size_t b) {
@@ -80,30 +81,22 @@ struct advent_16 : problem
 		return dancers;
 	}
 
-	std::size_t find_cycle_length() {
+	std::map<std::size_t, std::string> generate_all_permutations() {
 		const std::string original = "abcdefghijklmnop";
+		std::map<std::size_t, std::string> permutations;
 		std::iota(std::begin(dancers), std::end(dancers), gsl::narrow<uint8_t>('a'));
-		std::size_t cycle_length = 0;
 		do {
+			permutations[permutations.size()] = dancers;
 			for(const auto& m : moves) {
 				m();
 			}
-			++cycle_length;
-		} while(original != dancers && cycle_length < 1'000'000'000);
-		return cycle_length;
+		} while(original != dancers);
+		return permutations;
 	}
 
 	std::string part_2() override {
-		const std::size_t cycle_length = find_cycle_length();
-		if(cycle_length != 1'000'000'000) {
-			const std::size_t extras = 1'000'000'000 % cycle_length;
-			std::iota(std::begin(dancers), std::end(dancers), gsl::narrow<uint8_t>('a'));
-			for(std::size_t i = 0; i < extras; ++i) {
-				for(const auto& m : moves) {
-					m();
-				}
-			}
-		}
-		return dancers;
+		std::map<std::size_t, std::string> permutations = generate_all_permutations();
+		std::size_t remainder = 1'000'000'000 % permutations.size();
+		return permutations[remainder];
 	}
 };
