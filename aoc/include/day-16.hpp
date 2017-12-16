@@ -84,7 +84,7 @@ struct advent_16 : problem
 	std::map<std::size_t, std::string> generate_all_permutations() {
 		const std::string original = "abcdefghijklmnop";
 		std::map<std::size_t, std::string> permutations;
-		std::iota(std::begin(dancers), std::end(dancers), gsl::narrow<uint8_t>('a'));
+		std::iota(std::begin(dancers), std::end(dancers), 'a');
 		do {
 			permutations[permutations.size()] = dancers;
 			for(const auto& m : moves) {
@@ -96,7 +96,7 @@ struct advent_16 : problem
 
 	std::string part_2() override {
 		std::map<std::size_t, std::string> permutations = generate_all_permutations();
-		std::size_t remainder = 1'000'000'000 % permutations.size();
+		const std::size_t remainder = 1'000'000'000 % permutations.size();
 		return permutations[remainder];
 	}
 };
