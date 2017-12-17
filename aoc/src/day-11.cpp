@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -94,3 +94,9 @@ struct advent_11 : problem
 		return std::to_string(greatest_distance);
 	}
 };
+
+template<>
+void solve<advent_day::day_11>() {
+	advent_11 a;
+	a.solve();
+}

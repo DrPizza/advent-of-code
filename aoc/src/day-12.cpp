@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -35,3 +35,9 @@ struct advent_12 : problem
 		return std::to_string(ds.count_sets());
 	}
 };
+
+template<>
+void solve<advent_day::day_12>() {
+	advent_12 a;
+	a.solve();
+}

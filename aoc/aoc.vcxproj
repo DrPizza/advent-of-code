@@ -80,22 +80,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\day-1.hpp" />
-    <ClInclude Include="include\day-10.hpp" />
-    <ClInclude Include="include\day-11.hpp" />
-    <ClInclude Include="include\day-12.hpp" />
-    <ClInclude Include="include\day-13.hpp" />
-    <ClInclude Include="include\day-14.hpp" />
-    <ClInclude Include="include\day-15.hpp" />
-    <ClInclude Include="include\day-16.hpp" />
-    <ClInclude Include="include\day-2.hpp" />
-    <ClInclude Include="include\day-3.hpp" />
-    <ClInclude Include="include\day-4.hpp" />
-    <ClInclude Include="include\day-5.hpp" />
-    <ClInclude Include="include\day-6.hpp" />
-    <ClInclude Include="include\day-7.hpp" />
-    <ClInclude Include="include\day-8.hpp" />
-    <ClInclude Include="include\day-9.hpp" />
+    <ClCompile Include="src\day-1.cpp" />
+    <ClCompile Include="src\day-10.cpp" />
+    <ClCompile Include="src\day-11.cpp" />
+    <ClCompile Include="src\day-12.cpp" />
+    <ClCompile Include="src\day-13.cpp" />
+    <ClCompile Include="src\day-14.cpp" />
+    <ClCompile Include="src\day-15.cpp" />
+    <ClCompile Include="src\day-16.cpp" />
+    <ClCompile Include="src\day-17.cpp" />
+    <ClCompile Include="src\day-19.cpp" />
+    <ClCompile Include="src\day-2.cpp" />
+    <ClCompile Include="src\day-20.cpp" />
+    <ClCompile Include="src\day-21.cpp" />
+    <ClCompile Include="src\day-22.cpp" />
+    <ClCompile Include="src\day-23.cpp" />
+    <ClCompile Include="src\day-24.cpp" />
+    <ClCompile Include="src\day-25.cpp" />
+    <ClCompile Include="src\day-3.cpp" />
+    <ClCompile Include="src\day-4.cpp" />
+    <ClCompile Include="src\day-5.cpp" />
+    <ClCompile Include="src\day-6.cpp" />
+    <ClCompile Include="src\day-7.cpp" />
+    <ClCompile Include="src\day-8.cpp" />
+    <ClCompile Include="src\day-9.cpp" />
     <ClInclude Include="include\mdspan.hpp" />
     <ClInclude Include="include\problem.hpp" />
     <ClInclude Include="include\stdafx.h" />
@@ -104,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aoc.cpp" />
+    <ClCompile Include="src\day-18.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -116,7 +125,16 @@
     <Text Include="day-14.txt" />
     <Text Include="day-15.txt" />
     <Text Include="day-16.txt" />
+    <Text Include="day-17.txt" />
+    <Text Include="day-18.txt" />
+    <Text Include="day-19.txt" />
     <Text Include="day-2.txt" />
+    <Text Include="day-20.txt" />
+    <Text Include="day-21.txt" />
+    <Text Include="day-22.txt" />
+    <Text Include="day-23.txt" />
+    <Text Include="day-24.txt" />
+    <Text Include="day-25.txt" />
     <Text Include="day-3.txt" />
     <Text Include="day-4.txt" />
     <Text Include="day-5.txt" />

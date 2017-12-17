@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -48,3 +48,9 @@ protected:
 		return std::to_string(instruction_count);
 	}
 };
+
+template<>
+void solve<advent_day::day_5>() {
+	advent_5 a;
+	a.solve();
+}

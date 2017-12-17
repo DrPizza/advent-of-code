@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MDSPAN_HPP
+#define MDSPAN_HPP
 
 #if !defined(_STL_EXTRA_DISABLED_WARNINGS)
 #	define _STL_EXTRA_DISABLED_WARNINGS 4061 4324 4365 4514 4571 4582 4583 4623 4625 4626 4710 4774 4820 4987 5026 5027 5039
@@ -594,3 +595,5 @@ namespace md
 	template<typename T>
 	constexpr bool is_slice_v = is_slice<T>::value;
 }
+
+#endif

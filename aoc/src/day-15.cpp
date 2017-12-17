@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -78,3 +78,9 @@ struct advent_15 : problem
 		return std::to_string(pairs);
 	}
 };
+
+template<>
+void solve<advent_day::day_15>() {
+	advent_15 a;
+	a.solve();
+}

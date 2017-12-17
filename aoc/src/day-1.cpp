@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -39,3 +39,9 @@ protected:
 		return std::to_string(core(code.size() / 2));
 	}
 };
+
+template<>
+void solve<advent_day::day_1>() {
+	advent_1 a;
+	a.solve();
+}

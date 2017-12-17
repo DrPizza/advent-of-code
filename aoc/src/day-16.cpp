@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -82,9 +82,9 @@ struct advent_16 : problem
 	}
 
 	std::map<std::size_t, std::string> generate_all_permutations() {
-		const std::string original = "abcdefghijklmnop";
 		std::map<std::size_t, std::string> permutations;
 		std::iota(std::begin(dancers), std::end(dancers), 'a');
+		const std::string original = dancers;
 		do {
 			permutations[permutations.size()] = dancers;
 			for(const auto& m : moves) {
@@ -100,3 +100,9 @@ struct advent_16 : problem
 		return permutations[remainder];
 	}
 };
+
+template<>
+void solve<advent_day::day_16>() {
+	advent_16 a;
+	a.solve();
+}

@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -114,3 +114,9 @@ protected:
 		return std::to_string(gsl::narrow<std::size_t>(next_highest));
 	}
 };
+
+template<>
+void solve<advent_day::day_3>() {
+	advent_3 a;
+	a.solve();
+}

@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -110,3 +110,9 @@ struct advent_8 : problem
 		return std::to_string(highest_ever);
 	}
 };
+
+template<>
+void solve<advent_day::day_8>() {
+	advent_8 a;
+	a.solve();
+}

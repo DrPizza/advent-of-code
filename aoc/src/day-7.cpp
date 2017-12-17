@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -99,3 +99,9 @@ protected:
 		__assume(0);
 	}
 };
+
+template<>
+void solve<advent_day::day_7>() {
+	advent_7 a;
+	a.solve();
+}

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UTILITY_HPP
+#define UTILITY_HPP
 
 #include <functional>
 #include <iterator>
@@ -232,3 +233,5 @@ T transform_reduce(InIt first, InIt last, T init, Red&& red, Trans&& trans) {
 	}
 	return result;
 }
+
+#endif

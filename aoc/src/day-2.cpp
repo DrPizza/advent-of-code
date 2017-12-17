@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 
@@ -63,3 +63,9 @@ protected:
 		return std::to_string(running_sum);
 	}
 };
+
+template<>
+void solve<advent_day::day_2>() {
+	advent_2 a;
+	a.solve();
+}

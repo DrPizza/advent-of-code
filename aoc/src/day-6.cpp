@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -64,3 +64,9 @@ protected:
 		return std::to_string(cycle_length);
 	}
 };
+
+template<>
+void solve<advent_day::day_6>() {
+	advent_6 a;
+	a.solve();
+}

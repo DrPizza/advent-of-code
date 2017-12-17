@@ -1,4 +1,4 @@
-#pragma once
+#include "stdafx.h"
 
 #include "problem.hpp"
 #include "utility.hpp"
@@ -118,3 +118,9 @@ struct advent_14 : problem
 		return std::to_string(regions);
 	}
 };
+
+template<>
+void solve<advent_day::day_14>() {
+	advent_14 a;
+	a.solve();
+}
