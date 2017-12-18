@@ -38,111 +38,111 @@
     <ClCompile Include="src\aoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\day-1.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-2.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-3.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-4.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-5.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-6.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-7.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-8.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-9.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-10.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-11.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-12.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-13.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-14.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-15.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-16.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-17.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-18.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-19.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-20.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-21.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-22.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-23.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-24.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\day-25.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\problem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-1.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-2.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-3.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-4.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-5.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-6.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-7.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-8.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-9.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-10.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-11.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-12.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-13.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-14.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-15.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-16.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-17.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-18.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-19.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-20.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-21.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-22.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-23.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-24.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2017\day-25.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="day-8.txt" />
-    <Text Include="day-7.txt" />
-    <Text Include="day-1.txt" />
-    <Text Include="day-2.txt" />
-    <Text Include="day-3.txt" />
-    <Text Include="day-4.txt" />
-    <Text Include="day-5.txt" />
-    <Text Include="day-6.txt" />
     <Text Include="include\day-9.txt" />
-    <Text Include="day-9.txt" />
-    <Text Include="day-10.txt" />
-    <Text Include="day-11.txt" />
-    <Text Include="day-12.txt" />
-    <Text Include="day-13.txt" />
-    <Text Include="day-14.txt" />
-    <Text Include="day-15.txt" />
-    <Text Include="day-16.txt" />
-    <Text Include="day-17.txt" />
-    <Text Include="day-18.txt" />
-    <Text Include="day-19.txt" />
-    <Text Include="day-20.txt" />
-    <Text Include="day-21.txt" />
-    <Text Include="day-22.txt" />
-    <Text Include="day-23.txt" />
-    <Text Include="day-24.txt" />
-    <Text Include="day-25.txt" />
+    <Text Include="input\2017\day-1.txt" />
+    <Text Include="input\2017\day-2.txt" />
+    <Text Include="input\2017\day-3.txt" />
+    <Text Include="input\2017\day-4.txt" />
+    <Text Include="input\2017\day-5.txt" />
+    <Text Include="input\2017\day-6.txt" />
+    <Text Include="input\2017\day-7.txt" />
+    <Text Include="input\2017\day-8.txt" />
+    <Text Include="input\2017\day-9.txt" />
+    <Text Include="input\2017\day-10.txt" />
+    <Text Include="input\2017\day-11.txt" />
+    <Text Include="input\2017\day-12.txt" />
+    <Text Include="input\2017\day-13.txt" />
+    <Text Include="input\2017\day-14.txt" />
+    <Text Include="input\2017\day-15.txt" />
+    <Text Include="input\2017\day-16.txt" />
+    <Text Include="input\2017\day-17.txt" />
+    <Text Include="input\2017\day-18.txt" />
+    <Text Include="input\2017\day-19.txt" />
+    <Text Include="input\2017\day-20.txt" />
+    <Text Include="input\2017\day-21.txt" />
+    <Text Include="input\2017\day-22.txt" />
+    <Text Include="input\2017\day-23.txt" />
+    <Text Include="input\2017\day-24.txt" />
+    <Text Include="input\2017\day-25.txt" />
   </ItemGroup>
 </Project>

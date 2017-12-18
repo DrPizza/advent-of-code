@@ -22,7 +22,7 @@ struct advent_18 : problem
 	std::vector<std::string> raw_instructions;
 
 	void prepare_input() override {
-		std::ifstream fin("day-18.txt");
+		std::ifstream fin("input/2017/day-18.txt");
 		for(std::string line; std::getline(fin, line); ) {
 			raw_instructions.push_back(line);
 		}
@@ -300,20 +300,21 @@ struct advent_18 : problem
 		cpu[0].input_port = &cpu[1].output_port;
 		cpu[1].input_port = &cpu[0].output_port;
 
-		while(cpu[0].single_step() || cpu[1].single_step()) {
+		do {
 			while(cpu[0].single_step()) {
 				;
 			}
 			while(cpu[1].single_step()) {
 				;
 			}
-		}
+		} while(cpu[0].single_step() || cpu[1].single_step());
+
 		return std::to_string(cpu[1].send_count);
 	}
 };
 
 template<>
-void solve<advent_day::day_18>() {
+void solve<advent_year::year_2017, advent_day::day_18>() {
 	advent_18 a;
 	a.solve();
 }

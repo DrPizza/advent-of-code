@@ -35,7 +35,7 @@ struct advent_16 : problem
 	std::string raw_commands;
 
 	void prepare_input() override {
-		std::ifstream fin("day-16.txt");
+		std::ifstream fin("input/2017/day-16.txt");
 		std::getline(fin, raw_commands);
 	}
 
@@ -101,7 +101,7 @@ struct advent_16 : problem
 };
 
 template<>
-void solve<advent_day::day_16>() {
+void solve<advent_year::year_2017, advent_day::day_16>() {
 	advent_16 a;
 	a.solve();
 }

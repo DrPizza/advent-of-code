@@ -16,7 +16,7 @@ protected:
 	std::vector<std::string> lines;
 
 	void prepare_input() override {
-		std::ifstream fin("day-4.txt");
+		std::ifstream fin("input/2017/day-4.txt");
 		for(std::string line; std::getline(fin, line);) {
 			lines.push_back(line);
 		}
@@ -50,7 +50,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_4>() {
+void solve<advent_year::year_2017, advent_day::day_4>() {
 	advent_4 a;
 	a.solve();
 }

@@ -20,7 +20,7 @@ protected:
 	memory_type memory;
 
 	void prepare_input() override {
-		std::ifstream fin("day-6.txt");
+		std::ifstream fin("input/2017/day-6.txt");
 		std::string line;
 		std::getline(fin, line);
 
@@ -66,7 +66,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_6>() {
+void solve<advent_year::year_2017, advent_day::day_6>() {
 	advent_6 a;
 	a.solve();
 }

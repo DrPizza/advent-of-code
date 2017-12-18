@@ -17,7 +17,7 @@ struct advent_12 : problem
 	disjoint_set<std::size_t> ds;
 
 	void prepare_input() override {
-		std::ifstream fin("day-12.txt");
+		std::ifstream fin("input/2017/day-12.txt");
 		for(std::string line; std::getline(fin, line); ) {
 			std::vector<std::string> fragments;
 			boost::split(fragments, line, [](char c) { return c == ' '; });
@@ -37,7 +37,7 @@ struct advent_12 : problem
 };
 
 template<>
-void solve<advent_day::day_12>() {
+void solve<advent_year::year_2017, advent_day::day_12>() {
 	advent_12 a;
 	a.solve();
 }

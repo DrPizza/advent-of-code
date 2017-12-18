@@ -43,7 +43,7 @@ struct advent_11 : problem
 	std::vector<direction> directions;
 
 	void prepare_input() override {
-		std::ifstream fin("day-11.txt");
+		std::ifstream fin("input/2017/day-11.txt");
 		std::string line;
 		std::getline(fin, line);
 		std::vector<std::string> raw_directions;
@@ -96,7 +96,7 @@ struct advent_11 : problem
 };
 
 template<>
-void solve<advent_day::day_11>() {
+void solve<advent_year::year_2017, advent_day::day_11>() {
 	advent_11 a;
 	a.solve();
 }

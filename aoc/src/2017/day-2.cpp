@@ -26,7 +26,7 @@ protected:
 		//                })
 		//);
 
-		std::ifstream fin("day-2.txt");
+		std::ifstream fin("input/2017/day-2.txt");
 		for(std::string line; std::getline(fin, line);) {
 			std::vector<std::string> cells;
 			boost::split(cells, line, [](char c) { return c == '\t'; });
@@ -65,7 +65,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_2>() {
+void solve<advent_year::year_2017, advent_day::day_2>() {
 	advent_2 a;
 	a.solve();
 }

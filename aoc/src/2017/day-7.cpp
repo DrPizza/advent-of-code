@@ -49,7 +49,7 @@ protected:
 	}
 
 	void prepare_input() override {
-		std::ifstream fin("day-7.txt");
+		std::ifstream fin("input/2017/day-7.txt");
 		std::regex pattern(R"(([[:lower:]]+) \(([[:digit:]]+)\)( -> (.*))?)");
 		std::regex child_pattern(R"(([[:lower:]]+)(, )?)");
 		for(std::string line; std::getline(fin, line);) {
@@ -101,7 +101,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_7>() {
+void solve<advent_year::year_2017, advent_day::day_7>() {
 	advent_7 a;
 	a.solve();
 }

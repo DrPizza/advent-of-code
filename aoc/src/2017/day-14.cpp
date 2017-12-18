@@ -55,7 +55,7 @@ struct advent_14 : problem
 	std::size_t set_bits = 0;
 
 	void prepare_input() override {
-		std::ifstream fin("day-14.txt");
+		std::ifstream fin("input/2017/day-14.txt");
 		std::getline(fin, key_string);
 	}
 
@@ -120,7 +120,7 @@ struct advent_14 : problem
 };
 
 template<>
-void solve<advent_day::day_14>() {
+void solve<advent_year::year_2017, advent_day::day_14>() {
 	advent_14 a;
 	a.solve();
 }

@@ -15,7 +15,7 @@ protected:
 	std::ptrdiff_t target = 0;
 
 	void prepare_input() override {
-		std::ifstream fin("day-3.txt");
+		std::ifstream fin("input/2017/day-3.txt");
 		std::string line;
 		std::getline(fin, line);
 		target = std::stoll(line);
@@ -116,7 +116,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_3>() {
+void solve<advent_year::year_2017, advent_day::day_3>() {
 	advent_3 a;
 	a.solve();
 }

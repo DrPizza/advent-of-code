@@ -13,7 +13,7 @@ protected:
 	std::string code;
 
 	void prepare_input() override {
-		std::ifstream fin("day-1.txt");
+		std::ifstream fin("input/2017/day-1.txt");
 		std::getline(fin, code);
 	}
 
@@ -41,7 +41,7 @@ protected:
 };
 
 template<>
-void solve<advent_day::day_1>() {
+void solve<advent_year::year_2017, advent_day::day_1>() {
 	advent_1 a;
 	a.solve();
 }

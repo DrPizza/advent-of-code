@@ -12,7 +12,7 @@ struct advent_9 : problem {
 	std::string stream;
 
 	void prepare_input() override {
-		std::ifstream fin("day-9.txt");
+		std::ifstream fin("input/2017/day-9.txt");
 		std::getline(fin, stream);
 	}
 
@@ -75,7 +75,7 @@ struct advent_9 : problem {
 };
 
 template<>
-void solve<advent_day::day_9>() {
+void solve<advent_year::year_2017, advent_day::day_9>() {
 	advent_9 a;
 	a.solve();
 }

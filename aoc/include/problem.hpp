@@ -44,6 +44,13 @@ private:
 	std::size_t day;
 };
 
+enum struct advent_year
+{
+	year_2015,
+	year_2016,
+	year_2017,
+};
+
 enum struct advent_day
 {
 	day_1,
@@ -73,7 +80,7 @@ enum struct advent_day
 	day_25
 };
 
-template<advent_day day>
+template<advent_year year, advent_day day>
 inline void solve();
 
 #endif

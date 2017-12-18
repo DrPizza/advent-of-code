@@ -12,20 +12,20 @@
 #include <chrono>
 #include <boost/algorithm/string.hpp>
 
-struct advent_20 : problem
+struct advent_24 : problem
 {
-	advent_20() noexcept : problem(20) {
+	advent_24() noexcept : problem(24) {
 	}
 
 	void prepare_input() override {
-		std::ifstream fin("day-20.txt");
+		std::ifstream fin("input/2017/day-24.txt");
 		std::string line;
 		std::getline(fin, line);
 	}
 };
 
 template<>
-void solve<advent_day::day_20>() {
-	advent_20 a;
+void solve<advent_year::year_2017, advent_day::day_24>() {
+	advent_24 a;
 	a.solve();
 }
