@@ -2,19 +2,11 @@
 #define PROBLEM_HPP
 
 #include <gsl/gsl>
-#include <iostream>
 #include <string>
 
 struct problem
 {
-	void solve() {
-		std::cout << "advent of code 2017 day " << day << std::endl;
-		prepare_input();
-		precompute();
-		std::cout << "\tpart 1: " << part_1() << std::endl;
-		tidy_up();
-		std::cout << "\tpart 2: " << part_2() << std::endl;
-	}
+	void solve();
 
 	problem(std::size_t day_) noexcept : day(day_) {
 	}

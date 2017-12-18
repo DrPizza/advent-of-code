@@ -16,4 +16,16 @@ struct advent_24 : problem
 {
 	advent_24() noexcept : problem(24) {
 	}
+
+	void prepare_input() override {
+		std::ifstream fin("day-24.txt");
+		std::string line;
+		std::getline(fin, line);
+	}
 };
+
+template<>
+void solve<advent_day::day_24>() {
+	advent_24 a;
+	a.solve();
+}

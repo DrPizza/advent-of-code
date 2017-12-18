@@ -113,6 +113,9 @@
     <ClCompile Include="src\day-25.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\problem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="day-8.txt" />

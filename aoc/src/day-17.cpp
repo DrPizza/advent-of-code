@@ -41,7 +41,7 @@ struct advent_17 : problem
 	std::string part_2() override {
 		std::size_t current_position = 0;
 		std::size_t after_zero = 0;
-		for(std::size_t i = 1; i <= 50000000; ++i) {
+		for(std::size_t i = 1; i <= 50'000'000; ++i) {
 			current_position = ((current_position + steps) % i) + 1ui64;
 			if(current_position == 1) {
 				after_zero = i;
