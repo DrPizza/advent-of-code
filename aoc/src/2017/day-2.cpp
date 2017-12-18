@@ -6,9 +6,9 @@
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_2 : problem
+struct advent_2017_2 : problem
 {
-	advent_2() noexcept : problem(2) {
+	advent_2017_2() noexcept : problem(2017, 2) {
 	}
 
 	using row         = std::vector<std::size_t>;
@@ -66,6 +66,6 @@ protected:
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_2>() {
-	advent_2 a;
+	advent_2017_2 a;
 	a.solve();
 }

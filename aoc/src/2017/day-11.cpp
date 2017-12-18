@@ -7,9 +7,9 @@
 #include <unordered_map>
 #include <boost/algorithm/string.hpp>
 
-struct advent_11 : problem
+struct advent_2017_11 : problem
 {
-	advent_11() noexcept : problem(11) {
+	advent_2017_11() noexcept : problem(2017, 11) {
 	}
 
 	enum direction
@@ -97,6 +97,6 @@ struct advent_11 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_11>() {
-	advent_11 a;
+	advent_2017_11 a;
 	a.solve();
 }

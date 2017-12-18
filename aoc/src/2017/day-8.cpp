@@ -5,9 +5,9 @@
 #include <fstream>
 #include <unordered_map>
 
-struct advent_8 : problem
+struct advent_2017_8 : problem
 {
-	advent_8() noexcept : problem(8) {
+	advent_2017_8() noexcept : problem(2017, 8) {
 	}
 
 	enum operation
@@ -113,6 +113,6 @@ struct advent_8 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_8>() {
-	advent_8 a;
+	advent_2017_8 a;
 	a.solve();
 }

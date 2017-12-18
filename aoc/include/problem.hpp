@@ -8,7 +8,7 @@ struct problem
 {
 	void solve();
 
-	problem(std::size_t day_) noexcept : day(day_) {
+	problem(std::size_t year_, std::size_t day_) noexcept : year(year_), day(day_) {
 	}
 
 	problem(const problem&) = default;
@@ -41,6 +41,7 @@ protected:
 	}
 
 private:
+	std::size_t year;
 	std::size_t day;
 };
 

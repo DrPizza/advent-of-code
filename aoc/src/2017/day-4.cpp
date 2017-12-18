@@ -7,9 +7,9 @@
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_4 : problem
+struct advent_2017_4 : problem
 {
-	advent_4() noexcept : problem(4) {
+	advent_2017_4() noexcept : problem(2017, 4) {
 	}
 
 protected:
@@ -51,6 +51,6 @@ protected:
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_4>() {
-	advent_4 a;
+	advent_2017_4 a;
 	a.solve();
 }

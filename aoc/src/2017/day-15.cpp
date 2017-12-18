@@ -11,9 +11,9 @@
 #include <numeric>
 #include <boost/algorithm/string.hpp>
 
-struct advent_15 : problem
+struct advent_2017_15 : problem
 {
-	advent_15() noexcept : problem(15) {
+	advent_2017_15() noexcept : problem(2017, 15) {
 	}
 
 	struct generator
@@ -81,6 +81,6 @@ struct advent_15 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_15>() {
-	advent_15 a;
+	advent_2017_15 a;
 	a.solve();
 }

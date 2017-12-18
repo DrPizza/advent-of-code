@@ -12,9 +12,9 @@
 #include <chrono>
 #include <boost/algorithm/string.hpp>
 
-struct advent_24 : problem
+struct advent_2017_24 : problem
 {
-	advent_24() noexcept : problem(24) {
+	advent_2017_24() noexcept : problem(2017, 24) {
 	}
 
 	void prepare_input() override {
@@ -26,6 +26,6 @@ struct advent_24 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_24>() {
-	advent_24 a;
+	advent_2017_24 a;
 	a.solve();
 }

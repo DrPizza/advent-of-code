@@ -4,9 +4,9 @@
 
 #include <fstream>
 
-struct advent_25 : problem
+struct advent_2015_25 : problem
 {
-	advent_25() noexcept : problem(25) {
+	advent_2015_25() noexcept : problem(2015, 25) {
 	}
 
 protected:
@@ -19,6 +19,6 @@ protected:
 
 template<>
 void solve<advent_year::year_2015, advent_day::day_25>() {
-	advent_25 a;
+	advent_2015_25 a;
 	a.solve();
 }

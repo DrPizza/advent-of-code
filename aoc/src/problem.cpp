@@ -19,7 +19,7 @@ std::tuple<Durations...> break_down_durations(DurationIn d) noexcept {
 }
 
 void problem::solve() {
-	std::cout << "advent of code 2017 day " << day << std::endl;
+	std::cout << "advent of code " << year << " day " << day << std::endl;
 	prepare_input();
 	precompute();
 	const auto run_part = [&, this](std::size_t part, auto fn) {

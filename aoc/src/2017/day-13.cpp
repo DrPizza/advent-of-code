@@ -10,9 +10,9 @@
 #include <numeric>
 #include <boost/algorithm/string.hpp>
 
-struct advent_13 : problem
+struct advent_2017_13 : problem
 {
-	advent_13() noexcept : problem(13) {
+	advent_2017_13() noexcept : problem(2017, 13) {
 	}
 
 	std::unordered_map<std::size_t, std::size_t> firewall;
@@ -64,6 +64,6 @@ struct advent_13 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_13>() {
-	advent_13 a;
+	advent_2017_13 a;
 	a.solve();
 }

@@ -9,9 +9,9 @@
 #include <unordered_set>
 #include <boost/algorithm/string.hpp>
 
-struct advent_12 : problem
+struct advent_2017_12 : problem
 {
-	advent_12() noexcept : problem(12) {
+	advent_2017_12() noexcept : problem(2017, 12) {
 	}
 
 	disjoint_set<std::size_t> ds;
@@ -38,6 +38,6 @@ struct advent_12 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_12>() {
-	advent_12 a;
+	advent_2017_12 a;
 	a.solve();
 }

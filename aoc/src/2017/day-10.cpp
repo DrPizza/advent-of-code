@@ -12,9 +12,9 @@
 #include <type_traits>
 #include <boost/algorithm/string.hpp>
 
-struct advent_10 : problem
+struct advent_2017_10 : problem
 {
-	advent_10() noexcept : problem(10) {
+	advent_2017_10() noexcept : problem(2017, 10) {
 	}
 
 	std::string raw_input;
@@ -77,6 +77,6 @@ struct advent_10 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_10>() {
-	advent_10 a;
+	advent_2017_10 a;
 	a.solve();
 }

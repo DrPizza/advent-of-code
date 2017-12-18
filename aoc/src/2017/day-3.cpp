@@ -6,9 +6,9 @@
 #include <unordered_map>
 #include <utility>
 
-struct advent_3 : problem
+struct advent_2017_3 : problem
 {
-	advent_3() noexcept : problem(3) {
+	advent_2017_3() noexcept : problem(2017, 3) {
 	}
 
 protected:
@@ -117,6 +117,6 @@ protected:
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_3>() {
-	advent_3 a;
+	advent_2017_3 a;
 	a.solve();
 }

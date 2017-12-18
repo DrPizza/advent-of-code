@@ -12,9 +12,9 @@
 #include <chrono>
 #include <boost/algorithm/string.hpp>
 
-struct advent_17 : problem
+struct advent_2017_17 : problem
 {
-	advent_17() noexcept : problem(17) {
+	advent_2017_17() noexcept : problem(2017, 17) {
 	}
 
 	std::size_t steps = 0;
@@ -53,6 +53,6 @@ struct advent_17 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_17>() {
-	advent_17 a;
+	advent_2017_17 a;
 	a.solve();
 }

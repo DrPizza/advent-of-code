@@ -14,9 +14,9 @@
 #include <deque>
 #include <boost/algorithm/string.hpp>
 
-struct advent_18 : problem
+struct advent_2017_18 : problem
 {
-	advent_18() noexcept : problem(18) {
+	advent_2017_18() noexcept : problem(2017, 18) {
 	}
 
 	std::vector<std::string> raw_instructions;
@@ -315,6 +315,6 @@ struct advent_18 : problem
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_18>() {
-	advent_18 a;
+	advent_2017_18 a;
 	a.solve();
 }

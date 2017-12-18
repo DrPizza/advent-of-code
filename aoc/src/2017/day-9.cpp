@@ -5,8 +5,9 @@
 #include <fstream>
 #include <unordered_map>
 
-struct advent_9 : problem {
-	advent_9() noexcept : problem(9) {
+struct advent_2017_9 : problem
+{
+	advent_2017_9() noexcept : problem(2017, 9) {
 	}
 
 	std::string stream;
@@ -76,6 +77,6 @@ struct advent_9 : problem {
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_9>() {
-	advent_9 a;
+	advent_2017_9 a;
 	a.solve();
 }

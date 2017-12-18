@@ -9,9 +9,9 @@
 
 #include <boost/algorithm/string.hpp>
 
-struct advent_6 : problem
+struct advent_2017_6 : problem
 {
-	advent_6() noexcept : problem(6) {
+	advent_2017_6() noexcept : problem(2017, 6) {
 	}
 
 	using memory_type = std::vector<std::size_t>;
@@ -67,6 +67,6 @@ protected:
 
 template<>
 void solve<advent_year::year_2017, advent_day::day_6>() {
-	advent_6 a;
+	advent_2017_6 a;
 	a.solve();
 }
