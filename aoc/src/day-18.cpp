@@ -28,10 +28,10 @@ struct advent_18 : problem
 		}
 	}
 
-	using reg     = char;
-	using operand = std::variant<reg, std::ptrdiff_t>;
+	using reg           = char;
+	using operand       = std::variant<reg, std::ptrdiff_t>;
 	using register_file = std::unordered_map<char, std::ptrdiff_t>;
-	using speaker = std::deque<std::ptrdiff_t>;
+	using speaker       = std::deque<std::ptrdiff_t>;
 
 	static std::ptrdiff_t resolve_operand(operand op, register_file& registers) {
 		if(std::holds_alternative<reg>(op)) {
@@ -161,6 +161,8 @@ struct advent_18 : problem
 		}
 	};
 
+	using instruction_ptr = std::unique_ptr<instruction>;
+
 	reg parse_reg(const std::string& ins) {
 		return ins[0];
 	}
@@ -177,47 +179,47 @@ struct advent_18 : problem
 		__assume(0);
 	}
 
-	std::unique_ptr<instruction> parse_snd(const std::string& ins) {
+	instruction_ptr parse_snd(const std::string& ins) {
 		reg r = parse_reg(ins);
 		return std::make_unique<snd>(r);
 	}
 
-	std::unique_ptr<instruction> parse_set(const std::string& ins) {
-		reg r = parse_reg(ins.substr(0, 1));
-		operand o = parse_operand(ins.substr(2));
+	instruction_ptr parse_set(const std::string& ins) {
+		reg     r = parse_reg    (ins.substr(0, ins.find(' ')));
+		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
 		return std::make_unique<set>(r, o);
 	}
 
-	std::unique_ptr<instruction> parse_add(const std::string& ins) {
-		reg r = parse_reg(ins.substr(0, 1));
-		operand o = parse_operand(ins.substr(2));
+	instruction_ptr parse_add(const std::string& ins) {
+		reg     r = parse_reg    (ins.substr(0, ins.find(' ')));
+		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
 		return std::make_unique<add>(r, o);
 	}
 
-	std::unique_ptr<instruction> parse_mul(const std::string& ins) {
-		reg r = parse_reg(ins.substr(0, 1));
-		operand o = parse_operand(ins.substr(2));
+	instruction_ptr parse_mul(const std::string& ins) {
+		reg     r = parse_reg    (ins.substr(0, ins.find(' ')));
+		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
 		return std::make_unique<mul>(r, o);
 	}
 
-	std::unique_ptr<instruction> parse_mod(const std::string& ins) {
-		reg r = parse_reg(ins.substr(0, 1));
-		operand o = parse_operand(ins.substr(2));
+	instruction_ptr parse_mod(const std::string& ins) {
+		reg     r = parse_reg    (ins.substr(0, ins.find(' ')));
+		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
 		return std::make_unique<mod>(r, o);
 	}
 
-	std::unique_ptr<instruction> parse_rcv(const std::string& ins) {
+	instruction_ptr parse_rcv(const std::string& ins) {
 		reg r = parse_reg(ins);
 		return std::make_unique<rcv>(r);
 	}
 
-	std::unique_ptr<instruction> parse_jgz(const std::string& ins) {
+	instruction_ptr parse_jgz(const std::string& ins) {
 		operand o1 = parse_operand(ins.substr(0, ins.find(' ')));
 		operand o2 = parse_operand(ins.substr(ins.find(' ') + 1));
 		return std::make_unique<jgz>(o1, o2);
 	}
 
-	std::unique_ptr<instruction> parse_instruction(const std::string ins) {
+	instruction_ptr parse_instruction(const std::string ins) {
 		const std::string opcode = ins.substr(0, 3);
 		if(opcode == "snd") {
 			return parse_snd(ins.substr(4));
@@ -237,7 +239,39 @@ struct advent_18 : problem
 		__assume(0);
 	}
 
-	std::vector<std::unique_ptr<instruction>> instructions;
+	using program = std::vector<instruction_ptr>;
+
+	program instructions;
+
+	struct processor
+	{
+		program* instructions;
+		std::size_t instruction_pointer = 0;
+		register_file registers;
+		speaker* input_port = nullptr;
+		speaker output_port;
+		std::size_t send_count = 0;
+
+		processor(program& instructions_, std::ptrdiff_t id) : instructions(&instructions_) {
+			registers['p'] = id;
+		}
+
+		bool single_step() {
+			if(instruction_pointer >= instructions->size()) {
+				return false;
+			}
+			const instruction_ptr& ins = (*instructions)[instruction_pointer];
+			const std::ptrdiff_t delta = ins->execute(registers, output_port, *input_port);
+			if(dynamic_cast<snd*>(ins.get()) != nullptr) {
+				++send_count;
+			}
+			if(delta == 0) {
+				return false;
+			}
+			instruction_pointer += delta;
+			return true;
+		}
+	};
 
 	void precompute() override {
 		for(const std::string& line : raw_instructions) {
@@ -246,54 +280,35 @@ struct advent_18 : problem
 	}
 
 	std::string part_1() override {
-		std::size_t instruction_pointer = 0;
-		register_file registers;
-		speaker spk;
-		while(instruction_pointer < instructions.size()) {
-			const std::unique_ptr<instruction>& ins = instructions[instruction_pointer];
+		processor cpu = { processor(instructions, 0) };
+		cpu.input_port = &cpu.output_port;
+
+		do {
+			const instruction_ptr& ins = (*cpu.instructions)[cpu.instruction_pointer];
 			const rcv* r = dynamic_cast<const rcv*>(ins.get());
-			if(r != nullptr && registers[r->op1] != 0) {
-				return std::to_string(spk[0]);
+			if(r != nullptr && cpu.registers[r->op1] != 0) {
+				return std::to_string(cpu.output_port[0]);
 			}
-			instruction_pointer += ins->execute(registers, spk, spk);
-		}
+
+		} while(cpu.single_step());
+
 		__assume(0);
 	}
 
 	std::string part_2() override {
-		std::size_t instruction_pointer[2] = { 0, 0 };
-		register_file registers[2];
-		registers[0]['p'] = 0;
-		registers[1]['p'] = 1;
-		speaker spk[2];
+		processor cpu[2] = { processor(instructions, 0), processor(instructions, 1) };
+		cpu[0].input_port = &cpu[1].output_port;
+		cpu[1].input_port = &cpu[0].output_port;
 
-		std::size_t send_count[2] = { 0, 0 };
-
-		const auto single_step = [&](std::size_t i) {
-			if(instruction_pointer[i] >= instructions.size()) {
-				return false;
-			}
-			const std::unique_ptr<instruction>& ins = instructions[instruction_pointer[i]];
-			std::ptrdiff_t delta = ins->execute(registers[i], spk[1 - i], spk[i]);
-			if(dynamic_cast<snd*>(ins.get()) != nullptr) {
-				++send_count[i];
-			}
-			if(delta == 0) {
-				return false;
-			}
-			instruction_pointer[i] += delta;
-			return true;
-		};
-
-		while(single_step(0) || single_step(1)) {
-			while(single_step(0)) {
+		while(cpu[0].single_step() || cpu[1].single_step()) {
+			while(cpu[0].single_step()) {
 				;
 			}
-			while(single_step(1)) {
+			while(cpu[1].single_step()) {
 				;
 			}
 		}
-		return std::to_string(send_count[1]);
+		return std::to_string(cpu[1].send_count);
 	}
 };
 
