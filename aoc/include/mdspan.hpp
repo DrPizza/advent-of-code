@@ -155,8 +155,8 @@ namespace md
 			}
 		}
 
-		constexpr size_t size() const noexcept {
-			return static_cast<size_t>(accumulate(values.cbegin(), values.cend(), static_cast<index_type>(1), std::multiplies<>()));
+		constexpr std::size_t size() const noexcept {
+			return gsl::narrow<std::size_t>(accumulate(values.cbegin(), values.cend(), gsl::narrow<index_type>(1), std::multiplies<>()));
 		}
 
 		template<typename IndexType, size_t N>
@@ -309,7 +309,7 @@ namespace md
 			}
 
 			template<typename... IndexType>
-			constexpr mapping(IndexType... DynamicExtents) noexcept : mapping(std::array<index_type, sizeof...(DynamicExtents)>{ DynamicExtents... }) {
+			constexpr mapping(IndexType... DynamicExtents) noexcept : mapping(std::array<index_type, sizeof...(DynamicExtents)>{ gsl::narrow<index_type>(DynamicExtents)... }) {
 			}
 		};
 	};
@@ -317,7 +317,7 @@ namespace md
 	struct layout_left
 	{
 		template<typename Dimensions>
-		struct mapping
+		struct mapping : mapping_base<Dimensions>
 		{
 			using base_type = mapping_base<Dimensions>;
 
@@ -342,7 +342,7 @@ namespace md
 			}
 
 			template<typename... IndexType>
-			constexpr mapping(IndexType... DynamicExtents) noexcept : mapping(std::array<index_type, sizeof...(DynamicExtents)>{ DynamicExtents... }) {
+			constexpr mapping(IndexType... DynamicExtents) noexcept : mapping(std::array<index_type, sizeof...(DynamicExtents)>{ gsl::narrow<index_type>(DynamicExtents)... }) {
 			}
 		};
 	};
@@ -520,7 +520,7 @@ namespace md
 
 		template<typename... IndexType>
 		static constexpr size_t required_span_size(IndexType... DynamicExtents) {
-			return required_span_size(std::array<index_type, sizeof...(IndexType)>{ DynamicExtents... });
+			return required_span_size(std::array<index_type, sizeof...(IndexType)>{ gsl::narrow<index_type>(DynamicExtents)... });
 		}
 
 		template<typename IndexType, size_t N>

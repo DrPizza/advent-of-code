@@ -38,7 +38,7 @@ protected:
 			}
 			return true;
 		};
-		std::ptrdiff_t nice = std::count_if(std::begin(strings), std::end(strings), is_nice);
+		const std::ptrdiff_t nice = std::count_if(std::begin(strings), std::end(strings), is_nice);
 		return std::to_string(nice);
 	}
 
@@ -69,7 +69,7 @@ protected:
 			}
 			return true;
 		};
-		std::ptrdiff_t nice = std::count_if(std::begin(strings), std::end(strings), is_nice);
+		const std::ptrdiff_t nice = std::count_if(std::begin(strings), std::end(strings), is_nice);
 		return std::to_string(nice);
 	}
 };

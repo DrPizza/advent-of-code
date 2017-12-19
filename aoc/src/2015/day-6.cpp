@@ -15,7 +15,7 @@ protected:
 	using grid_shape = md::extents<1'000, 1'000>;
 	using grid_type = md::mdspan<uint32_t, grid_shape>;
 
-	enum class action
+	enum struct action
 	{
 		off,
 		toggle,
@@ -75,7 +75,7 @@ protected:
 				}
 			}
 		}
-		std::ptrdiff_t number_on = std::count(std::begin(light_span), std::end(light_span), 1ui8);
+		const std::ptrdiff_t number_on = std::count(std::begin(light_span), std::end(light_span), 1ui8);
 		return std::to_string(number_on);
 	}
 
@@ -102,7 +102,7 @@ protected:
 				}
 			}
 		}
-		std::size_t total_brightness = std::accumulate(std::begin(light_span), std::end(light_span), 0ui64);
+		const std::size_t total_brightness = std::accumulate(std::begin(light_span), std::end(light_span), 0ui64);
 		return std::to_string(total_brightness);
 	}
 };
