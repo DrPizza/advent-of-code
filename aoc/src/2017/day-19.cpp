@@ -5,13 +5,8 @@
 #include "mdspan.hpp"
 
 #include <fstream>
-#include <iomanip>
-#include <regex>
 #include <utility>
-#include <map>
 #include <numeric>
-#include <chrono>
-#include <boost/algorithm/string.hpp>
 
 struct advent_2017_19 : problem
 {
@@ -43,7 +38,7 @@ struct advent_2017_19 : problem
 		std::ptrdiff_t r, c;
 	};
 
-	bool get_next_position(position& pos, grid_type& network) {
+	bool get_next_position(position& pos, grid_type& network) noexcept {
 		if(network(pos.r, pos.c) != '+') {
 			switch(pos.dir) {
 			case direction::up:
@@ -130,7 +125,7 @@ struct advent_2017_19 : problem
 		position pos = { direction::down, 0, start };
 		do {
 			++steps;
-			char ch = network(pos.r, pos.c);
+			const char ch = network(pos.r, pos.c);
 			if(ch != '|'
 			&& ch != '+'
 			&& ch != '-') {
