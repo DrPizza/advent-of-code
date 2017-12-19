@@ -30,7 +30,6 @@ protected:
 	virtual void tidy_up() {
 	}
 
-
 	[[gsl::suppress(f .6)]]
 	virtual std::string part_1() {
 		return "";
