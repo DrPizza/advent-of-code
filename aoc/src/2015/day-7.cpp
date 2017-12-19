@@ -9,6 +9,7 @@
 #include <utility>
 
 struct component;
+using component_ptr = std::unique_ptr<component>;
 
 using wire = std::string;
 using operand = std::variant<wire, uint16_t>;
@@ -16,7 +17,7 @@ using operand = std::variant<wire, uint16_t>;
 struct circuit
 {
 	std::unordered_map<wire, uint16_t> wires;
-	std::unordered_map<wire, std::unique_ptr<component>> components;
+	std::unordered_map<wire, component_ptr> components;
 
 	uint16_t resolve_wire(wire w);
 
@@ -57,28 +58,32 @@ uint16_t circuit::resolve_wire(wire w) {
 	return wires[w];
 }
 
-struct assign : component
+struct unary_component : component 
 {
-	assign(operand value_, wire target_) : component(target_), value(value_) {
+	unary_component(operand source_, wire target_) : component(target_), source(source_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
-		return c.resolve_operand(value);
-	}
-
-	operand value;
+	operand source;
 };
 
-struct not_gate : component
+struct assign : unary_component
 {
-	not_gate(wire source_, wire target_) : component(target_), source(source_) {
+	assign(operand source_, wire target_) : unary_component(source_, target_) {
 	}
 
 	virtual uint16_t do_execute(circuit& c) override {
-		return gsl::narrow_cast<uint16_t>(~c.resolve_wire(source));
+		return c.resolve_operand(source);
+	}
+};
+
+struct not_gate : unary_component
+{
+	not_gate(operand source_, wire target_) : unary_component(source_, target_) {
 	}
 
-	wire source;
+	virtual uint16_t do_execute(circuit& c) override {
+		return gsl::narrow_cast<uint16_t>(~c.resolve_operand(source));
+	}
 };
 
 struct binary_component : component
@@ -143,8 +148,6 @@ protected:
 			raw_components.push_back(line);
 		}
 	}
-
-	using component_ptr = std::unique_ptr<component>;
 
 	operand parse_operand(const std::string& s) {
 		std::regex pattern(R"(([[:lower:]]+)|([[:digit:]]+))");
