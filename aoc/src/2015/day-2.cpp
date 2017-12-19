@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <functional>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 
