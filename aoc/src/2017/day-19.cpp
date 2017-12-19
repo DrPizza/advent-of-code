@@ -38,7 +38,7 @@ struct advent_2017_19 : problem
 		std::ptrdiff_t r, c;
 	};
 
-	bool get_next_position(position& pos, grid_type& network) noexcept {
+	bool get_next_position(position& pos, const grid_type& network) noexcept {
 		if(network(pos.r, pos.c) != '+') {
 			switch(pos.dir) {
 			case direction::up:
@@ -101,12 +101,13 @@ struct advent_2017_19 : problem
 	std::string letters;
 	std::size_t steps = 0;
 
+	[[gsl::suppress(r.5)]]
 	void precompute() override {
 		const std::size_t width = raw_map[0].size();
 		const std::size_t height = raw_map.size();
 		const std::size_t required_size = grid_type::required_span_size(width, height);
 		std::unique_ptr<char[]> data(std::make_unique<char[]>(required_size));
-		grid_type network(data.get(), width, height);
+		const grid_type network(data.get(), width, height);
 		
 		for(std::size_t i = 0; i < raw_map.size(); ++i) {
 			for(std::size_t j = 0; j < raw_map[i].size(); ++j) {

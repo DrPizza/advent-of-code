@@ -87,7 +87,7 @@ protected:
 			const std::string cooked = cook(s);
 			cooked_strings.push_back(cooked);
 		}
-		const auto add_lengths = [](std::size_t s, std::string& rhs) {
+		const auto add_lengths = [](std::size_t s, std::string& rhs) noexcept {
 			return s + rhs.size();
 		};
 		const std::size_t raw_lengths    = std::accumulate(std::begin(raw_strings   ), std::end(raw_strings   ), 0ui64, add_lengths);
@@ -102,7 +102,7 @@ protected:
 			const std::string uncooked = uncook(s);
 			uncooked_strings.push_back(uncooked);
 		}
-		const auto add_lengths = [](std::size_t s, std::string& rhs) {
+		const auto add_lengths = [](std::size_t s, std::string& rhs) noexcept {
 			return s + rhs.size();
 		};
 		const std::size_t uncooked_lengths = std::accumulate(std::begin(uncooked_strings), std::end(uncooked_strings), 0ui64, add_lengths);

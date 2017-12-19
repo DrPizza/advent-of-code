@@ -53,9 +53,10 @@ protected:
 		}
 	}
 
+	[[gsl::suppress(r.5)]]
 	std::string part_1() override {
 		std::unique_ptr<uint32_t[]> data{ std::make_unique<uint32_t[]>(1'000 * 1'000) };
-		grid_type lights{ data.get() };
+		const grid_type lights{ data.get() };
 		gsl::span<uint32_t, 1'000 * 1'000> light_span{ data.get(), 1'000 * 1'000 };
 
 		for(const command& c : commands) {
@@ -79,9 +80,10 @@ protected:
 		return std::to_string(number_on);
 	}
 
+	[[gsl::suppress(r.5)]]
 	std::string part_2() override {
 		std::unique_ptr<uint32_t[]> data{ std::make_unique<uint32_t[]>(1'000 * 1'000) };
-		grid_type lights{ data.get() };
+		const grid_type lights{ data.get() };
 		gsl::span<uint32_t, 1'000 * 1'000> light_span{ data.get(), 1'000 * 1'000 };
 
 		for(const command& c : commands) {
