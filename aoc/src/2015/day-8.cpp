@@ -100,7 +100,6 @@ protected:
 		std::vector<std::string> uncooked_strings;
 		for(const std::string& s : raw_strings) {
 			const std::string uncooked = uncook(s);
-			std::cout << "raw: " << s << " uncooked: " << uncooked << std::endl;
 			uncooked_strings.push_back(uncooked);
 		}
 		const auto add_lengths = [](std::size_t s, std::string& rhs) {
