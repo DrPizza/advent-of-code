@@ -20,7 +20,11 @@ std::tuple<Durations...> break_down_durations(DurationIn d) noexcept {
 
 void problem::solve() {
 	std::cout << "advent of code " << year << " day " << day << std::endl;
-	prepare_input();
+	const std::string file_name = "input/" + std::to_string(year) + "/day-" + std::to_string(day) + ".txt";
+	{
+		std::ifstream fin(file_name);
+		prepare_input(fin);
+	}
 	precompute();
 	const auto run_part = [&, this](std::size_t part, auto fn) {
 		const auto start = std::chrono::high_resolution_clock::now();

@@ -19,8 +19,7 @@ struct advent_2017_17 : problem
 
 	std::size_t steps = 0;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-17.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::string line;
 		std::getline(fin, line);
 		steps = std::stoull(line);

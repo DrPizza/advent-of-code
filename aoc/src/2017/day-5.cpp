@@ -13,8 +13,7 @@ struct advent_2017_5 : problem
 protected:
 	std::vector<std::ptrdiff_t> instructions;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-5.txt");
+	void prepare_input(std::ifstream& fin) override {
 		for(std::string line; std::getline(fin, line);) {
 			instructions.push_back(std::stoll(line));
 		}

@@ -44,8 +44,7 @@ struct advent_2017_15 : problem
 	std::unique_ptr<generator> a;
 	std::unique_ptr<generator> b;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-15.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::regex pattern(R"(Generator ([[:upper:]]) starts with ([[:digit:]]*))");
 		std::string line;
 		std::getline(fin, line);

@@ -10,8 +10,7 @@ struct advent_2015_13 : problem
 	}
 
 protected:
-	void prepare_input() override {
-		std::ifstream fin("input/2015/day-13.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::string line;
 		std::getline(fin, line);
 	}

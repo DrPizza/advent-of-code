@@ -32,8 +32,7 @@ struct advent_2015_3 : problem
 protected:
 	std::string directions;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2015/day-3.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, directions);
 	}
 

@@ -19,8 +19,7 @@ struct advent_2017_6 : problem
 protected:
 	memory_type memory;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-6.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::string line;
 		std::getline(fin, line);
 

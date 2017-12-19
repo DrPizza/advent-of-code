@@ -19,8 +19,7 @@ struct advent_2017_10 : problem
 
 	std::string raw_input;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-10.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, raw_input);
 	}
 

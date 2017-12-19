@@ -54,8 +54,7 @@ struct advent_2017_14 : problem
 	std::string key_string;
 	std::size_t set_bits = 0;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-14.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, key_string);
 	}
 

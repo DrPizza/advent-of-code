@@ -17,8 +17,7 @@ struct advent_2017_13 : problem
 
 	std::unordered_map<std::size_t, std::size_t> firewall;
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-13.txt");
+	void prepare_input(std::ifstream& fin) override {
 		for(std::string line; std::getline(fin, line); ) {
 			std::size_t depth = std::stoull(line.substr(0, line.find(':')));
 			std::size_t range = std::stoull(line.substr(line.find(' ')));

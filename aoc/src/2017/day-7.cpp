@@ -48,8 +48,7 @@ protected:
 		return n;
 	}
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-7.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::regex pattern(R"(([[:lower:]]+) \(([[:digit:]]+)\)( -> (.*))?)");
 		std::regex child_pattern(R"(([[:lower:]]+)(, )?)");
 		for(std::string line; std::getline(fin, line);) {

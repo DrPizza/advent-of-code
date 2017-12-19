@@ -17,8 +17,7 @@ struct advent_2017_24 : problem
 	advent_2017_24() noexcept : problem(2017, 24) {
 	}
 
-	void prepare_input() override {
-		std::ifstream fin("input/2017/day-24.txt");
+	void prepare_input(std::ifstream& fin) override {
 		std::string line;
 		std::getline(fin, line);
 	}

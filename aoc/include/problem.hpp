@@ -19,7 +19,7 @@ struct problem
 
 protected:
 	[[gsl::suppress(f .6)]]
-	virtual void prepare_input() {
+	virtual void prepare_input(std::ifstream&) {
 	}
 
 	[[gsl::suppress(f .6)]]

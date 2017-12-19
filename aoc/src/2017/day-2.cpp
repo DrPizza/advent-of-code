@@ -17,7 +17,7 @@ struct advent_2017_2 : problem
 protected:
 	spreadsheet ss;
 
-	void prepare_input() override {
+	void prepare_input(std::ifstream& fin) override {
 		//auto const ss = spreadsheet(
 		//        input | ranges::view::split(is_char('\n'))
 		//              | ranges::view::transform([](const std::string& line) -> row {
@@ -26,7 +26,6 @@ protected:
 		//                })
 		//);
 
-		std::ifstream fin("input/2017/day-2.txt");
 		for(std::string line; std::getline(fin, line);) {
 			std::vector<std::string> cells;
 			boost::split(cells, line, [](char c) { return c == '\t'; });
