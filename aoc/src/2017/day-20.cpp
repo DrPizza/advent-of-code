@@ -7,21 +7,13 @@
 #include <iomanip>
 #include <regex>
 #include <utility>
-#include <map>
 #include <numeric>
-#include <chrono>
 #include <valarray>
-#include <boost/algorithm/string.hpp>
 
 struct advent_2017_20 : problem
 {
 	advent_2017_20() noexcept : problem(2017, 20) {
 	}
-
-	struct triplet
-	{
-		std::ptrdiff_t x, y, z;
-	};
 
 	struct particle
 	{

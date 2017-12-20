@@ -4,13 +4,7 @@
 #include "utility.hpp"
 
 #include <fstream>
-#include <iomanip>
-#include <regex>
-#include <utility>
-#include <map>
-#include <numeric>
-#include <chrono>
-#include <boost/algorithm/string.hpp>
+#include <string>
 
 struct advent_2017_24 : problem
 {

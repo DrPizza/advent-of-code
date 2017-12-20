@@ -3,6 +3,7 @@
 #include "problem.hpp"
 
 #include <fstream>
+#include <string>
 
 struct advent_2015_23 : problem
 {

@@ -6,6 +6,7 @@
 #include <regex>
 #include <vector>
 #include <valarray>
+#include <string>
 
 struct advent_2015_15 : problem
 {
