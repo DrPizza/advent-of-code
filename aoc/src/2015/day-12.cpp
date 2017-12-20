@@ -73,7 +73,6 @@ protected:
 		const std::ptrdiff_t total = sum_non_red_values(data);
 		return std::to_string(total);
 	}
-
 };
 
 template<>

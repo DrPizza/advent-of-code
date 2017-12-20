@@ -18,19 +18,19 @@ struct problem
 	virtual ~problem()            = default;
 
 protected:
-	[[gsl::suppress(f .6)]]
+	[[gsl::suppress(f.6)]]
 	virtual void prepare_input(std::ifstream&) {
 	}
 
-	[[gsl::suppress(f .6)]]
+	[[gsl::suppress(f.6)]]
 	virtual void precompute() {
 	}
 
-	[[gsl::suppress(f .6)]]
+	[[gsl::suppress(f.6)]]
 	virtual void tidy_up() {
 	}
 
-	[[gsl::suppress(f .6)]]
+	[[gsl::suppress(f.6)]]
 	virtual std::string part_1() {
 		return "";
 	}

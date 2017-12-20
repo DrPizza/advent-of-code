@@ -63,7 +63,6 @@ protected:
 	std::string part_2() override {
 		return std::to_string(highest_distance);
 	}
-
 };
 
 template<>

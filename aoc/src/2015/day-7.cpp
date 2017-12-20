@@ -154,7 +154,7 @@ protected:
 		std::smatch m;
 		std::regex_search(s, m, pattern);
 		if(m[1].matched) {
-			return std::string(m[1].str());
+			return wire(m[1].str());
 		} else if(m[2].matched) {
 			return gsl::narrow<uint16_t>(std::stoul(m[2].str()));
 		}
