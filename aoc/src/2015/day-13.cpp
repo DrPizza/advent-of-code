@@ -14,7 +14,6 @@ struct advent_2015_13 : problem
 	}
 
 protected:
-protected:
 	std::vector<std::string> raw_happinesses;
 
 	void prepare_input(std::ifstream& fin) override {
