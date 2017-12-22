@@ -29,7 +29,7 @@ struct advent_2015_23 : problem
 
 	struct unary_instruction : instruction
 	{
-		unary_instruction(reg target_) : target(target_) {
+		unary_instruction(reg target_) noexcept : target(target_) {
 		}
 
 		reg target;
@@ -37,7 +37,7 @@ struct advent_2015_23 : problem
 
 	struct binary_instruction : instruction
 	{
-		binary_instruction(reg target_, std::ptrdiff_t offset_) : target(target_), offset(offset_) {
+		binary_instruction(reg target_, std::ptrdiff_t offset_) noexcept : target(target_), offset(offset_) {
 		}
 
 		reg target;
@@ -46,7 +46,7 @@ struct advent_2015_23 : problem
 
 	struct hlf : unary_instruction
 	{
-		hlf(reg target_) : unary_instruction(target_) {
+		hlf(reg target_) noexcept : unary_instruction(target_) {
 		}
 
 		std::ptrdiff_t execute(register_file& registers) override {
@@ -57,7 +57,7 @@ struct advent_2015_23 : problem
 
 	struct tpl : unary_instruction
 	{
-		tpl(reg target_) : unary_instruction(target_) {
+		tpl(reg target_) noexcept : unary_instruction(target_) {
 		}
 
 		std::ptrdiff_t execute(register_file& registers) override {
@@ -68,7 +68,7 @@ struct advent_2015_23 : problem
 
 	struct inc : unary_instruction
 	{
-		inc(reg target_) : unary_instruction(target_) {
+		inc(reg target_) noexcept : unary_instruction(target_) {
 		}
 
 		std::ptrdiff_t execute(register_file& registers) override {
@@ -79,10 +79,10 @@ struct advent_2015_23 : problem
 
 	struct jmp : instruction
 	{
-		jmp(std::ptrdiff_t offset_) : offset(offset_) {
+		jmp(std::ptrdiff_t offset_) noexcept : offset(offset_) {
 		}
 
-		std::ptrdiff_t execute(register_file&) override {
+		std::ptrdiff_t execute(register_file&) noexcept override {
 			return offset;
 		}
 
@@ -91,7 +91,7 @@ struct advent_2015_23 : problem
 
 	struct jie : binary_instruction
 	{
-		jie(reg target_, std::ptrdiff_t offset_) : binary_instruction(target_, offset_) {
+		jie(reg target_, std::ptrdiff_t offset_) noexcept : binary_instruction(target_, offset_) {
 		}
 
 		std::ptrdiff_t execute(register_file& registers) override {
@@ -104,7 +104,7 @@ struct advent_2015_23 : problem
 
 	struct jio : binary_instruction
 	{
-		jio(reg target_, std::ptrdiff_t offset_) : binary_instruction(target_, offset_) {
+		jio(reg target_, std::ptrdiff_t offset_) noexcept : binary_instruction(target_, offset_) {
 		}
 
 		std::ptrdiff_t execute(register_file& registers) override {
