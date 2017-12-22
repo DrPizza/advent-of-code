@@ -19,14 +19,15 @@ protected:
 	std::unordered_map<std::string, std::string> rewrite_rules;
 
 	using grid = std::vector<std::vector<char>>;
+	using semi_grid = std::vector<std::vector<std::string>>;
 
 	grid linear_to_grid(const std::string& linear) {
-		std::vector<std::string> semi_grid;
-		boost::split(semi_grid, linear, [](char ch) {
+		std::vector<std::string> partial_grid;
+		boost::split(partial_grid, linear, [](char ch) {
 			return ch == '/';
 		});
 		grid result;
-		for(const std::string& s : semi_grid) {
+		for(const std::string& s : partial_grid) {
 			std::vector<char> cs(std::begin(s), std::end(s));
 			result.push_back(cs);
 		}
@@ -44,11 +45,11 @@ protected:
 		return linear.substr(0, linear.size() - 1);
 	}
 
-	std::vector<std::vector<std::string>> split_grid(const std::string& in) {
+	semi_grid split_grid(const std::string& in) {
 		const std::size_t size = in.find('/');
 		const std::size_t subgrid_size = (size % 2 == 0) ? 2u : 3u;
 		const std::size_t fragment_count = (size % 2 == 0) ? size / 2 : size / 3;
-		std::vector<std::vector<std::string>> fragments;
+		semi_grid fragments;
 		fragments.resize(fragment_count);
 		for(std::vector<std::string>& v : fragments) {
 			v.resize(fragment_count);
@@ -60,19 +61,16 @@ protected:
 					for(std::size_t l = 0; l < subgrid_size; ++l) {
 						fragments[i][j] += source[k + (i * subgrid_size)][l + (j * subgrid_size)];
 					}
-					fragments[i][j] += '/';
+					if(k != subgrid_size - 1) {
+						fragments[i][j] += '/';
+					}
 				}
-			}
-		}
-		for(std::size_t i = 0; i < fragment_count; ++i) {
-			for(std::size_t j = 0; j < fragment_count; ++j) {
-				fragments[i][j] = fragments[i][j].substr(0, fragments[i][j].size() - 1);
 			}
 		}
 		return fragments;
 	}
 
-	std::string unsplit_grid(const std::vector<std::vector<std::string>>& g) {
+	std::string unsplit_grid(const semi_grid& g) {
 		std::string result;
 		for(std::size_t major_row = 0; major_row < g.size(); ++major_row) {
 			std::string row;
@@ -87,11 +85,13 @@ protected:
 						row += subgrids[major_col][sub_row][sub_col];
 					}
 				}
-				row += '/';
+				if(sub_row != subgrids[0].size() && major_row != g.size()) {
+					row += '/';
+				}
 			}
 			result += row;
 		}
-		return result.substr(0, result.size() - 1);
+		return result;
 	}
 
 	grid flip_up_down(const grid& g) {
@@ -160,6 +160,7 @@ protected:
 	std::vector<std::string> generate_variations(const std::string& s) {
 		std::vector<std::string> results;
 		auto g = linear_to_grid(s);
+		// blindly generate all the rotations and flips; duplicates will get removed by the map.
 		for(std::size_t i = 0; i < 4; ++i) {
 			results.push_back(grid_to_linear(g));
 			results.push_back(grid_to_linear(flip_up_down(g)));
@@ -189,7 +190,7 @@ protected:
 	std::string do_art(std::size_t iterations) {
 		std::string picture = initial;
 		for(std::size_t i = 0; i < iterations; ++i) {
-			auto split = split_grid(picture);
+			semi_grid split = split_grid(picture);
 			for(auto& r : split) {
 				for(auto& c : r) {
 					c = rewrite_rules[c];

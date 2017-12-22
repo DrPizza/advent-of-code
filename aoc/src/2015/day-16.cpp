@@ -56,7 +56,7 @@ protected:
 		std::vector<aunt> plausible_aunts;
 		std::copy_if(std::begin(aunts), std::end(aunts), std::back_inserter(plausible_aunts), [&](const aunt& a) {
 			for(const auto& prop : known_properties) {
-				auto it = a.properties.find(prop.first);
+				const auto it = a.properties.find(prop.first);
 				if(it != a.properties.end()) {
 					if(exact_match) {
 						if(it->second != prop.second.second) {
