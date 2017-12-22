@@ -167,7 +167,7 @@ protected:
 		}
 	};
 
-	character boss;
+	character boss = {};
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string boss_description;

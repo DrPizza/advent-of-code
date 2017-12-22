@@ -12,8 +12,8 @@ struct advent_2015_25 : problem
 	}
 
 protected:
-	std::size_t row;
-	std::size_t col;
+	std::size_t row = 0;
+	std::size_t col = 0;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string line;
@@ -28,23 +28,13 @@ protected:
 	std::size_t seed = 20'151'125;
 	std::size_t current_code = seed;
 
-	std::size_t generate_code() {
+	std::size_t generate_code() noexcept {
 		current_code = current_code * 252'533;
 		current_code = current_code % 33'554'393;
 		return current_code;
 	}
 
-	std::size_t diagonalize(std::size_t r, std::size_t c) {
-		// triangle(0) = 0
-		// triangle(1) = 1
-		// triangle(2) = 3
-		// triangle(3) = 6
-		// triangle(4) = 10
-		// 1, c = triangle(c) = c(c + 1) / 2
-		// 2, c-1 = triangle(c) - 1
-		// 3, c-2 = triangle(c) - 2
-		// r, c   = triangle(c + r - 1) - (r - 1)
-
+	std::size_t diagonalize(std::size_t r, std::size_t c) noexcept {
 		const auto triangle = [](const std::size_t x) {
 			return (x * (x + 1)) / 2;
 		};
