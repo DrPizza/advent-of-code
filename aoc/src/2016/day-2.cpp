@@ -75,7 +75,7 @@ protected:
 		return destinations[gsl::narrow_cast<int8_t>(d)][position];
 	}
 
-	char to_char(int8_t position) {
+	char to_char(int8_t position) noexcept {
 		if(position < 10) {
 			return position + '0';
 		} else {
