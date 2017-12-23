@@ -70,7 +70,6 @@ protected:
 		}
 		return password;
 	}
-
 };
 
 template<>

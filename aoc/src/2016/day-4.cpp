@@ -82,6 +82,7 @@ protected:
 				return std::to_string(r.sector);
 			}
 		}
+		__assume(0);
 	}
 };
 
