@@ -40,7 +40,7 @@ protected:
 			return abba && !bad_abba;
 		};
 
-		std::ptrdiff_t supports_tls = std::count_if(std::begin(raw_addresses), std::end(raw_addresses), tls);
+		const std::ptrdiff_t supports_tls = std::count_if(std::begin(raw_addresses), std::end(raw_addresses), tls);
 		return std::to_string(supports_tls);
 	}
 
@@ -70,7 +70,7 @@ protected:
 
 			return false;
 		};
-		std::ptrdiff_t supports_ssl = std::count_if(std::begin(raw_addresses), std::end(raw_addresses), ssl);
+		const std::ptrdiff_t supports_ssl = std::count_if(std::begin(raw_addresses), std::end(raw_addresses), ssl);
 		return std::to_string(supports_ssl);
 	}
 };

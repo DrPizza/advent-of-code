@@ -55,7 +55,7 @@ protected:
 			if(digest[0] == 0x00
 			&& digest[1] == 0x00
 			&& digest[2] <= 0x0f) {
-				std::size_t offset = gsl::narrow<std::size_t>(digest[2] & 0xf);
+				const std::size_t offset = gsl::narrow<std::size_t>(digest[2] & 0xf);
 				char c = gsl::narrow<char>((digest[3] & 0xf0) >> 4);
 				if(c < 10) {
 					c = c + '0';
