@@ -7,6 +7,7 @@
 #include <string>
 #include <variant>
 #include <unordered_map>
+#include <list>
 
 struct advent_2017_23 : problem
 {
@@ -21,8 +22,10 @@ struct advent_2017_23 : problem
 		}
 	}
 
+	struct instruction;
+
 	using reg           = char;
-	using operand       = std::variant<reg, std::ptrdiff_t>;
+	using operand       = std::variant<reg, std::ptrdiff_t, instruction*>;
 	using register_file = std::unordered_map<char, std::ptrdiff_t>;
 
 	static std::ptrdiff_t resolve_operand(operand op, register_file& registers) {
@@ -35,7 +38,14 @@ struct advent_2017_23 : problem
 	}
 
 	static std::string print_register(reg r) {
-		return std::string(1, r);
+		switch(r) {
+		case 'f':
+			return "is_prime";
+		case 'h':
+			return "total_composite";
+		default:
+			return std::string(1, r);
+		}
 	}
 
 	static std::string print_operand(operand op) {
@@ -51,6 +61,8 @@ struct advent_2017_23 : problem
 	{
 		virtual std::ptrdiff_t execute(register_file& registers) = 0;
 		virtual std::string emit_code(std::ptrdiff_t addr, std::ptrdiff_t highest_addr) = 0;
+
+		std::ptrdiff_t abs_addr = 0;
 
 		virtual ~instruction() = default;
 		instruction() = default;
@@ -74,6 +86,16 @@ struct advent_2017_23 : problem
 		operand op2;
 
 		binary_instruction(reg op1_, operand op2_) noexcept : op1(op1_), op2(op2_) {
+		}
+	};
+
+	struct ternary_instruction : instruction
+	{
+		reg op1;
+		operand op2;
+		operand op3;
+
+		ternary_instruction(reg op1_, operand op2_, operand op3_) noexcept : op1(op1_), op2(op2_), op3(op3_) {
 		}
 	};
 
@@ -104,6 +126,21 @@ struct advent_2017_23 : problem
 
 		std::string emit_code(std::ptrdiff_t, std::ptrdiff_t) override {
 			return print_register(op1) + " -= " + print_operand(op2) + ";";
+		}
+	};
+
+	struct add : binary_instruction
+	{
+		add(reg op1_, operand op2_) noexcept : binary_instruction(op1_, op2_) {
+		}
+
+		std::ptrdiff_t execute(register_file& registers) override {
+			registers[op1] -= resolve_operand(op2, registers);
+			return 1;
+		}
+
+		std::string emit_code(std::ptrdiff_t, std::ptrdiff_t) override {
+			return print_register(op1) + " += " + print_operand(op2) + ";";
 		}
 	};
 
@@ -141,7 +178,13 @@ struct advent_2017_23 : problem
 		}
 
 		std::string emit_code(std::ptrdiff_t addr, std::ptrdiff_t highest_addr) override {
-			const std::ptrdiff_t absolute_address = addr + std::get<std::ptrdiff_t>(op2);
+			std::ptrdiff_t absolute_address = 0;
+			if(std::holds_alternative<std::ptrdiff_t>(op2)) {
+				absolute_address = addr + std::get<std::ptrdiff_t>(op2);
+			} else if(std::holds_alternative<instruction*>(op2)) {
+				instruction* ins = std::get<instruction*>(op2);
+				absolute_address = ins != nullptr ? std::get<instruction*>(op2)->abs_addr : std::numeric_limits<std::ptrdiff_t>::max();
+			}
 			const std::string destination = (absolute_address < highest_addr) ? "case_" + std::to_string(absolute_address)
 			                                                                  : "case_end";
 			if(std::holds_alternative<std::ptrdiff_t>(op1)) {
@@ -150,7 +193,51 @@ struct advent_2017_23 : problem
 				return "if(" + print_register(std::get<reg>(op1)) + " != 0) { goto " + destination + "; }";
 			}
 		}
+	};
 
+	struct tern_add : ternary_instruction
+	{
+		tern_add(reg op1_, operand op2_, operand op3_) noexcept : ternary_instruction(op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(register_file& registers) override {
+			registers[op1] = resolve_operand(op2, registers) + resolve_operand(op3, registers);
+			return 1;
+		}
+
+		std::string emit_code(std::ptrdiff_t, std::ptrdiff_t) override {
+			return print_register(op1) + " = " + print_operand(op2) + " + " + print_operand(op3) + ";";
+		}
+	};
+
+	struct tern_sub : ternary_instruction
+	{
+		tern_sub(reg op1_, operand op2_, operand op3_) noexcept : ternary_instruction(op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(register_file& registers) override {
+			registers[op1] = resolve_operand(op2, registers) + resolve_operand(op3, registers);
+			return 1;
+		}
+
+		std::string emit_code(std::ptrdiff_t, std::ptrdiff_t) override {
+			return print_register(op1) + " = " + print_operand(op2) + " - " + print_operand(op3) + ";";
+		}
+	};
+
+	struct tern_mul : ternary_instruction
+	{
+		tern_mul(reg op1_, operand op2_, operand op3_) noexcept : ternary_instruction(op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(register_file& registers) override {
+			registers[op1] = resolve_operand(op2, registers) + resolve_operand(op3, registers);
+			return 1;
+		}
+
+		std::string emit_code(std::ptrdiff_t, std::ptrdiff_t) override {
+			return print_register(op1) + " = " + print_operand(op2) + " * " + print_operand(op3) + ";";
+		}
 	};
 
 	using instruction_ptr = std::unique_ptr<instruction>;
@@ -254,13 +341,127 @@ struct advent_2017_23 : problem
 		return std::to_string(muls);
 	}
 
+	void optimize(std::vector<instruction_ptr>& insns) {
+		const auto fix_gotos = [&](instruction* first, instruction* second, instruction* replacement) -> bool {
+			// gotos pointing at second should return false and disable the replacement entirely
+			if(second != nullptr) {
+				for(std::size_t i = 0; i < instructions.size(); ++i) {
+					instruction_ptr& ins = instructions[i];
+					if(jnz* j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
+						if(std::get<instruction*>(j->op2) == second) {
+							return false;
+						}
+					}
+				}
+			}
+			// gotos pointing at first should be redirected to replacement
+			for(std::size_t i = 0; i < instructions.size(); ++i) {
+				instruction_ptr& ins = instructions[i];
+				if(jnz* j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
+					if(std::get<instruction*>(j->op2) == first) {
+						std::get<instruction*>(j->op2) = replacement;
+					}
+				}
+			}
+			return true;
+		};
+
+		const auto set_sub_neg_to_add = [&]() -> bool {
+			for(std::size_t i = 0; i < insns.size(); ++i) {
+				if(sub* ins1 = dynamic_cast<sub*>(insns[i].get()); ins1 != nullptr) {
+					if(std::holds_alternative<std::ptrdiff_t>(ins1->op2)) {
+						std::ptrdiff_t value = std::get<std::ptrdiff_t>(ins1->op2);
+						if(value < 0) {
+							instruction_ptr replacement = std::make_unique<add>(ins1->op1, operand{ -value });
+							if(fix_gotos(ins1, nullptr, replacement.get())) {
+								instructions[i] = std::move(replacement);
+							}
+						}
+					}
+				}
+			}
+			return false;
+		};
+
+		const auto set_arith_to_tern_arith = [&]() -> bool {
+			for(std::size_t i = 0; i < insns.size() - 1; ++i) {
+				if(set* ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr) {
+					instruction_ptr replacement = nullptr;
+					binary_instruction* ins2 = nullptr;
+					if(sub* i2 = dynamic_cast<sub*>(insns[i + 1].get()); i2 != nullptr) {
+						ins2 = i2;
+						replacement = std::make_unique<tern_sub>(ins1->op1, ins1->op2, ins2->op2);
+					} else if(mul* i2 = dynamic_cast<mul*>(insns[i + 1].get()); i2 != nullptr) { 
+						ins2 = i2;
+						replacement = std::make_unique<tern_mul>(ins1->op1, ins1->op2, ins2->op2);
+					}
+					if(ins2 && ins1->op1 == ins2->op1) {
+						if(fix_gotos(ins1, ins2, replacement.get())) {
+							instructions.erase(instructions.begin() + i, instructions.begin() + i + 2);
+							instructions.insert(instructions.begin() + i, std::move(replacement));
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		};
+
+		const auto tidy_loops = [&]() -> bool {
+			// arith(a, b) -> result
+			// if result != 0 jmp d1
+			// arith a or b
+			// jmp d2
+			//
+			// =>
+			//
+			// d2: for(; arith(a, b) != 0; arith a or b) {
+			// 
+			// }
+			// d1: 
+			for(std::size_t i = 0; i < instructions.size() - 4; ++i) {
+
+			}
+			return false;
+		};
+
+		bool did_work = false;
+		do {
+			did_work = set_sub_neg_to_add();
+			did_work = did_work || set_arith_to_tern_arith();
+		} while(did_work);
+	}
+
 	std::string part_2() override {
+		for(std::size_t i = 0; i < instructions.size(); ++i) {
+			instruction_ptr& ins = instructions[i];
+			jnz* j = dynamic_cast<jnz*>(ins.get());
+			if(j) {
+				const std::ptrdiff_t relative_address = std::get<ptrdiff_t>(j->op2);
+				const std::ptrdiff_t absolute_address = i + relative_address;
+				if(absolute_address >= instructions.size()) {
+					instruction* ptr = nullptr;
+					j->op2 = { ptr };
+				} else {
+					j->op2 = { instructions[absolute_address].get() };
+				}
+			}
+		}
+
+		optimize(instructions);
+
+		// bake addresses
+		for(std::size_t i = 0; i < instructions.size(); ++i) {
+			instructions[i]->abs_addr = i;
+		}
+
 		std::cout <<
 R"(#include <iostream>
 #include <cstddef>
 
 int main() {
-	std::int32_t a = 1, b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
+	const std::int32_t a = 1;
+	std::int32_t b = 0, c = 0, d = 0, e = 0, is_prime = 0, g = 0, total_composite = 0;
 	{
 )";
 		for(std::size_t i = 0; i < instructions.size(); ++i) {
@@ -272,7 +473,7 @@ R"(
 	case_end:
 		;
 	}
-	return h;
+	return total_composite;
 }
 )" << std::endl;
 		return "905";
