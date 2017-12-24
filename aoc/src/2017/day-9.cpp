@@ -10,6 +10,7 @@ struct advent_2017_9 : problem
 	advent_2017_9() noexcept : problem(2017, 9) {
 	}
 
+protected:
 	std::string stream;
 
 	void prepare_input(std::ifstream& fin) override {
@@ -19,7 +20,7 @@ struct advent_2017_9 : problem
 	std::size_t total_group_score = 0;
 	std::size_t garbage_count = 0;
 
-	enum state_t
+	enum struct state
 	{
 		normal,
 		garbage,
@@ -28,10 +29,10 @@ struct advent_2017_9 : problem
 
 	void precompute() noexcept override {
 		std::size_t group_score = 0;
-		state_t state = normal;
+		state current_state = state::normal;
 		for(const char ch : stream) {
-			switch(state) {
-			case normal:
+			switch(current_state) {
+			case state::normal:
 				switch(ch) {
 				case '{':
 					++group_score;
@@ -41,25 +42,25 @@ struct advent_2017_9 : problem
 					--group_score;
 					break;
 				case '<':
-					state = garbage;
+					current_state = state::garbage;
 					break;
 				}
 				break;
-			case garbage:
+			case state::garbage:
 				switch(ch) {
 				case '>':
-					state = normal;
+					current_state = state::normal;
 					break;
 				case '!':
-					state = skip;
+					current_state = state::skip;
 					break;
 				default:
 					++garbage_count;
 					break;
 				}
 				break;
-			case skip:
-				state = garbage;
+			case state::skip:
+				current_state = state::garbage;
 				break;
 			}
 		}

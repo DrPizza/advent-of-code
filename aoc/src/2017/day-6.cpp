@@ -35,7 +35,7 @@ protected:
 
 	void precompute() override {
 		memory_type my_memory(memory);
-		using cyc_it = cyclic_iterator<memory_type::iterator>;
+		using cyc_it = utility::cyclic_iterator<memory_type::iterator>;
 		std::vector<memory_type> previous_configurations;
 		for(;;) {
 			++rebalance_iterations;

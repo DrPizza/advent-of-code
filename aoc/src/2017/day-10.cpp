@@ -17,6 +17,7 @@ struct advent_2017_10 : problem
 	advent_2017_10() noexcept : problem(2017, 10) {
 	}
 
+protected:
 	std::string raw_input;
 
 	void prepare_input(std::ifstream& fin) override {
@@ -26,7 +27,7 @@ struct advent_2017_10 : problem
 	std::array<std::size_t, 256> partial_hash(std::size_t iterations, std::vector<std::size_t> input) noexcept {
 		std::array<std::size_t, 256> sparse;
 		std::iota(std::begin(sparse), std::end(sparse), 0);
-		using cyclic = cyclic_iterator<std::array<std::size_t, 256>::iterator>;
+		using cyclic = utility::cyclic_iterator<std::array<std::size_t, 256>::iterator>;
 		cyclic first = cyclic(std::begin(sparse), std::end(sparse));
 		std::size_t skip_size = 0;
 		while(iterations--) {

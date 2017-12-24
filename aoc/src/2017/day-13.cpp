@@ -15,6 +15,7 @@ struct advent_2017_13 : problem
 	advent_2017_13() noexcept : problem(2017, 13) {
 	}
 
+protected:
 	std::unordered_map<std::size_t, std::size_t> firewall;
 
 	void prepare_input(std::ifstream& fin) override {
@@ -28,21 +29,21 @@ struct advent_2017_13 : problem
 	enum { caught, severity };
 
 	auto traverse_firewall(std::size_t delay) {
-		return transform_reduce(std::begin(firewall),
-		                        std::end(firewall),
-		                        std::make_pair(false, 0ull),
-		                        [](const auto& lhs, const auto& rhs) {
-		                            return std::make_pair(std::get<caught>(lhs) || std::get<caught>(rhs),
-		                                                  std::get<severity>(lhs) + std::get<severity>(rhs));
-		                        },
-		                        [delay](const auto& layer) {
-		                            const auto [depth, range] = layer;
-		                            if((depth + delay) % range == 0) {
-		                                return std::make_pair(true, depth * ((range / 2) + 1));
-		                            } else {
-		                                return std::make_pair(false, 0ull);
-		                            }
-		                        }
+		return utility::transform_reduce(std::begin(firewall),
+		                                 std::end(firewall),
+		                                 std::make_pair(false, 0ull),
+		                                 [](const auto& lhs, const auto& rhs) {
+		                                     return std::make_pair(std::get<caught>(lhs) || std::get<caught>(rhs),
+		                                                           std::get<severity>(lhs) + std::get<severity>(rhs));
+		                                 },
+		                                 [delay](const auto& layer) {
+		                                     const auto [depth, range] = layer;
+		                                     if((depth + delay) % range == 0) {
+		                                         return std::make_pair(true, depth * ((range / 2) + 1));
+		                                     } else {
+		                                         return std::make_pair(false, 0ull);
+		                                     }
+		                                 }
 		);
 	}
 

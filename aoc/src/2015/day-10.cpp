@@ -18,7 +18,7 @@ protected:
 
 	std::string look_and_say(const std::string& in) {
 		std::string result;
-		result.reserve(gsl::narrow_cast<std::size_t>(in.size() * 1.8));
+		result.reserve(gsl::narrow_cast<std::size_t>(in.size() * 1.40));
 		char last_seen = in[0];
 		std::size_t count = 0;
 		for(const char ch : in) {

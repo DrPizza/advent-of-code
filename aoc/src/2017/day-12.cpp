@@ -14,7 +14,8 @@ struct advent_2017_12 : problem
 	advent_2017_12() noexcept : problem(2017, 12) {
 	}
 
-	disjoint_set<std::size_t> ds;
+protected:
+	utility::disjoint_set<std::size_t> ds;
 
 	void prepare_input(std::ifstream& fin) override {
 		for(std::string line; std::getline(fin, line); ) {

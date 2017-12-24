@@ -13,6 +13,7 @@ struct advent_2017_19 : problem
 	advent_2017_19() noexcept : problem(2017, 19) {
 	}
 
+protected:
 	std::vector<std::string> raw_map;
 
 	void prepare_input(std::ifstream& fin) override {

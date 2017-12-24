@@ -19,6 +19,7 @@ struct advent_2017_18 : problem
 	advent_2017_18() noexcept : problem(2017, 18) {
 	}
 
+protected:
 	std::vector<std::string> raw_instructions;
 
 	void prepare_input(std::ifstream& fin) override {

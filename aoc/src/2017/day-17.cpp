@@ -17,6 +17,7 @@ struct advent_2017_17 : problem
 	advent_2017_17() noexcept : problem(2017, 17) {
 	}
 
+protected:
 	std::size_t steps = 0;
 
 	void prepare_input(std::ifstream& fin) override {

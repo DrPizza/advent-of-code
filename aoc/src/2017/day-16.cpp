@@ -17,6 +17,7 @@ struct advent_2017_16 : problem
 	advent_2017_16() noexcept : problem(2017, 16) {
 	}
 
+protected:
 	std::string dancers;
 
 	void do_spin(std::ptrdiff_t amount) {

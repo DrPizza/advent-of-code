@@ -12,7 +12,8 @@ struct advent_2017_11 : problem
 	advent_2017_11() noexcept : problem(2017, 11) {
 	}
 
-	enum direction
+protected:
+	enum struct compass
 	{
 		n,
 		ne,
@@ -22,25 +23,25 @@ struct advent_2017_11 : problem
 		nw,
 	};
 
-	direction str_to_direction(const std::string& str) {
+	compass str_to_direction(const std::string& str) {
 		if(str == "n") {
-			return n;
+			return compass::n;
 		} else if(str == "ne") {
-			return ne;
+			return compass::ne;
 		} else if(str == "se") {
-			return se;
+			return compass::se;
 		} else if(str == "s") {
-			return s;
+			return compass::s;
 		} else if(str == "sw") {
-			return sw;
+			return compass::sw;
 		} else if(str == "nw") {
-			return nw;
+			return compass::nw;
 		} else {
 			__assume(0);
 		}
 	}
 
-	std::vector<direction> directions;
+	std::vector<compass> directions;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string line;
@@ -59,14 +60,14 @@ struct advent_2017_11 : problem
 	{
 		std::ptrdiff_t x, y, z;
 
-		hex_coord& operator+=(direction d) noexcept {
+		hex_coord& operator+=(compass d) noexcept {
 			switch(d) {
-			case n:      ++y; --z; break;
-			case ne: ++x;      --z; break;
-			case se: ++x; --y;      break;
-			case s:      --y; ++z; break;
-			case sw: --x;      ++z; break;
-			case nw: --x; ++y;      break;
+			case compass::n:      ++y; --z; break;
+			case compass::ne: ++x;      --z; break;
+			case compass::se: ++x; --y;      break;
+			case compass::s:      --y; ++z; break;
+			case compass::sw: --x;      ++z; break;
+			case compass::nw: --x; ++y;      break;
 			}
 			return *this;
 		}
@@ -78,7 +79,7 @@ struct advent_2017_11 : problem
 
 	void precompute() noexcept override {
 		hex_coord position{ 0, 0, 0 };
-		std::for_each(std::begin(directions), std::end(directions), [&](direction d) {
+		std::for_each(std::begin(directions), std::end(directions), [&](compass d) {
 			position += d;
 			current_distance = distance_from_origin(position);
 			greatest_distance = std::max(greatest_distance, current_distance);

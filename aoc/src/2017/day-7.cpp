@@ -39,7 +39,7 @@ protected:
 	}
 
 	gsl::not_null<node*> find_bad_node(gsl::not_null<node*> n) {
-		auto odd_one = find_odd_one_out(std::begin(n->child_nodes), std::end(n->child_nodes), [](gsl::not_null<node*> lhs, gsl::not_null<node*> rhs) {
+		auto odd_one = utility::find_odd_one_out(std::begin(n->child_nodes), std::end(n->child_nodes), [](gsl::not_null<node*> lhs, gsl::not_null<node*> rhs) {
 			return lhs->total_weight == rhs->total_weight;
 		});
 		if(odd_one != std::end(n->child_nodes)) {

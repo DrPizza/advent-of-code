@@ -16,11 +16,12 @@ struct advent_2017_14 : problem
 	advent_2017_14() noexcept : problem(2017, 14) {
 	}
 
+protected:
 	template<typename It>
 	std::array<uint8_t, 256> sparse_hash(It first, It last) noexcept {
 		std::array<uint8_t, 256> sparse;
 		std::iota(std::begin(sparse), std::end(sparse), 0ui8);
-		using cyclic = cyclic_iterator<std::array<uint8_t, 256>::iterator>;
+		using cyclic = utility::cyclic_iterator<std::array<uint8_t, 256>::iterator>;
 		cyclic cfirst = cyclic(std::begin(sparse), std::end(sparse));
 		std::size_t skip_size = 0;
 		for(std::size_t i = 0; i < 64; ++i) {

@@ -57,7 +57,7 @@ protected:
 			for(const reindeer& r : reindeers) {
 				per_second_scoreboard.insert(std::make_pair(fly_distance(r, i), r.name));
 			}
-			auto winners = per_second_scoreboard.equal_range(per_second_scoreboard.begin()->first);
+			const auto winners = per_second_scoreboard.equal_range(per_second_scoreboard.begin()->first);
 			for(auto j = winners.first; j != winners.second; ++j) {
 				++scoreboard[j->second];
 			}

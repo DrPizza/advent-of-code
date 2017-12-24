@@ -16,6 +16,7 @@ struct advent_2017_15 : problem
 	advent_2017_15() noexcept : problem(2017, 15) {
 	}
 
+protected:
 	struct generator
 	{
 		std::string name;

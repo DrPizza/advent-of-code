@@ -10,7 +10,8 @@ struct advent_2017_8 : problem
 	advent_2017_8() noexcept : problem(2017, 8) {
 	}
 
-	enum operation
+protected:
+	enum struct operation
 	{
 		increment,
 		decrement
@@ -18,18 +19,18 @@ struct advent_2017_8 : problem
 
 	operation str_to_op(const std::string& s) {
 		if(s == "inc") {
-			return increment;
+			return operation::increment;
 		} else {
-			return decrement;
+			return operation::decrement;
 		}
 	}
 
 	std::unordered_map<operation, std::function<std::ptrdiff_t(std::ptrdiff_t, std::ptrdiff_t)>> operations{
-		{ increment, std::plus<void>{} },
-		{ decrement, std::minus<void>{} },
+		{ operation::increment, std::plus<void>{} },
+		{ operation::decrement, std::minus<void>{} },
 	};
 
-	enum comparison
+	enum struct comparison
 	{
 		lt,
 		gt,
@@ -41,24 +42,25 @@ struct advent_2017_8 : problem
 
 	comparison str_to_comp(const std::string& s) {
 		if(s == "<") {
-			return lt;
+			return comparison::lt;
 		} else if(s == ">") {
-			return gt;
+			return comparison::gt;
 		} else if(s == "<=") {
-			return lte;
+			return comparison::lte;
 		} else if(s == ">=") {
-			return gte;
+			return comparison::gte;
 		} else if(s == "==") {
-			return eq;
+			return comparison::eq;
 		} else if(s == "!=") {
-			return ne;
+			return comparison::ne;
 		}
 		__assume(0);
 	}
 
 	std::unordered_map<comparison, std::function<bool(std::ptrdiff_t, std::ptrdiff_t)>> comparisons{
-		{ lt, std::less<void>{} },           { gt, std::greater<void>{} },  { lte, std::less_equal<void>{} },
-		{ gte, std::greater_equal<void>{} }, { eq, std::equal_to<void>{} }, { ne, std::not_equal_to<void>{} }
+		{ comparison::lt , std::less<void>{}       }, { comparison::gt , std::greater<void>{}       },
+		{ comparison::lte, std::less_equal<void>{} }, { comparison::gte, std::greater_equal<void>{} },
+		{ comparison::eq , std::equal_to<void>{}   }, { comparison::ne , std::not_equal_to<void>{}  }
 	};
 
 	struct instruction

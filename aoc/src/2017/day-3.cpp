@@ -74,7 +74,7 @@ protected:
 	struct coordinate_hash
 	{
 		std::size_t operator()(const coordinate& c) const noexcept {
-			return std::hash<std::ptrdiff_t>{}(c.first) | std::hash<std::ptrdiff_t>{}(c.second);
+			return std::hash<std::ptrdiff_t>{}(c.first) ^ std::hash<std::ptrdiff_t>{}(c.second);
 		}
 	};
 

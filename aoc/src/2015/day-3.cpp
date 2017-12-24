@@ -4,25 +4,7 @@
 
 #include <fstream>
 #include <functional>
-#include <unordered_map>
-
-namespace {
-	struct coord
-	{
-		std::ptrdiff_t x, y;
-	};
-
-	static bool operator==(const coord& lhs, const coord& rhs) noexcept {
-		return lhs.x == rhs.x && lhs.y == rhs.y;
-	}
-
-	struct coord_hash
-	{
-		std::size_t operator()(const coord& c) const noexcept {
-			return std::hash<std::ptrdiff_t>{}(c.x) ^ std::hash<std::ptrdiff_t>{}(c.y);
-		}
-	};
-}
+#include <map>
 
 struct advent_2015_3 : problem
 {
@@ -30,6 +12,8 @@ struct advent_2015_3 : problem
 	}
 
 protected:
+	using coord = std::pair<std::ptrdiff_t, std::ptrdiff_t>;
+
 	std::string directions;
 
 	void prepare_input(std::ifstream& fin) override {
@@ -37,25 +21,25 @@ protected:
 	}
 
 	std::string part_1() override {
-		std::unordered_map<coord, std::size_t, coord_hash> present_counts;
+		std::map<coord, std::size_t> present_counts;
 		coord position = { 0, 0 };
 		present_counts[position] = 1;
 		for(const char ch : directions) {
 			switch(ch) {
 			case '<':
-				--position.x;
+				--position.first;
 				++present_counts[position];
 				break;
 			case '^':
-				++position.y;
+				++position.second;
 				++present_counts[position];
 				break;
 			case '>':
-				++position.x;
+				++position.first;
 				++present_counts[position];
 				break;
 			case 'v':
-				--position.y;
+				--position.second;
 				++present_counts[position];
 				break;
 			}
@@ -64,7 +48,7 @@ protected:
 	}
 
 	std::string part_2() override {
-		std::unordered_map<coord, std::size_t, coord_hash> presents;
+		std::map<coord, std::size_t> presents;
 		coord positions[2] = { { 0, 0 }, {0, 0} };
 		++presents[positions[0]];
 		++presents[positions[1]];
@@ -73,19 +57,19 @@ protected:
 		for(const char ch : directions) {
 			switch(ch) {
 			case '<':
-				--positions[idx].x;
+				--positions[idx].first;
 				++presents[positions[idx]];
 				break;
 			case '^':
-				++positions[idx].y;
+				++positions[idx].second;
 				++presents[positions[idx]];
 				break;
 			case '>':
-				++positions[idx].x;
+				++positions[idx].first;
 				++presents[positions[idx]];
 				break;
 			case 'v':
-				--positions[idx].y;
+				--positions[idx].second;
 				++presents[positions[idx]];
 				break;
 			}
