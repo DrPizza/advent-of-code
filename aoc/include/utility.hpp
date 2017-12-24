@@ -5,6 +5,8 @@
 #include <iterator>
 #include <cstddef>
 
+#include <gsl/gsl>
+
 namespace utility {
 
 	template<typename It, typename Pred>
@@ -234,6 +236,45 @@ namespace utility {
 			result = std::forward<Red>(red)(result, std::forward<Trans>(trans)(*first));
 		}
 		return result;
+	}
+
+	template<typename iterator_type>
+	struct combination_generator
+	{
+		using element_type = typename std::iterator_traits<iterator_type>::value_type;
+
+		combination_generator(iterator_type first_, iterator_type last_, typename std::iterator_traits<iterator_type>::difference_type r) : first(first_), last(last_) {
+			const typename std::iterator_traits<iterator_type>::difference_type n = std::distance(first, last);
+			if(r > n) {
+				throw std::domain_error("can't select more elements than exist for combination");
+			}
+			use.resize(gsl::narrow<std::size_t>(r), true);
+			use.resize(gsl::narrow<std::size_t>(n), false);
+		}
+		template<class output_iterator>
+		bool operator()(output_iterator result) {
+			if(!has_more_combinations) {
+				return false;
+			}
+			iterator_type c = first;
+			for(std::size_t i = 0; i < use.size(); ++i, ++c) {
+				if(use[i]) {
+					*result++ = *c;
+				}
+			}
+			has_more_combinations = std::prev_permutation(use.begin(), use.end());
+			return true;
+		}
+
+	private:
+		iterator_type first, last;
+		bool has_more_combinations = true;
+		std::vector<bool> use;
+	};
+
+	template<typename iterator_type>
+	combination_generator<iterator_type> make_combination_generator(iterator_type first, iterator_type last, typename std::iterator_traits<iterator_type>::difference_type r) {
+		return combination_generator<iterator_type>(first, last, r);
 	}
 
 }
