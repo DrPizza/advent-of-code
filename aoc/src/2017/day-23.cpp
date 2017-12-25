@@ -407,24 +407,6 @@ struct advent_2017_23 : problem
 			return false;
 		};
 
-		const auto tidy_loops = [&]() -> bool {
-			// arith(a, b) -> result
-			// if result != 0 jmp d1
-			// arith a or b
-			// jmp d2
-			//
-			// =>
-			//
-			// d2: for(; arith(a, b) != 0; arith a or b) {
-			// 
-			// }
-			// d1: 
-			for(std::size_t i = 0; i < instructions.size() - 4; ++i) {
-
-			}
-			return false;
-		};
-
 		bool did_work = false;
 		do {
 			did_work = set_sub_neg_to_add();

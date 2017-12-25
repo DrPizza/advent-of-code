@@ -52,7 +52,7 @@ protected:
 	}
 
 	std::string part_2() override {
-		return "**************************************************";
+		return "*";
 	}
 };
 
