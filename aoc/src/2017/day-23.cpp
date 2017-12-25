@@ -182,7 +182,7 @@ struct advent_2017_23 : problem
 			if(std::holds_alternative<std::ptrdiff_t>(op2)) {
 				absolute_address = addr + std::get<std::ptrdiff_t>(op2);
 			} else if(std::holds_alternative<instruction*>(op2)) {
-				instruction* ins = std::get<instruction*>(op2);
+				const instruction* const ins = std::get<instruction*>(op2);
 				absolute_address = ins != nullptr ? std::get<instruction*>(op2)->abs_addr : std::numeric_limits<std::ptrdiff_t>::max();
 			}
 			const std::string destination = (absolute_address < highest_addr) ? "case_" + std::to_string(absolute_address)
@@ -346,8 +346,8 @@ struct advent_2017_23 : problem
 			// gotos pointing at second should return false and disable the replacement entirely
 			if(second != nullptr) {
 				for(std::size_t i = 0; i < instructions.size(); ++i) {
-					instruction_ptr& ins = instructions[i];
-					if(jnz* j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
+					const instruction_ptr& ins = instructions[i];
+					if(jnz* const j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
 						if(std::get<instruction*>(j->op2) == second) {
 							return false;
 						}
@@ -356,8 +356,8 @@ struct advent_2017_23 : problem
 			}
 			// gotos pointing at first should be redirected to replacement
 			for(std::size_t i = 0; i < instructions.size(); ++i) {
-				instruction_ptr& ins = instructions[i];
-				if(jnz* j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
+				const instruction_ptr& ins = instructions[i];
+				if(jnz* const j = dynamic_cast<jnz*>(ins.get()); j != nullptr) {
 					if(std::get<instruction*>(j->op2) == first) {
 						std::get<instruction*>(j->op2) = replacement;
 					}
@@ -370,7 +370,7 @@ struct advent_2017_23 : problem
 			for(std::size_t i = 0; i < insns.size(); ++i) {
 				if(sub* ins1 = dynamic_cast<sub*>(insns[i].get()); ins1 != nullptr) {
 					if(std::holds_alternative<std::ptrdiff_t>(ins1->op2)) {
-						std::ptrdiff_t value = std::get<std::ptrdiff_t>(ins1->op2);
+						const std::ptrdiff_t value = std::get<std::ptrdiff_t>(ins1->op2);
 						if(value < 0) {
 							instruction_ptr replacement = std::make_unique<add>(ins1->op1, operand{ -value });
 							if(fix_gotos(ins1, nullptr, replacement.get())) {
@@ -397,8 +397,8 @@ struct advent_2017_23 : problem
 					}
 					if(ins2 && ins1->op1 == ins2->op1) {
 						if(fix_gotos(ins1, ins2, replacement.get())) {
-							instructions.erase(instructions.begin() + i, instructions.begin() + i + 2);
-							instructions.insert(instructions.begin() + i, std::move(replacement));
+							instructions.erase(instructions.begin() + gsl::narrow_cast<std::ptrdiff_t>(i), instructions.begin() + gsl::narrow_cast<std::ptrdiff_t>(i) + 2);
+							instructions.insert(instructions.begin() + gsl::narrow_cast<std::ptrdiff_t>(i), std::move(replacement));
 							return true;
 						}
 					}
@@ -434,16 +434,16 @@ struct advent_2017_23 : problem
 
 	std::string part_2() override {
 		for(std::size_t i = 0; i < instructions.size(); ++i) {
-			instruction_ptr& ins = instructions[i];
-			jnz* j = dynamic_cast<jnz*>(ins.get());
+			const instruction_ptr& ins = instructions[i];
+			jnz* const j = dynamic_cast<jnz*>(ins.get());
 			if(j) {
 				const std::ptrdiff_t relative_address = std::get<ptrdiff_t>(j->op2);
-				const std::ptrdiff_t absolute_address = i + relative_address;
-				if(absolute_address >= instructions.size()) {
-					instruction* ptr = nullptr;
+				const std::ptrdiff_t absolute_address = gsl::narrow_cast<std::ptrdiff_t>(i) + relative_address;
+				if(absolute_address >= gsl::narrow_cast<std::ptrdiff_t>(instructions.size())) {
+					instruction* const ptr = nullptr;
 					j->op2 = { ptr };
 				} else {
-					j->op2 = { instructions[absolute_address].get() };
+					j->op2 = { instructions[gsl::narrow_cast<std::size_t>(absolute_address)].get() };
 				}
 			}
 		}
@@ -452,7 +452,7 @@ struct advent_2017_23 : problem
 
 		// bake addresses
 		for(std::size_t i = 0; i < instructions.size(); ++i) {
-			instructions[i]->abs_addr = i;
+			instructions[i]->abs_addr = gsl::narrow_cast<std::ptrdiff_t>(i);
 		}
 
 		std::cout <<
@@ -466,7 +466,7 @@ int main() {
 )";
 		for(std::size_t i = 0; i < instructions.size(); ++i) {
 			std::cout << "\tcase_" << i << ": \n";
-			std::cout << "\t\t\t" << instructions[i]->emit_code(i, instructions.size()) << "\n";
+			std::cout << "\t\t\t" << instructions[i]->emit_code(gsl::narrow_cast<std::ptrdiff_t>(i), gsl::narrow_cast<std::ptrdiff_t>(instructions.size())) << "\n";
 		}
 		std::cout <<
 R"(

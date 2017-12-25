@@ -33,7 +33,7 @@ protected:
 		}
 
 		for(std::ptrdiff_t r = fewest_plausible_packages; ; ++r) {
-			auto cg = make_combination_generator(std::begin(packages), std::end(packages), r);
+			auto cg = utility::make_combination_generator(std::begin(packages), std::end(packages), r);
 			std::vector<std::size_t> combination(gsl::narrow<std::size_t>(r), 0ui64);
 			std::set<std::size_t> possible_entanglements;
 			while(cg(std::begin(combination))) {
