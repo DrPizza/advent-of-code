@@ -22,7 +22,7 @@ protected:
 
 	struct transition
 	{
-		bool new_value;
+		uint8_t new_value;
 		direction new_direction;
 		char new_state;
 	};
@@ -32,7 +32,7 @@ protected:
 	std::unordered_map<char, state> machine;
 	char initial_state = 'A';
 	std::size_t steps = 0;
-	std::map<std::ptrdiff_t, bool> tape;
+	std::map<std::ptrdiff_t, uint8_t> tape;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string config;
@@ -63,10 +63,10 @@ R"(In state ([[:upper:]]):
 
 		while(std::regex_search(config, m, rule_pattern)) {
 			state s;
-			s[0].new_value = m[2].str() == "1" ? true : false;
+			s[0].new_value = m[2].str() == "1" ? 1ui8 : 0ui8;
 			s[0].new_direction = m[3].str() == "left" ? direction::left : direction::right;
 			s[0].new_state = m[4].str()[0];
-			s[1].new_value = m[5].str() == "1" ? true : false;
+			s[1].new_value = m[5].str() == "1" ? 1ui8 : 0ui8;
 			s[1].new_direction = m[6].str() == "left" ? direction::left : direction::right;
 			s[1].new_state = m[7].str()[0];
 
