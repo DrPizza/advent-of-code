@@ -353,6 +353,21 @@ struct advent_2017_23 : problem
 		}
 	};
 
+	struct tern_mod : ternary_instruction
+	{
+		tern_mod(reg op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmod", op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(register_file& registers) override {
+			registers[op1] = resolve_operand(op2, registers) % resolve_operand(op3, registers);
+			return 1;
+		}
+
+		std::string emit_code() override {
+			return print_register(op1) + " = " + print_operand(op2) + " % " + print_operand(op3) + ";";
+		}
+	};
+
 	using instruction_ptr = std::unique_ptr<instruction>;
 
 	reg parse_reg(const std::string& ins) {
@@ -559,6 +574,9 @@ struct advent_2017_23 : problem
 					} else if(mul* i2 = dynamic_cast<mul*>(insns[i + 1].get()); i2 != nullptr) {
 						ins2 = i2;
 						replacement = std::make_unique<tern_mul>(ins1->op1, ins1->op2, ins2->op2);
+					} else if(mod* i2 = dynamic_cast<mod*>(insns[i + 1].get()); i2 != nullptr) {
+						ins2 = i2;
+						replacement = std::make_unique<tern_mod>(ins1->op1, ins1->op2, ins2->op2);
 					}
 					if(ins2 && ins1->op1 == ins2->op1) {
 						if(fix_jumps(ins1, ins2, replacement.get())) {
@@ -703,6 +721,8 @@ struct advent_2017_23 : problem
 		virtualize_jumps(instructions);
 		optimize(instructions);
 		devirtualize_jumps(instructions);
+
+		print_asm(instructions);
 
 		processor cpu = { processor(instructions) };
 		cpu.registers['a'] = 1;
