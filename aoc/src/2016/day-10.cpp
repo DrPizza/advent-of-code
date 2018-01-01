@@ -82,7 +82,7 @@ protected:
 		}
 
 		bool has_both_targets() const noexcept {
-			return targets[1].has_value() && targets[1].has_value();
+			return targets[0].has_value() && targets[1].has_value();
 		}
 	};
 
