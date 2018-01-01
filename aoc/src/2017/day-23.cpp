@@ -613,10 +613,10 @@ struct advent_2017_23 : problem
 						            insns.begin() + gsl::narrow_cast<std::ptrdiff_t>(i) + 5);
 						for(std::size_t j = i + 2; j < insns.size() - 3; ++j) {
 							bool update_e_found = false;
-							if(sub* su = dynamic_cast<sub*>(insns[j].get()); su != nullptr && 'e' == su->op1) {
+							if(const sub* const su = dynamic_cast<sub*>(insns[j].get()); su != nullptr && 'e' == su->op1) {
 								update_e_found = true;
 							}
-							if(add* ad = dynamic_cast<add*>(insns[j].get()); ad != nullptr && 'e' == ad->op1) {
+							if(const add* const ad = dynamic_cast<add*>(insns[j].get()); ad != nullptr && 'e' == ad->op1) {
 								update_e_found = true;
 							}
 							if(update_e_found) {

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <valarray>
 #include <regex>
+#include <unordered_map>
 
 struct advent_2016_8 : problem
 {
@@ -51,7 +52,11 @@ protected:
 	constexpr static std::size_t height = 6;
 	constexpr static std::size_t width = 50;
 	constexpr static std::size_t letter_width = 5;
-	screen_type screen = screen_type(width * height);
+	constexpr static std::size_t total_pixels = height * width;
+	constexpr static std::size_t total_letters = width / letter_width;
+	constexpr static std::size_t pixels_per_letter = total_pixels / total_letters;
+
+	screen_type screen = screen_type(total_pixels);
 
 	static void rect(screen_type& screen, std::size_t rows, std::size_t cols) {
 		screen[std::gslice{ 0, {cols, rows}, {width, 1} }] = 1;
@@ -101,15 +106,26 @@ protected:
 		return std::to_string(lit);;
 	}
 
+	static const inline std::unordered_map<std::uint32_t, char> letter_codes = {{
+		{0x19297A52, 'a'}, {0x392E4A5C, 'b'}, {0x1928424C, 'c'}, {0x39294A5C, 'd'}, {0x3D0E421E, 'e'},
+		{0x3D0E4210, 'f'}, {0x19285A4E, 'g'}, {0x252F4A52, 'h'}, {0x1C42108E, 'i'}, {0x0C210A4C, 'j'},
+		{0x254C5292, 'k'}, {0x2108421E, 'l'}, {0x23BAC631, 'm'}, {0x252D5A52, 'n'}, {0x19294A4C, 'o'},
+		{0x39297210, 'p'}, {0x19295A4D, 'q'}, {0x39297292, 'r'}, {0x1D08305C, 's'}, {0x1C421084, 't'},
+		{0x25294A4C, 'u'}, {0x2318A944, 'v'}, {0x231AD6AA, 'w'}, {0x22A22951, 'x'}, {0x23151084, 'y'},
+		{0x3C22221E, 'z'}, {0x00000000, ' '}
+	}};
+
 	std::string part_2() override {
-		screen[std::gslice(0, { 10, height, letter_width }, { letter_width, width, 1 })] = 1;
-		//screen_type letters = screen[std::gslice(0, {10, 5, 6}, { 30, 6, 1})];
-		//for(std::size_t i = 0; i < 30; ++i) {
-		//	//std::cout << letters[i];
-		//	letters[i] = 1 - letters[i];
-		//}
-		print(screen);
-		return "";
+		screen_type letters = screen[std::gslice(0, { total_letters, height, letter_width }, { letter_width, width, 1 })];
+		std::string result;
+		for(std::size_t letter = 0; letter < total_letters; ++letter) {
+			std::uint32_t letter_code = 0;
+			for(std::size_t pixel = 0; pixel < pixels_per_letter; ++pixel) {
+				letter_code = letter_code | (letters[(letter * pixels_per_letter) + pixel] << 30 - 1 - pixel);
+			}
+			result += letter_codes.at(letter_code);
+		}
+		return result;
 	}
 };
 
