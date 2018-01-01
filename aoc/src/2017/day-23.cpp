@@ -568,14 +568,14 @@ struct advent_2017_23 : problem
 				if(set* ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr) {
 					instruction_ptr replacement = nullptr;
 					binary_instruction* ins2 = nullptr;
-					if(sub* i2 = dynamic_cast<sub*>(insns[i + 1].get()); i2 != nullptr) {
-						ins2 = i2;
+					if(sub* s = dynamic_cast<sub*>(insns[i + 1].get()); s != nullptr) {
+						ins2 = s;
 						replacement = std::make_unique<tern_sub>(ins1->op1, ins1->op2, ins2->op2);
-					} else if(mul* i2 = dynamic_cast<mul*>(insns[i + 1].get()); i2 != nullptr) {
-						ins2 = i2;
+					} else if(mul* mu = dynamic_cast<mul*>(insns[i + 1].get()); mu != nullptr) {
+						ins2 = mu;
 						replacement = std::make_unique<tern_mul>(ins1->op1, ins1->op2, ins2->op2);
-					} else if(mod* i2 = dynamic_cast<mod*>(insns[i + 1].get()); i2 != nullptr) {
-						ins2 = i2;
+					} else if(mod* mo = dynamic_cast<mod*>(insns[i + 1].get()); mo != nullptr) {
+						ins2 = mo;
 						replacement = std::make_unique<tern_mod>(ins1->op1, ins1->op2, ins2->op2);
 					}
 					if(ins2 && ins1->op1 == ins2->op1) {
@@ -634,7 +634,7 @@ struct advent_2017_23 : problem
 
 		const auto bail_early = [&]() -> bool {
 			for(std::size_t i = 0; i < insns.size() - 1; ++i) {
-				if(set* ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr && 'f' == ins1->op1 && operand{ std::ptrdiff_t { 0 } } == ins1->op2) {
+				if(const set* const ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr && 'f' == ins1->op1 && operand{ std::ptrdiff_t { 0 } } == ins1->op2) {
 					if(dynamic_cast<jump*>(insns[i + 1].get()) == nullptr) {
 						const std::ptrdiff_t target_offset = find_instruction<binary_instruction>(insns,
 						                                                                          gsl::narrow_cast<std::ptrdiff_t>(i + 1),

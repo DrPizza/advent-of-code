@@ -95,7 +95,7 @@ using state_t = std::pair<item_state, floor_number>;
 namespace std {
 	template <>
 	struct hash<state_t> {
-		std::size_t operator()(const state_t& s) const {
+		std::size_t operator()(const state_t& s) const noexcept {
 			return hash<std::uint64_t>()(std::get<0>(s)) + 33 * hash<std::uint8_t>()(static_cast<std::uint8_t>(std::get<1>(s)));
 		}
 	};
@@ -105,7 +105,7 @@ std::int8_t solve(const state_t& start, const state_t& end) {
 	std::unordered_map<state_t, std::int8_t> prev, next, curr;
 	curr.emplace(start, 0), curr.emplace(end, -1);
 	// Breadth-first search forward and backward
-	for(std::int8_t depth{ 0 }; depth >= 0; ++depth) {
+	for(std::int8_t depth{ 0 }; ; ++depth) {
 		for(const auto &mi0 : curr) {
 			const state_t& state0 = mi0.first;
 			// Select first item class to move
