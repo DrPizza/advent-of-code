@@ -33,7 +33,8 @@ protected:
 		const double nearest_power_of_three = std::floor(std::log(elf_count - 1) / std::log(3.0));
 		const double pow_three = std::pow(3.0, nearest_power_of_three);
 		const double result = elf_count - pow_three + std::max(elf_count - (2.0 * pow_three), 0.0);
-		return std::to_string(result);
+		const std::uint64_t safe_position = gsl::narrow_cast<std::uint64_t>(result);
+		return std::to_string(safe_position);
 	}
 };
 
