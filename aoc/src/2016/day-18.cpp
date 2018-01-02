@@ -10,10 +10,41 @@ struct advent_2016_18 : problem
 	}
 
 protected:
+	std::string first_row;
 	void prepare_input(std::ifstream& fin) override {
-		std::string line;
-		std::getline(fin, line);
+		std::getline(fin, first_row);
 	}
+
+	std::string next_row(const std::string& s) {
+		const std::string fake_row = "." + s + ".";
+		std::string new_row;
+		for(std::size_t i = 1; i < fake_row.size() - 1; ++i) {
+			const bool trap = fake_row[i - 1] != fake_row[i + 1];
+			new_row.push_back(trap ? '^' : '.');
+		}
+		return new_row;
+	}
+
+	std::string part_1() override {
+		std::size_t safe_count = 0;
+		std::string row = first_row;
+		for(std::size_t i = 0; i < 40; ++i) {
+			safe_count += std::count(std::begin(row), std::end(row), '.');
+			row = next_row(row);
+		}
+		return std::to_string(safe_count);
+	}
+
+	std::string part_2() override {
+		std::size_t safe_count = 0;
+		std::string row = first_row;
+		for(std::size_t i = 0; i < 400'000; ++i) {
+			safe_count += std::count(std::begin(row), std::end(row), '.');
+			row = next_row(row);
+		}
+		return std::to_string(safe_count);
+	}
+
 };
 
 template<>
