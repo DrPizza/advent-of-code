@@ -67,7 +67,7 @@ constexpr item_state udgmo(direction ud, item i, floor_number other) {
 
 item_state move_table[4][16];
 
-void init_move_table() {
+void init_move_table() noexcept {
 	// Default all entries to 0x8888888888888888
 	std::memset(move_table, 0x88, sizeof(move_table));
 	// Generate all legal moves

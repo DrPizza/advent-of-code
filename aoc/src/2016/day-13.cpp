@@ -36,7 +36,7 @@ block_type get_block_type(const coord& c, std::size_t favourite) noexcept {
 	std::size_t eqn = (c.x * c.x) + (3 * c.x) + (2 * c.x * c.y) + c.y + (c.y * c.y);
 	eqn += favourite;
 
-	return block_type{ __popcnt64(eqn) % 2 };
+	return gsl::narrow_cast<block_type>(__popcnt64(eqn) % 2);
 }
 
 using office_type = std::unordered_map<coord, block_type>;
@@ -46,7 +46,7 @@ std::size_t shortest_path(const coord& position, const coord& destination, std::
 	if(position == destination) {
 		return dist;
 	}
-	if(auto m = memo.find(position); m != memo.end()) {
+	if(memo.end() !=  memo.find(position)) {
 		return std::numeric_limits<std::size_t>::max();
 	}
 	if(position.x == std::numeric_limits<std::size_t>::max()) {
