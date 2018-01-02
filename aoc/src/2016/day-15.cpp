@@ -53,7 +53,7 @@ protected:
 
 	std::string part_1() override {
 		for(std::size_t delay = 0; ; ++delay) {
-			bool result = can_traverse_discs(delay);
+			const bool result = can_traverse_discs(delay);
 			if(result) {
 				return std::to_string(delay);
 			}
@@ -63,7 +63,7 @@ protected:
 	std::string part_2() override {
 		discs[discs.size() + 1] = disc{ 11, 0 };
 		for(std::size_t delay = 0; ; ++delay) {
-			bool result = can_traverse_discs(delay);
+			const bool result = can_traverse_discs(delay);
 			if(result) {
 				return std::to_string(delay);
 			}

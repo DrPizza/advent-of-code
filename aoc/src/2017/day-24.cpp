@@ -13,15 +13,15 @@ struct advent_2017_24 : problem
 	}
 
 protected:
-	//using component = std::pair<std::size_t, std::size_t>;
-	using component = std::pair<int, int>;
+	using component = std::pair<std::size_t, std::size_t>;
+	//using component = std::pair<int, int>;
 	std::vector<component> components;
 	std::vector<bool> used;
 
 	void prepare_input(std::ifstream& fin) override {
 		for(std::string line; std::getline(fin, line);) {
-			const std::size_t f = std::stoull(line.substr(0, line.find('/')));
-			const std::size_t s = std::stoull(line.substr(line.find('/') + 1, -1));
+			const std::size_t f = std::stoull(line.substr(0ui64, line.find('/')));
+			const std::size_t s = std::stoull(line.substr(line.find('/') + 1ui64, std::string::npos));
 			const component c = std::make_pair(f, s);
 			components.push_back(c);
 		}

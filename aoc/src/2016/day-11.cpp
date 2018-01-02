@@ -103,7 +103,7 @@ namespace std {
 
 std::int8_t solve(const state_t& start, const state_t& end) {
 	std::unordered_map<state_t, std::int8_t> prev, next, curr;
-	curr.emplace(start, 0), curr.emplace(end, -1);
+	curr.emplace(start, 0i8), curr.emplace(end, gsl::narrow<std::int8_t>(-1));
 	// Breadth-first search forward and backward
 	for(std::int8_t depth{ 0 }; ; ++depth) {
 		for(const auto &mi0 : curr) {
@@ -133,7 +133,7 @@ std::int8_t solve(const state_t& start, const state_t& end) {
 					&& ((mi = curr.find(state_t(items2, e))) == curr.end())
 					&& ((mi = next.find(state_t(items2, e))) == next.end())) {
 						// Nope, increment depth and add to next
-						next.emplace(state_t(items2, e), mi0.second + depth_sign(mi0.second));
+						next.emplace(state_t(items2, e), gsl::narrow<std::int8_t>(mi0.second + depth_sign(mi0.second)));
 					} else if(depth_sign(mi0.second) != depth_sign(mi->second)) {
 						// Yes, and signs were opposite (solved; met in the middle)
 						return gsl::narrow_cast<std::int8_t>(std::abs(mi0.second) + std::abs(mi->second));

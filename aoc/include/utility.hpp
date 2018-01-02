@@ -7,6 +7,12 @@
 
 #include <gsl/gsl>
 
+#pragma warning(push)
+#pragma warning(disable: 4619 4365 6011 26432 26440 26439 26474 26495 26497 26493 26492 26481 26494 26472 26429 26481 26409 26466 26424 26434 26496)
+#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+#include <cryptopp/md5.h>
+#pragma warning(pop)
+
 namespace utility {
 
 	template<typename It, typename Pred>
@@ -277,6 +283,36 @@ namespace utility {
 		return combination_generator<iterator_type>(first, last, r);
 	}
 
+	using digest_type = std::array<std::uint8_t, 16>;
+	using hex_digest_type = std::array<char, 32>;
+
+	inline hex_digest_type to_hex_digest(const digest_type& d) noexcept {
+		hex_digest_type result = {};
+		for(std::size_t i = 0; i < d.size(); ++i) {
+			result[(i * 2)    ] = gsl::narrow_cast<char>((d[i] & 0xf0ui8) >> 4ui8);
+			result[(i * 2) + 1] = gsl::narrow_cast<char>((d[i] & 0x0fui8) >> 0ui8);
+		}
+		for(std::size_t l = 0; l < result.size(); ++l) {
+			if(result[l] < 10) {
+				result[l] += '0';
+			} else {
+				result[l] += 'a' - 10;
+			}
+		}
+		return result;
+	}
+
+	inline digest_type md5(const gsl::span<const std::byte> data) {
+		CryptoPP::Weak::MD5 md5;
+		digest_type digest;
+		md5.CalculateDigest(digest.data(), reinterpret_cast<const byte*>(data.data()), gsl::narrow_cast<std::size_t>(data.size()));
+		return digest;
+	}
+
+	template<typename T>
+	hex_digest_type md5str(const gsl::span<const T> data) {
+		return to_hex_digest(md5(gsl::as_bytes(data)));
+	}
 }
 
 #endif

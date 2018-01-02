@@ -88,8 +88,8 @@ protected:
 		}
 
 		for(std::size_t i = 0; ; ++i) {
-			hex_digest_type hd = digests[0];
-			std::uint8_t trip = find_trip(hd);
+			const hex_digest_type hd = digests[0];
+			const std::uint8_t trip = find_trip(hd);
 			if(trip != 0xffui8) {
 				for(std::size_t j = 1; j <= 1'000; ++j) {
 					if(has_five(digests[j], trip)) {

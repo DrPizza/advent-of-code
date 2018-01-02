@@ -492,8 +492,8 @@ namespace assembler {
 				const std::ptrdiff_t relative_address = std::get<ptrdiff_t>(j->destination);
 				const std::ptrdiff_t absolute_address = gsl::narrow_cast<std::ptrdiff_t>(i) + relative_address;
 				if(absolute_address >= gsl::narrow_cast<std::ptrdiff_t>(insns.size())) {
-					instruction* const ptr = nullptr;
-					j->destination = { ptr };
+					using ip = instruction*;
+					j->destination = ip { nullptr };
 				} else {
 					j->destination = { insns[gsl::narrow_cast<std::size_t>(absolute_address)].get() };
 				}

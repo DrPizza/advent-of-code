@@ -64,12 +64,12 @@ protected:
 
 	static void rotate_row(screen_type& screen, std::size_t r, std::ptrdiff_t amount) {
 		screen_type row = screen[std::slice{ width * r, width, 1 }];
-		screen[std::slice{ width * r, width, 1 }] = row.cshift(-amount);
+		screen[std::slice{ width * r, width, 1 }] = row.cshift(gsl::narrow_cast<int>(-amount));
 	}
 
 	static void rotate_column(screen_type& screen, std::size_t c, std::ptrdiff_t amount) {
 		screen_type col = screen[std::slice{ c, height, width }];
-		screen[std::slice{ c, height, width }] = col.cshift(-amount);
+		screen[std::slice{ c, height, width }] = col.cshift(gsl::narrow_cast<int>(-amount));
 	}
 
 	static void print(const screen_type& screen) {
@@ -89,10 +89,10 @@ protected:
 			rect(s, i.a, i.b);
 			break;
 		case operation::rot_row:
-			rotate_row(s, i.a, i.b);
+			rotate_row(s, i.a, gsl::narrow_cast<std::ptrdiff_t>(i.b));
 			break;
 		case operation::rot_col:
-			rotate_column(s, i.a, i.b);
+			rotate_column(s, i.a, gsl::narrow_cast<std::ptrdiff_t>(i.b));
 			break;
 		}
 	}
@@ -121,7 +121,7 @@ protected:
 		for(std::size_t letter = 0; letter < total_letters; ++letter) {
 			std::uint32_t letter_code = 0;
 			for(std::size_t pixel = 0; pixel < pixels_per_letter; ++pixel) {
-				letter_code = letter_code | (letters[(letter * pixels_per_letter) + pixel] << 30 - 1 - pixel);
+				letter_code = gsl::narrow_cast<std::uint32_t>(letter_code | (letters[(letter * pixels_per_letter) + pixel] << (30 - 1 - pixel)));
 			}
 			result += letter_codes.at(letter_code);
 		}
