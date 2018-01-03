@@ -52,12 +52,14 @@ namespace assembler {
 
 	using instruction_ptr = std::unique_ptr<instruction>;
 	using program = std::vector<instruction_ptr>;
+	using port = std::vector<std::ptrdiff_t>;
 
 	struct processor
 	{
 		program* instructions;
 		std::size_t instruction_pointer = 0;
 		register_file registers;
+		port* output;
 
 		processor(program* instructions_) : instructions(instructions_) {
 		}
@@ -150,6 +152,22 @@ namespace assembler {
 		std::string emit_code() override {
 			return "++" + print_operand(op1) + ";";
 		}
+	};
+
+	struct out : unary_instruction
+	{
+		out(operand op1_) noexcept : unary_instruction("out", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			cpu.output->push_back(resolve_operand(op1, cpu.registers));
+			return 1;
+		}
+
+		std::string emit_code() override {
+			return "std::cout << " + print_operand(op1) + " << std::endl;";
+		}
+
 	};
 
 	struct dec : unary_instruction
@@ -515,6 +533,11 @@ namespace assembler {
 		return std::make_unique<tgl>(r);
 	}
 
+	inline instruction_ptr parse_out(const std::string& ins) {
+		operand o = parse_operand(ins);
+		return std::make_unique<out>(o);
+	}
+
 	inline instruction_ptr parse_sub(const std::string& ins) {
 		reg     r = parse_reg(ins.substr(0, ins.find(' ')));
 		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
@@ -551,6 +574,8 @@ namespace assembler {
 			return parse_dec(ins.substr(4));
 		} else if(opcode == "tgl") {
 			return parse_tgl(ins.substr(4));
+		} else if(opcode == "out") {
+			return parse_out(ins.substr(4));
 		}
 		__assume(0);
 	}
@@ -772,7 +797,8 @@ namespace assembler {
 		const auto uncond_jmp = [&]() -> bool {
 			for(std::size_t i = 0; i < insns.size(); ++i) {
 				if(conditional_jump* j = dynamic_cast<conditional_jump*>(insns[i].get()); j != nullptr) {
-					if(std::holds_alternative<std::ptrdiff_t>(j->control)) {
+					if(std::holds_alternative<std::ptrdiff_t>(j->control)
+					&& std::get<std::ptrdiff_t>(j->control) != 0) {
 						instruction_ptr replacement = std::make_unique<jump>(j->destination);
 						if(fix_jumps(insns[i].get(), nullptr, replacement.get())) {
 							insns[i] = std::move(replacement);
