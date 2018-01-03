@@ -70,7 +70,7 @@ protected:
 			}
 			if(toggled) {
 				assembler::instruction_ptr toggle = std::make_unique<assembler::tgl>(assembler::reg{ 'z' });
-				std::size_t true_pc = cpu.instruction_pointer;
+				const std::size_t true_pc = cpu.instruction_pointer;
 				cpu.instruction_pointer = toggle_pc;
 				for(std::size_t i = 0; !toggled_locations.empty() && i < toggled_locations.size() - 1; ++i) {
 					const std::size_t target = toggled_locations[i];

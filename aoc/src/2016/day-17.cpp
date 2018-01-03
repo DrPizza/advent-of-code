@@ -63,9 +63,9 @@ path shortest_path(const coord& position, const coord& destination, const std::s
 	utility::hex_digest_type dig = utility::md5str(gsl::make_span(code.data(), gsl::narrow_cast<std::ptrdiff_t>(code.size())));
 
 	const bool viable[4] = {
-		is_open(dig[direction::up]) && position.y != 0,
-		is_open(dig[direction::down]) && position.y != 3,
-		is_open(dig[direction::left]) && position.x != 0,
+		is_open(dig[direction::up])    && position.y != 0,
+		is_open(dig[direction::down])  && position.y != 3,
+		is_open(dig[direction::left])  && position.x != 0,
 		is_open(dig[direction::right]) && position.x != 3
 	};
 
