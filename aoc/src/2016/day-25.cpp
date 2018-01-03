@@ -33,8 +33,6 @@ protected:
 		optimize(instructions);
 		devirtualize_jumps(instructions);
 
-		std::cout << assembler::print_asm(instructions) << std::endl;
-
 		for(std::ptrdiff_t i = 0; ; ++i) {
 			assembler::processor cpu = { &instructions };
 			std::vector<std::ptrdiff_t> output;
@@ -49,11 +47,6 @@ protected:
 					} else {
 						for(std::size_t j = 1; output.size() > 2 && j < output.size(); ++j) {
 							if(output[j - 1] != 1 - output[j]) {
-								std::cout << i << ": ";
-								for(std::size_t k = 0; k < output.size(); ++k) {
-									std::cout << output[k] << " ";
-								}
-								std::cout << std::endl;
 								output_valid = false;
 								break;
 							}

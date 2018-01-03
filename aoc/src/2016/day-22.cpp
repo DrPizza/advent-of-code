@@ -122,7 +122,6 @@ protected:
 				}
 			}
 		}
-		print(grid);
 		// step 1: move the hole to (x - 2, 0)
 		const std::size_t distance = empty_node.y + (grid[0].size() - 1 - empty_node.x) + 2 * (1 + empty_node.x - wall_start.x)
 		// step 2: leapfrog hole and data to (0, 0); 4 hole movements to 1 data movement

@@ -61,7 +61,6 @@ struct advent_2017_23 : problem
 	struct instruction
 	{
 		virtual std::ptrdiff_t execute(register_file& registers) = 0;
-		virtual std::string emit_code() = 0;
 		virtual std::string emit_asm() = 0;
 
 		std::ptrdiff_t abs_addr = 0;
@@ -125,10 +124,6 @@ struct advent_2017_23 : problem
 			registers[op1] = resolve_operand(op2, registers);
 			return 1;
 		}
-		
-		std::string emit_code() override {
-			return print_register(op1) + " = " + print_operand(op2) + ";";
-		}
 	};
 
 	struct sub : binary_instruction
@@ -139,10 +134,6 @@ struct advent_2017_23 : problem
 		std::ptrdiff_t execute(register_file& registers) override {
 			registers[op1] -= resolve_operand(op2, registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " -= " + print_operand(op2) + ";";
 		}
 	};
 
@@ -155,10 +146,6 @@ struct advent_2017_23 : problem
 			registers[op1] += resolve_operand(op2, registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " += " + print_operand(op2) + ";";
-		}
 	};
 
 	struct mul : binary_instruction
@@ -169,10 +156,6 @@ struct advent_2017_23 : problem
 		std::ptrdiff_t execute(register_file& registers) override {
 			registers[op1] *= resolve_operand(op2, registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " *= " + print_operand(op2) + ";";
 		}
 	};
 
@@ -185,10 +168,6 @@ struct advent_2017_23 : problem
 			registers[op1] %= resolve_operand(op2, registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " %= " + print_operand(op2) + ";";
-		}
 	};
 
 	struct sqrt : binary_instruction
@@ -199,10 +178,6 @@ struct advent_2017_23 : problem
 		std::ptrdiff_t execute(register_file& registers) override {
 			registers[op1] = gsl::narrow_cast<std::ptrdiff_t>(std::ceil(std::sqrt(resolve_operand(op2, registers))));
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_register(op1) + "  std::ceil(std::sqrt(" + print_operand(op2) + "));";
 		}
 	};
 
@@ -222,19 +197,6 @@ struct advent_2017_23 : problem
 
 		std::ptrdiff_t execute(register_file& registers) override {
 			return resolve_operand(destination, registers);
-		}
-
-		std::string emit_code() override {
-			std::ptrdiff_t absolute_address = 0;
-			if(std::holds_alternative<std::ptrdiff_t>(destination)) {
-				absolute_address = std::get<std::ptrdiff_t>(destination) != 0 ? abs_addr + std::get<std::ptrdiff_t>(destination) : 0;
-			} else if(std::holds_alternative<instruction*>(destination)) {
-				const instruction* const ins = std::get<instruction*>(destination);
-				absolute_address = ins != nullptr ? std::get<instruction*>(destination)->abs_addr : 0;
-			}
-			const std::string dest = (absolute_address != 0) ? "case_" + std::to_string(absolute_address)
-			                                                 : "case_end";
-			return "goto " + dest + ";";
 		}
 	};
 
@@ -259,25 +221,7 @@ struct advent_2017_23 : problem
 			}
 		}
 
-		std::string emit_code() override {
-			std::ptrdiff_t absolute_address = 0;
-			if(std::holds_alternative<std::ptrdiff_t>(destination)) {
-				absolute_address = std::get<std::ptrdiff_t>(destination) != 0 ? abs_addr + std::get<std::ptrdiff_t>(destination) : 0;
-			} else if(std::holds_alternative<instruction*>(destination)) {
-				const instruction* const ins = std::get<instruction*>(destination);
-				absolute_address = ins != nullptr ? std::get<instruction*>(destination)->abs_addr : 0;
-			}
-			const std::string dest = (absolute_address != 0) ? "case_" + std::to_string(absolute_address)
-			                                                 : "case_end";
-			if(std::holds_alternative<std::ptrdiff_t>(control)) {
-				return "goto " + dest + ";";
-			} else {
-				return "if(" + print_register(std::get<reg>(control)) + " " + emit_condition() + " 0) { goto " + dest + "; }";
-			}
-		}
-
 		virtual bool execute_condition(std::ptrdiff_t control_value) = 0;
-		virtual std::string emit_condition() = 0;
 	};
 
 	struct jnz : conditional_jump
@@ -288,10 +232,6 @@ struct advent_2017_23 : problem
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
 			return control_value != 0;
 		}
-
-		std::string emit_condition() override {
-			return "!=";
-		}
 	};
 
 	struct jgz : conditional_jump
@@ -301,10 +241,6 @@ struct advent_2017_23 : problem
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
 			return control_value > 0;
-		}
-
-		std::string emit_condition() override {
-			return ">";
 		}
 	};
 
@@ -317,10 +253,6 @@ struct advent_2017_23 : problem
 			registers[op1] = resolve_operand(op2, registers) + resolve_operand(op3, registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " = " + print_operand(op2) + " + " + print_operand(op3) + ";";
-		}
 	};
 
 	struct tern_sub : ternary_instruction
@@ -331,10 +263,6 @@ struct advent_2017_23 : problem
 		std::ptrdiff_t execute(register_file& registers) override {
 			registers[op1] = resolve_operand(op2, registers) - resolve_operand(op3, registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " = " + print_operand(op2) + " - " + print_operand(op3) + ";";
 		}
 	};
 
@@ -347,10 +275,6 @@ struct advent_2017_23 : problem
 			registers[op1] = resolve_operand(op2, registers) * resolve_operand(op3, registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " = " + print_operand(op2) + " * " + print_operand(op3) + ";";
-		}
 	};
 
 	struct tern_mod : ternary_instruction
@@ -361,10 +285,6 @@ struct advent_2017_23 : problem
 		std::ptrdiff_t execute(register_file& registers) override {
 			registers[op1] = resolve_operand(op2, registers) % resolve_operand(op3, registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_register(op1) + " = " + print_operand(op2) + " % " + print_operand(op3) + ";";
 		}
 	};
 
@@ -722,43 +642,12 @@ struct advent_2017_23 : problem
 		optimize(instructions);
 		devirtualize_jumps(instructions);
 
-		print_asm(instructions);
-
-		processor cpu = { processor(instructions) };
+		 processor cpu = { processor(instructions) };
 		cpu.registers['a'] = 1;
 		while(cpu.single_step()) {
 			;
 		}
 		return std::to_string(cpu.registers['h']);
-	}
-
-	void emit_code() {
-		virtualize_jumps(instructions);
-		optimize(instructions);
-		devirtualize_jumps(instructions);
-
-		std::cout <<
-R"(#include <iostream>
-#include <cstddef>
-#include <cmath>
-
-int main() {
-	const std::int32_t a = 1;
-	std::int32_t b = 0, c = 0, d = 0, e = 0, f = 0, g = 0, h = 0;
-	{
-)";
-		for(std::size_t i = 0; i < instructions.size(); ++i) {
-			std::cout << "\tcase_" << i << ": \n";
-			std::cout << "\t\t\t" << instructions[i]->emit_code() << "\n";
-		}
-		std::cout <<
-R"(
-	case_end:
-		;
-	}
-	return h;
-}
-)" << std::endl;
 	}
 };
 

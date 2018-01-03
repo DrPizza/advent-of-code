@@ -102,7 +102,6 @@ protected:
 			execute(screen, i);
 		}
 		const std::size_t lit = screen.sum();
-		print(screen);
 		return std::to_string(lit);;
 	}
 
