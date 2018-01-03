@@ -30,6 +30,9 @@
     <ClInclude Include="include\mdspan.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\assembler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\stdafx.cpp">

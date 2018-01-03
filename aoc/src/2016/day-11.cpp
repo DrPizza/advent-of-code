@@ -5,7 +5,6 @@
 #include <fstream>
 #include <map>
 
-
 enum struct floor_number : std::uint8_t
 {
 	bottom = 0,
