@@ -2,7 +2,7 @@
 
 #include "problem.hpp"
 #include "utility.hpp"
-#include "assembler.hpp"
+#include "assembunny.hpp"
 
 #include <fstream>
 #include <string>
@@ -55,9 +55,7 @@ protected:
 
 		assembunny::processor cpu = { &instructions };
 		cpu.registers['a'] = 1;
-		while(cpu.single_step()) {
-			;
-		}
+		cpu.run();
 		return std::to_string(cpu.registers['h']);
 	}
 };

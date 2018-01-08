@@ -1,5 +1,5 @@
-#ifndef ASSEMBLER_HPP
-#define ASSEMBLER_HPP
+#ifndef ASSEMBUNNY_HPP
+#define ASSEMBUNNY_HPP
 
 #include <variant>
 #include <unordered_map>
