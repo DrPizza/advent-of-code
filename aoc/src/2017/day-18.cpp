@@ -21,20 +21,20 @@ protected:
 		}
 	}
 
-	assembler::program instructions;
+	assembunny::program instructions;
 
 	void precompute() override {
 		for(const std::string& line : raw_instructions) {
-			instructions.push_back(assembler::parse_instruction(line));
+			instructions.push_back(assembunny::parse_instruction(line));
 		}
 	}
 
 	std::string part_1() override {
-		assembler::processor cpu = { &instructions };
+		assembunny::processor cpu = { &instructions };
 
 		do {
-			const assembler::rcv* r = dynamic_cast<const assembler::rcv*>((*cpu.instructions)[cpu.instruction_pointer].get());
-			if(r != nullptr && cpu.registers[std::get<assembler::reg>(r->op1)] != 0) {
+			const assembunny::rcv* r = dynamic_cast<const assembunny::rcv*>((*cpu.instructions)[cpu.instruction_pointer].get());
+			if(r != nullptr && cpu.registers[std::get<assembunny::reg>(r->op1)] != 0) {
 				return std::to_string(cpu.output[0]);
 			}
 
@@ -44,7 +44,7 @@ protected:
 	}
 
 	std::string part_2() override {
-		assembler::processor cpu[2] = { &instructions, &instructions };
+		assembunny::processor cpu[2] = { &instructions, &instructions };
 		cpu[0].input = &cpu[1].output;
 		cpu[0].registers['p'] = 0;
 		cpu[1].input = &cpu[0].output;
@@ -58,7 +58,7 @@ protected:
 			}
 
 			do {
-				const assembler::snd* s = dynamic_cast<const assembler::snd*>((*cpu[1].instructions)[cpu[1].instruction_pointer].get());
+				const assembunny::snd* s = dynamic_cast<const assembunny::snd*>((*cpu[1].instructions)[cpu[1].instruction_pointer].get());
 				if(s != nullptr) {
 					++send_count;
 				}

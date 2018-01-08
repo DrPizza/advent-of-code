@@ -20,11 +20,11 @@ protected:
 		}
 	}
 
-	assembler::program instructions;
+	assembunny::program instructions;
 
 	void precompute() override {
 		for(const std::string& line : raw_instructions) {
-			instructions.push_back(assembler::parse_instruction(line));
+			instructions.push_back(assembunny::parse_instruction(line));
 		}
 	}
 
@@ -34,7 +34,7 @@ protected:
 		devirtualize_jumps(instructions);
 
 		for(std::ptrdiff_t i = 0; ; ++i) {
-			assembler::processor cpu = { &instructions };
+			assembunny::processor cpu = { &instructions };
 			cpu.registers['a'] = i;
 			bool output_valid = true;
 			std::size_t output_size = 0;

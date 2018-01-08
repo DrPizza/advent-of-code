@@ -19,22 +19,22 @@ protected:
 		}
 	}
 
-	assembler::program instructions;
+	assembunny::program instructions;
 
 	void precompute() override {
 		for(const std::string& line : raw_instructions) {
-			instructions.push_back(assembler::parse_instruction(line));
+			instructions.push_back(assembunny::parse_instruction(line));
 		}
 	}
 
 	std::string part_1() override {
-		assembler::processor cpu = { &instructions };
+		assembunny::processor cpu = { &instructions };
 		cpu.run();
 		return std::to_string(cpu.registers['a']);
 	}
 
 	std::string part_2() override {
-		assembler::processor cpu = { &instructions };
+		assembunny::processor cpu = { &instructions };
 		cpu.registers['c'] = 1;
 		cpu.run();
 		return std::to_string(cpu.registers['a']);

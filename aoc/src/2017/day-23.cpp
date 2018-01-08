@@ -23,20 +23,20 @@ protected:
 		}
 	}
 
-	assembler::program instructions;
+	assembunny::program instructions;
 
 	void precompute() override {
 		for(const std::string& line : raw_instructions) {
-			instructions.push_back(assembler::parse_instruction(line));
+			instructions.push_back(assembunny::parse_instruction(line));
 		}
 	}
 
 	std::string part_1() override {
-		assembler::processor cpu = { &instructions };
+		assembunny::processor cpu = { &instructions };
 		std::size_t muls = 0;
 		do {
-			const assembler::instruction_ptr& ins = (*cpu.instructions)[cpu.instruction_pointer];
-			const assembler::mul* m = dynamic_cast<const assembler::mul*>(ins.get());
+			const assembunny::instruction_ptr& ins = (*cpu.instructions)[cpu.instruction_pointer];
+			const assembunny::mul* m = dynamic_cast<const assembunny::mul*>(ins.get());
 			if(m) {
 				++muls;
 			}
@@ -51,9 +51,9 @@ protected:
 		optimize(instructions);
 		devirtualize_jumps(instructions);
 
-		assembler::print_asm(instructions);
+		assembunny::print_asm(instructions);
 
-		assembler::processor cpu = { &instructions };
+		assembunny::processor cpu = { &instructions };
 		cpu.registers['a'] = 1;
 		while(cpu.single_step()) {
 			;

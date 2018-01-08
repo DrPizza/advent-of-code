@@ -10,7 +10,7 @@
 
 #include <gsl/gsl>
 
-namespace assembler {
+namespace assembunny {
 
 	struct instruction;
 
