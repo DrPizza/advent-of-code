@@ -12,8 +12,8 @@ namespace assembler {
 
 	struct instruction;
 
-	using reg = char;
-	using operand = std::variant<reg, std::ptrdiff_t, instruction*>;
+	using reg           = char;
+	using operand       = std::variant<reg, std::ptrdiff_t, instruction*>;
 	using register_file = std::unordered_map<char, std::ptrdiff_t>;
 
 	inline std::ptrdiff_t resolve_operand(operand op, register_file& registers) {
@@ -34,7 +34,6 @@ namespace assembler {
 	struct instruction
 	{
 		virtual std::ptrdiff_t execute(processor& cpu) = 0;
-		virtual std::string emit_code() = 0;
 		virtual std::string emit_asm() = 0;
 
 		std::ptrdiff_t abs_addr = 0;
@@ -51,8 +50,8 @@ namespace assembler {
 	};
 
 	using instruction_ptr = std::unique_ptr<instruction>;
-	using program = std::vector<instruction_ptr>;
-	using port = std::vector<std::ptrdiff_t>;
+	using program         = std::vector<instruction_ptr>;
+	using port            = std::vector<std::ptrdiff_t>;
 
 	struct processor
 	{
@@ -148,10 +147,6 @@ namespace assembler {
 			++cpu.registers[std::get<reg>(op1)];
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return "++" + print_operand(op1) + ";";
-		}
 	};
 
 	struct out : unary_instruction
@@ -163,11 +158,6 @@ namespace assembler {
 			cpu.output->push_back(resolve_operand(op1, cpu.registers));
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return "std::cout << " + print_operand(op1) + " << std::endl;";
-		}
-
 	};
 
 	struct dec : unary_instruction
@@ -182,9 +172,15 @@ namespace assembler {
 			--cpu.registers[std::get<reg>(op1)];
 			return 1;
 		}
+	};
 
-		std::string emit_code() override {
-			return "--" + print_operand(op1) + ";";
+	struct nop1 : unary_instruction
+	{
+		nop1(operand op1_) noexcept : unary_instruction("nop1", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			return 1;
 		}
 	};
 
@@ -196,10 +192,6 @@ namespace assembler {
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " = " + print_operand(op2) + ";";
 		}
 	};
 
@@ -215,10 +207,6 @@ namespace assembler {
 			cpu.registers[std::get<reg>(op2)] = resolve_operand(op1, cpu.registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_operand(op2) + " = " + print_operand(op1) + ";";
-		}
 	};
 
 	struct sub : binary_instruction
@@ -229,10 +217,6 @@ namespace assembler {
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] -= resolve_operand(op2, cpu.registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " -= " + print_operand(op2) + ";";
 		}
 	};
 
@@ -245,10 +229,6 @@ namespace assembler {
 			cpu.registers[std::get<reg>(op1)] += resolve_operand(op2, cpu.registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " += " + print_operand(op2) + ";";
-		}
 	};
 
 	struct mul : binary_instruction
@@ -259,10 +239,6 @@ namespace assembler {
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] *= resolve_operand(op2, cpu.registers);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " *= " + print_operand(op2) + ";";
 		}
 	};
 
@@ -275,9 +251,16 @@ namespace assembler {
 			cpu.registers[std::get<reg>(op1)] %= resolve_operand(op2, cpu.registers);
 			return 1;
 		}
+	};
 
-		std::string emit_code() override {
-			return print_operand(op1) + " %= " + print_operand(op2) + ";";
+	struct div : binary_instruction
+	{
+		div(operand op1_, operand op2_) noexcept : binary_instruction("div", op1_, op2_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			cpu.registers[std::get<reg>(op1)] /= resolve_operand(op2, cpu.registers);
+			return 1;
 		}
 	};
 
@@ -290,20 +273,26 @@ namespace assembler {
 			cpu.registers[std::get<reg>(op1)] = gsl::narrow_cast<std::ptrdiff_t>(std::ceil(std::sqrt(resolve_operand(op2, cpu.registers))));
 			return 1;
 		}
+	};
 
-		std::string emit_code() override {
-			return print_operand(op1) + "  std::ceil(std::sqrt(" + print_operand(op2) + "));";
+	struct nop2 : binary_instruction
+	{
+		nop2(operand op1_, operand op2_) noexcept : binary_instruction("nop2", op1_, op2_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			return 1;
 		}
 	};
 
-	struct jump : instruction
+	struct jmp : instruction
 	{
 		operand destination;
 
-		jump(operand destination_) : jump("jmp", destination_) {
+		jmp(operand destination_) : jmp("jmp", destination_) {
 		}
 
-		jump(const std::string& opcode_, operand destination_) noexcept : instruction(opcode_), destination(destination_) {
+		jmp(const std::string& opcode_, operand destination_) noexcept : instruction(opcode_), destination(destination_) {
 		}
 
 		std::string emit_asm() override {
@@ -313,26 +302,13 @@ namespace assembler {
 		std::ptrdiff_t execute(processor& cpu) override {
 			return resolve_operand(destination, cpu.registers);
 		}
-
-		std::string emit_code() override {
-			std::ptrdiff_t absolute_address = 0;
-			if(std::holds_alternative<std::ptrdiff_t>(destination)) {
-				absolute_address = std::get<std::ptrdiff_t>(destination) != 0 ? abs_addr + std::get<std::ptrdiff_t>(destination) : 0;
-			} else if(std::holds_alternative<instruction*>(destination)) {
-				const instruction* const ins = std::get<instruction*>(destination);
-				absolute_address = ins != nullptr ? std::get<instruction*>(destination)->abs_addr : 0;
-			}
-			const std::string dest = (absolute_address != 0) ? "case_" + std::to_string(absolute_address)
-			                                                 : "case_end";
-			return "goto " + dest + ";";
-		}
 	};
 
-	struct conditional_jump : jump
+	struct conditional_jump : jmp
 	{
 		operand control;
 
-		conditional_jump(const std::string& opcode_, operand control_, operand destination_) noexcept : jump(opcode_, destination_), control(control_) {
+		conditional_jump(const std::string& opcode_, operand control_, operand destination_) noexcept : jmp(opcode_, destination_), control(control_) {
 		}
 
 		std::string emit_asm() override {
@@ -349,25 +325,7 @@ namespace assembler {
 			}
 		}
 
-		std::string emit_code() override {
-			std::ptrdiff_t absolute_address = 0;
-			if(std::holds_alternative<std::ptrdiff_t>(destination)) {
-				absolute_address = std::get<std::ptrdiff_t>(destination) != 0 ? abs_addr + std::get<std::ptrdiff_t>(destination) : 0;
-			} else if(std::holds_alternative<instruction*>(destination)) {
-				const instruction* const ins = std::get<instruction*>(destination);
-				absolute_address = ins != nullptr ? std::get<instruction*>(destination)->abs_addr : 0;
-			}
-			const std::string dest = (absolute_address != 0) ? "case_" + std::to_string(absolute_address)
-			                                                 : "case_end";
-			if(std::holds_alternative<std::ptrdiff_t>(control)) {
-				return "goto " + dest + ";";
-			} else {
-				return "if(" + print_register(std::get<reg>(control)) + " " + emit_condition() + " 0) { goto " + dest + "; }";
-			}
-		}
-
 		virtual bool execute_condition(std::ptrdiff_t control_value) = 0;
-		virtual std::string emit_condition() = 0;
 	};
 
 	struct jnz : conditional_jump
@@ -377,10 +335,6 @@ namespace assembler {
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
 			return control_value != 0;
-		}
-
-		std::string emit_condition() override {
-			return "!=";
 		}
 	};
 
@@ -392,71 +346,74 @@ namespace assembler {
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
 			return control_value > 0;
 		}
-
-		std::string emit_condition() override {
-			return ">";
-		}
 	};
 
-	struct tern_add : ternary_instruction
+	struct tadd : ternary_instruction
 	{
-		tern_add(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tadd", op1_, op2_, op3_) {
+		tadd(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tadd", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers) + resolve_operand(op3, cpu.registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " = " + print_operand(op2) + " + " + print_operand(op3) + ";";
-		}
 	};
 
-	struct tern_sub : ternary_instruction
+	struct tsub : ternary_instruction
 	{
-		tern_sub(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tsub", op1_, op2_, op3_) {
+		tsub(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tsub", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers) - resolve_operand(op3, cpu.registers);
 			return 1;
 		}
-
-		std::string emit_code() override {
-			return print_operand(op1) + " = " + print_operand(op2) + " - " + print_operand(op3) + ";";
-		}
 	};
 
-	struct tern_mul : ternary_instruction
+	struct tmul : ternary_instruction
 	{
-		tern_mul(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmul", op1_, op2_, op3_) {
+		tmul(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmul", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers) * resolve_operand(op3, cpu.registers);
 			return 1;
 		}
+	};
 
-		std::string emit_code() override {
-			return print_operand(op1) + " = " + print_operand(op2) + " * " + print_operand(op3) + ";";
+	struct tdiv : ternary_instruction
+	{
+		tdiv(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tdiv", op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers) / resolve_operand(op3, cpu.registers);
+			return 1;
 		}
 	};
 
-	struct tern_mod : ternary_instruction
+	struct tmod : ternary_instruction
 	{
-		tern_mod(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmod", op1_, op2_, op3_) {
+		tmod(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmod", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
 			cpu.registers[std::get<reg>(op1)] = resolve_operand(op2, cpu.registers) % resolve_operand(op3, cpu.registers);
 			return 1;
 		}
+	};
 
-		std::string emit_code() override {
-			return print_operand(op1) + " = " + print_operand(op2) + " % " + print_operand(op3) + ";";
+	struct nop3 : ternary_instruction
+	{
+		nop3(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("nop3", op1_, op2_, op3_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			return 1;
 		}
 	};
+
+
 
 	struct tgl : unary_instruction
 	{
@@ -465,7 +422,7 @@ namespace assembler {
 
 		std::ptrdiff_t execute(processor& cpu) override {
 			const std::ptrdiff_t delta = cpu.registers[std::get<reg>(op1)];
-			const std::size_t offset = cpu.instruction_pointer + delta;
+			const std::size_t offset   = cpu.instruction_pointer + delta;
 			if(offset >= cpu.instructions->size()) {
 				return 1;
 			}
@@ -483,10 +440,6 @@ namespace assembler {
 			}
 			(*cpu.instructions)[offset] = std::move(replacement);
 			return 1;
-		}
-
-		std::string emit_code() override {
-			return "TODO TODO self modifying code vomit gross";
 		}
 	};
 
@@ -506,76 +459,68 @@ namespace assembler {
 		__assume(0);
 	}
 
-	inline instruction_ptr parse_set(const std::string& ins) {
-		reg     r = parse_reg(ins.substr(0, ins.find(' ')));
-		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
-		return std::make_unique<set>(r, o);
+	template<typename T>
+	instruction_ptr parse_unary(const std::string& ins) {
+		const std::regex pattern(R"(([[:alnum:]]+))", std::regex::optimize);
+		std::smatch m;
+		std::regex_search(ins, m, pattern);
+		operand o1 = parse_operand(m[1].str());
+		return std::make_unique<T>(o1);
 	}
 
-	inline instruction_ptr parse_cpy(const std::string& ins) {
-		operand o = parse_operand(ins.substr(0, ins.find(' ')));
-		reg     r = parse_reg(ins.substr(ins.find(' ') + 1));
-		return std::make_unique<cpy>(o, r);
+	template<typename T>
+	instruction_ptr parse_binary(const std::string& ins) {
+		const std::regex pattern(R"(([[:alnum:]]+) ([[:alnum:]]+))", std::regex::optimize);
+		std::smatch m;
+		std::regex_search(ins, m, pattern);
+		operand o1 = parse_operand(m[1].str());
+		operand o2 = parse_operand(m[2].str());
+		return std::make_unique<T>(o1, o2);
 	}
 
-	inline instruction_ptr parse_inc(const std::string& ins) {
-		reg r = parse_reg(ins);
-		return std::make_unique<inc>(r);
-	}
-
-	inline instruction_ptr parse_dec(const std::string& ins) {
-		reg r = parse_reg(ins);
-		return std::make_unique<dec>(r);
-	}
-
-	inline instruction_ptr parse_tgl(const std::string& ins) {
-		reg r = parse_reg(ins);
-		return std::make_unique<tgl>(r);
-	}
-
-	inline instruction_ptr parse_out(const std::string& ins) {
-		operand o = parse_operand(ins);
-		return std::make_unique<out>(o);
-	}
-
-	inline instruction_ptr parse_sub(const std::string& ins) {
-		reg     r = parse_reg(ins.substr(0, ins.find(' ')));
-		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
-		return std::make_unique<sub>(r, o);
-	}
-
-	inline instruction_ptr parse_mul(const std::string& ins) {
-		reg     r = parse_reg(ins.substr(0, ins.find(' ')));
-		operand o = parse_operand(ins.substr(ins.find(' ') + 1));
-		return std::make_unique<mul>(r, o);
-	}
-
-	inline instruction_ptr parse_jnz(const std::string& ins) {
-		operand o1 = parse_operand(ins.substr(0, ins.find(' ')));
-		operand o2 = parse_operand(ins.substr(ins.find(' ') + 1));
-		return std::make_unique<jnz>(o1, o2);
+	template<typename T>
+	instruction_ptr parse_ternary(const std::string& ins) {
+		const std::regex pattern(R"(([[:alnum:]]+) ([[:alnum:]]+) ([[:alnum:]]+))", std::regex::optimize);
+		std::smatch m;
+		std::regex_search(ins, m, pattern);
+		operand o1 = parse_operand(m[1].str());
+		operand o2 = parse_operand(m[2].str());
+		operand o3 = parse_operand(m[3].str());
+		return std::make_unique<T>(o1, o2, o3);
 	}
 
 	inline instruction_ptr parse_instruction(const std::string ins) {
-		const std::string opcode = ins.substr(0, 3);
-		if(opcode == "set") {
-			return parse_set(ins.substr(4));
-		} else if(opcode == "sub") {
-			return parse_sub(ins.substr(4));
-		} else if(opcode == "mul") {
-			return parse_mul(ins.substr(4));
-		} else if(opcode == "jnz") {
-			return parse_jnz(ins.substr(4));
-		} else if(opcode == "cpy") {
-			return parse_cpy(ins.substr(4));
-		} else if(opcode == "inc") {
-			return parse_inc(ins.substr(4));
+		const std::string opcode = ins.substr(0, ins.find(' '));
+		if(opcode == "inc") {
+			return parse_unary<inc>(ins.substr(4));
 		} else if(opcode == "dec") {
-			return parse_dec(ins.substr(4));
+			return parse_unary<dec>(ins.substr(4));
 		} else if(opcode == "tgl") {
-			return parse_tgl(ins.substr(4));
+			return parse_unary<tgl>(ins.substr(4));
 		} else if(opcode == "out") {
-			return parse_out(ins.substr(4));
+			return parse_unary<out>(ins.substr(4));
+		} else if(opcode == "set") {
+			return parse_binary<set>(ins.substr(4));
+		} else if(opcode == "cpy") {
+			return parse_binary<cpy>(ins.substr(4));
+		} else if(opcode == "add") {
+			return parse_binary<add>(ins.substr(4));
+		} else if(opcode == "sub") {
+			return parse_binary<sub>(ins.substr(4));
+		} else if(opcode == "mul") {
+			return parse_binary<mul>(ins.substr(4));
+		} else if(opcode == "div") {
+			return parse_binary<div>(ins.substr(4));
+		} else if(opcode == "mod") {
+			return parse_binary<mod>(ins.substr(4));
+		} else if(opcode == "sqrt") {
+			return parse_binary<sqrt>(ins.substr(4));
+		} else if(opcode == "jmp") {
+			return parse_unary<jmp>(ins.substr(4));
+		} else if(opcode == "jnz") {
+			return parse_binary<jnz>(ins.substr(4));
+		} else if(opcode == "jgz") {
+			return parse_binary<jgz>(ins.substr(4));
 		}
 		__assume(0);
 	}
@@ -583,7 +528,7 @@ namespace assembler {
 	inline void virtualize_jumps(program& insns) {
 		for(std::size_t i = 0; i < insns.size(); ++i) {
 			const instruction_ptr& ins = insns[i];
-			jump* const j = dynamic_cast<jump*>(ins.get());
+			jmp* const j = dynamic_cast<jmp*>(ins.get());
 			if(j && std::holds_alternative<std::ptrdiff_t>(j->destination)) {
 				const std::ptrdiff_t relative_address = std::get<ptrdiff_t>(j->destination);
 				const std::ptrdiff_t absolute_address = gsl::narrow_cast<std::ptrdiff_t>(i) + relative_address;
@@ -604,7 +549,7 @@ namespace assembler {
 
 		for(std::size_t i = 0; i < insns.size(); ++i) {
 			const instruction_ptr& ins = insns[i];
-			jump* j = dynamic_cast<jump*>(ins.get());
+			jmp* j = dynamic_cast<jmp*>(ins.get());
 			if(j) {
 				if(std::holds_alternative<instruction*>(j->destination)) {
 					const instruction* const target = std::get<instruction*>(j->destination);
@@ -633,12 +578,12 @@ namespace assembler {
 	}
 
 	inline void optimize(program& insns) {
-		const auto fix_jumps = [&](instruction* first, instruction* second, instruction* replacement) -> bool {
+		const auto fix_jumps = [&](const instruction* first, const instruction* second, const instruction* replacement) -> bool {
 			// jumps pointing at second should return false and disable the replacement entirely
 			if(second != nullptr) {
 				for(std::size_t i = 0; i < insns.size(); ++i) {
 					const instruction_ptr& ins = insns[i];
-					if(jump* const j = dynamic_cast<jump*>(ins.get()); j != nullptr) {
+					if(jmp* const j = dynamic_cast<jmp*>(ins.get()); j != nullptr) {
 						if(std::get<instruction*>(j->destination) == second) {
 							return false;
 						}
@@ -648,7 +593,7 @@ namespace assembler {
 			// jumps pointing at first should be redirected to replacement
 			for(std::size_t i = 0; i < insns.size(); ++i) {
 				const instruction_ptr& ins = insns[i];
-				if(jump* const j = dynamic_cast<jump*>(ins.get()); j != nullptr && std::holds_alternative<instruction*>(j->destination)) {
+				if(jmp* const j = dynamic_cast<jmp*>(ins.get()); j != nullptr && std::holds_alternative<instruction*>(j->destination)) {
 					if(std::get<instruction*>(j->destination) == first) {
 						std::get<instruction*>(j->destination) = replacement;
 					}
@@ -675,19 +620,44 @@ namespace assembler {
 		};
 
 		const auto set_arith_to_tern_arith = [&]() -> bool {
-			for(std::size_t i = 0; i < insns.size() - 1; ++i) {
+			for(std::size_t i = 1; i < insns.size(); ++i) {
+				const set* const                 s1 = dynamic_cast<const set*>(insns[i - 1].get());
+				const binary_instruction* const bi1 = dynamic_cast<const binary_instruction*>(insns[i - 0].get());
+				if(s1 != nullptr
+				&& bi1 != nullptr) {
+					if(s1->op1 == bi1->op2) {
+						instruction_ptr replacement = nullptr;
+						if(dynamic_cast<const sub*>(bi1) != nullptr) {
+							replacement = std::make_unique<tsub>(s1->op1, s1->op2, bi1->op2);
+						} else if(dynamic_cast<const add*>(bi1) != nullptr) {
+							replacement = std::make_unique<tadd>(s1->op1, s1->op2, bi1->op2);
+						} else if(dynamic_cast<const mul*>(bi1) != nullptr) {
+							replacement = std::make_unique<tmul>(s1->op1, s1->op2, bi1->op2);
+						} else if(dynamic_cast<const mod*>(bi1) != nullptr) {
+							replacement = std::make_unique<tmod>(s1->op1, s1->op2, bi1->op2);
+						} else if(dynamic_cast<const div*>(bi1) != nullptr) {
+							replacement = std::make_unique<tdiv>(s1->op1, s1->op2, bi1->op2);
+						}
+						if(fix_jumps(s1, bi1, replacement.get()) {
+
+						}
+						
+						
+					}
+				}
+
 				if(set* ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr) {
 					instruction_ptr replacement = nullptr;
 					binary_instruction* ins2 = nullptr;
 					if(sub* s = dynamic_cast<sub*>(insns[i + 1].get()); s != nullptr) {
 						ins2 = s;
-						replacement = std::make_unique<tern_sub>(ins1->op1, ins1->op2, ins2->op2);
+						replacement = std::make_unique<tsub>(ins1->op1, ins1->op2, ins2->op2);
 					} else if(mul* mu = dynamic_cast<mul*>(insns[i + 1].get()); mu != nullptr) {
 						ins2 = mu;
-						replacement = std::make_unique<tern_mul>(ins1->op1, ins1->op2, ins2->op2);
+						replacement = std::make_unique<tmul>(ins1->op1, ins1->op2, ins2->op2);
 					} else if(mod* mo = dynamic_cast<mod*>(insns[i + 1].get()); mo != nullptr) {
 						ins2 = mo;
-						replacement = std::make_unique<tern_mod>(ins1->op1, ins1->op2, ins2->op2);
+						replacement = std::make_unique<tmod>(ins1->op1, ins1->op2, ins2->op2);
 					}
 					if(ins2 && ins1->op1 == ins2->op1) {
 						if(fix_jumps(ins1, ins2, replacement.get())) {
@@ -711,9 +681,9 @@ namespace assembler {
 						insns[i + 1] = std::make_unique<mod>('g', 'd');
 
 						const std::ptrdiff_t target_offset = find_instruction<binary_instruction>(insns,
-							gsl::narrow_cast<std::ptrdiff_t>(i + 1),
-							1,
-							'd');
+						                                                                          gsl::narrow_cast<std::ptrdiff_t>(i + 1),
+						                                                                          1,
+						                                                                          'd');
 						if(target_offset == -1) {
 							break;
 						}
@@ -744,9 +714,13 @@ namespace assembler {
 		};
 
 		const auto bail_early = [&]() -> bool {
-			for(std::size_t i = 0; i < insns.size() - 1; ++i) {
-				if(const set* const ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr && 'f' == std::get<reg>(ins1->op1) && operand{ std::ptrdiff_t { 0 } } == ins1->op2) {
-					if(dynamic_cast<jump*>(insns[i + 1].get()) == nullptr) {
+			for(std::size_t i = 0; i < insns.size(); ++i) {
+				const set* const s1 = dynamic_cast<set*>(insns[i - 1].get());
+				const jmp* const j1 = dynamic_cast<jmp*>(insns[i - 0].get());
+				if(s1 != nullptr
+				&& j1 == nullptr) {
+					if('f' == std::get<reg>(s1->op1)
+					&& operand{ std::ptrdiff_t { 0 } } == s1->op2) {
 						const std::ptrdiff_t target_offset = find_instruction<binary_instruction>(insns,
 						                                                                          gsl::narrow_cast<std::ptrdiff_t>(i + 1),
 						                                                                          1,
@@ -756,7 +730,7 @@ namespace assembler {
 						}
 						instruction* target = insns[gsl::narrow_cast<std::size_t>(target_offset)].get();
 
-						instruction_ptr jmp = std::make_unique<jump>(target);
+						instruction_ptr jmp = std::make_unique<jmp>(operand{ target });
 						insns.insert(insns.begin() + gsl::narrow_cast<std::ptrdiff_t>(i) + 1, std::move(jmp));
 						return true;
 					}
@@ -772,7 +746,7 @@ namespace assembler {
 				if(const set* const ins1 = dynamic_cast<set*>(insns[i].get()); ins1 != nullptr && 'g' == std::get<reg>(ins1->op1) && operand{ 'd' } == ins1->op2) {
 					sqrt_target = true;
 				}
-				if(const tern_sub* const ins1 = dynamic_cast<tern_sub*>(insns[i].get()); ins1 != nullptr && 'g' == std::get<reg>(ins1->op1) && operand{ 'd' } == ins1->op2 && operand{ 'b' } == ins1->op3) {
+				if(const tsub* const ins1 = dynamic_cast<tsub*>(insns[i].get()); ins1 != nullptr && 'g' == std::get<reg>(ins1->op1) && operand{ 'd' } == ins1->op2 && operand{ 'b' } == ins1->op3) {
 					sqrt_target = true;
 					has_slack = false;
 				}
@@ -785,7 +759,7 @@ namespace assembler {
 						}
 						insns[i + 1] = std::make_unique<sub>('g', operand{ 'd' });
 
-						jump* j = dynamic_cast<jump*>(insns[i + 2].get());
+						jmp* j = dynamic_cast<jmp*>(insns[i + 2].get());
 						insns[i + 2] = std::make_unique<jgz>('g', j->destination);
 						return true;
 					}
@@ -799,7 +773,7 @@ namespace assembler {
 				if(conditional_jump* j = dynamic_cast<conditional_jump*>(insns[i].get()); j != nullptr) {
 					if(std::holds_alternative<std::ptrdiff_t>(j->control)
 					&& std::get<std::ptrdiff_t>(j->control) != 0) {
-						instruction_ptr replacement = std::make_unique<jump>(j->destination);
+						instruction_ptr replacement = std::make_unique<jmp>(j->destination);
 						if(fix_jumps(insns[i].get(), nullptr, replacement.get())) {
 							insns[i] = std::move(replacement);
 							return true;
@@ -821,7 +795,9 @@ namespace assembler {
 					if(d1->op1 == j1->control
 					&& d2->op1 == j2->control
 					&& i1->op1 != d1->op1
-					&& i1->op1 != d2->op1) {
+					&& i1->op1 != d2->op1
+					&& std::get<instruction*>(j1->destination) == i1
+					&& std::get<instruction*>(j2->destination) == i1) {
 						operand accumulator = i1->op1;
 						operand mul1 = d1->op1;
 						operand mul2 = d2->op1;
