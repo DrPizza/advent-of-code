@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <memory>
 #include <regex>
+#include <vector>
+#include <deque>
 
 #include <gsl/gsl>
 
@@ -51,16 +53,18 @@ namespace assembler {
 
 	using instruction_ptr = std::unique_ptr<instruction>;
 	using program         = std::vector<instruction_ptr>;
-	using port            = std::vector<std::ptrdiff_t>;
+	using port            = std::deque<std::ptrdiff_t>;
 
 	struct processor
 	{
 		program* instructions;
 		std::size_t instruction_pointer = 0;
 		register_file registers;
-		port* output;
+		port* input;
+		port output;
 
 		processor(program* instructions_) : instructions(instructions_) {
+			input = &output;
 		}
 
 		bool single_step() {
@@ -175,8 +179,35 @@ namespace assembler {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
-			cpu.output->push_back(resolve_operand(op1, cpu.registers));
+			cpu.output.push_back(resolve_operand(op1, cpu.registers));
 			return 1;
+		}
+	};
+
+	struct snd : unary_instruction
+	{
+		snd(operand op1_) noexcept : unary_instruction("snd", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			cpu.output.push_front(resolve_operand(op1, cpu.registers));
+			return 1;
+		}
+	};
+
+	struct rcv : unary_instruction
+	{
+		rcv(operand op1_) noexcept : unary_instruction("rcv", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			if(!cpu.input->empty()) {
+				cpu.registers[std::get<reg>(op1)] = cpu.input->back();
+				cpu.input->pop_back();
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 	};
 
@@ -190,6 +221,34 @@ namespace assembler {
 				return 1;
 			}
 			--cpu.registers[std::get<reg>(op1)];
+			return 1;
+		}
+	};
+
+	struct hlf : unary_instruction
+	{
+		hlf(operand op1_) noexcept : unary_instruction("hlf", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			if(!std::holds_alternative<reg>(op1)) {
+				return 1;
+			}
+			cpu.registers[std::get<reg>(op1)] /= 2;
+			return 1;
+		}
+	};
+
+	struct tpl : unary_instruction
+	{
+		tpl(operand op1_) noexcept : unary_instruction("tpl", op1_) {
+		}
+
+		std::ptrdiff_t execute(processor& cpu) override {
+			if(!std::holds_alternative<reg>(op1)) {
+				return 1;
+			}
+			cpu.registers[std::get<reg>(op1)] *= 3;
 			return 1;
 		}
 	};
@@ -368,6 +427,26 @@ namespace assembler {
 		}
 	};
 
+	struct jie : conditional_jump
+	{
+		jie(operand control_, operand destination_) noexcept : conditional_jump("jie", control_, destination_) {
+		}
+
+		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
+			return (control_value % 2) == 0;
+		}
+	};
+
+	struct jio : conditional_jump
+	{
+		jio(operand control_, operand destination_) noexcept : conditional_jump("jio", control_, destination_) {
+		}
+
+		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
+			return control_value == 1;
+		}
+	};
+
 	struct tadd : ternary_instruction
 	{
 		tadd(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tadd", op1_, op2_, op3_) {
@@ -466,7 +545,7 @@ namespace assembler {
 	}
 
 	inline operand parse_operand(const std::string& ins) {
-		std::regex pattern(R"(([[:lower:]])|(-?[[:digit:]]+))");
+		std::regex pattern(R"(([[:lower:]])|([+-]?[[:digit:]]+))");
 		std::smatch m;
 		std::regex_search(ins, m, pattern);
 		if(m[1].matched) {
@@ -479,7 +558,7 @@ namespace assembler {
 
 	template<typename T>
 	instruction_ptr parse_unary(const std::string& ins) {
-		const std::regex pattern(R"((-?[[:alnum:]]+))", std::regex::optimize);
+		const std::regex pattern(R"(([+-]?[[:alnum:]]+))", std::regex::optimize);
 		std::smatch m;
 		std::regex_search(ins, m, pattern);
 		operand o1 = parse_operand(m[1].str());
@@ -488,7 +567,7 @@ namespace assembler {
 
 	template<typename T>
 	instruction_ptr parse_binary(const std::string& ins) {
-		const std::regex pattern(R"((-?[[:alnum:]]+) (-?[[:alnum:]]+))", std::regex::optimize);
+		const std::regex pattern(R"(([+-]?[[:alnum:]]+),? ([+-]?[[:alnum:]]+))", std::regex::optimize);
 		std::smatch m;
 		std::regex_search(ins, m, pattern);
 		operand o1 = parse_operand(m[1].str());
@@ -498,7 +577,7 @@ namespace assembler {
 
 	template<typename T>
 	instruction_ptr parse_ternary(const std::string& ins) {
-		const std::regex pattern(R"((-?[[:alnum:]]+) (-?[[:alnum:]]+) (-?[[:alnum:]]+))", std::regex::optimize);
+		const std::regex pattern(R"(([+-]?[[:alnum:]]+),? ([+-]?[[:alnum:]]+),? ([+-]?[[:alnum:]]+))", std::regex::optimize);
 		std::smatch m;
 		std::regex_search(ins, m, pattern);
 		operand o1 = parse_operand(m[1].str());
@@ -517,6 +596,14 @@ namespace assembler {
 			return parse_unary<tgl>(ins.substr(4));
 		} else if(opcode == "out") {
 			return parse_unary<out>(ins.substr(4));
+		} else if(opcode == "snd") {
+			return parse_unary<snd>(ins.substr(4));
+		} else if(opcode == "rcv") {
+			return parse_unary<rcv>(ins.substr(4));
+		} else if(opcode == "hlf") {
+			return parse_unary<hlf>(ins.substr(4));
+		} else if(opcode == "tpl") {
+			return parse_unary<tpl>(ins.substr(4));
 		} else if(opcode == "set") {
 			return parse_binary<set>(ins.substr(4));
 		} else if(opcode == "cpy") {
@@ -539,6 +626,10 @@ namespace assembler {
 			return parse_binary<jnz>(ins.substr(4));
 		} else if(opcode == "jgz") {
 			return parse_binary<jgz>(ins.substr(4));
+		} else if(opcode == "jie") {
+			return parse_binary<jie>(ins.substr(4));
+		} else if(opcode == "jio") {
+			return parse_binary<jio>(ins.substr(4));
 		}
 		__assume(0);
 	}
@@ -729,7 +820,7 @@ namespace assembler {
 						instruction* target = insns[gsl::narrow_cast<std::size_t>(target_offset)].get();
 
 						instruction_ptr j = std::make_unique<jmp>(operand{ target });
-						insns.insert(insns.begin() + gsl::narrow_cast<std::ptrdiff_t>(i) + 1, std::move(j));
+						insns.insert(insns.begin() + gsl::narrow_cast<std::ptrdiff_t>(i), std::move(j));
 						return true;
 					}
 				}

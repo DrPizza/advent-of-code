@@ -35,24 +35,22 @@ protected:
 
 		for(std::ptrdiff_t i = 0; ; ++i) {
 			assembler::processor cpu = { &instructions };
-			std::vector<std::ptrdiff_t> output;
-			cpu.output = &output;
 			cpu.registers['a'] = i;
 			bool output_valid = true;
 			std::size_t output_size = 0;
 			do {
-				if(output.size() != output_size) {
-					if(output[0] != 0) {
+				if(cpu.output.size() != output_size) {
+					output_size = cpu.output.size();
+					if(cpu.output[0] != 0) {
 						output_valid = false;
 					} else {
-						for(std::size_t j = 1; output.size() > 2 && j < output.size(); ++j) {
-							if(output[j - 1] != 1 - output[j]) {
+						for(std::size_t j = 1; cpu.output.size() > 2 && j < cpu.output.size(); ++j) {
+							if(cpu.output[j - 1] != 1 - cpu.output[j]) {
 								output_valid = false;
 								break;
 							}
 						}
 					}
-					output_size = output.size();
 				}
 				if(output_size == 100) {
 					return std::to_string(i);

@@ -39,7 +39,6 @@ protected:
 		cpu.run();
 		return std::to_string(cpu.registers['a']);
 	}
-
 };
 
 template<>
