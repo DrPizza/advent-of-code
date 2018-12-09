@@ -13,7 +13,10 @@ struct advent_2015_18 : problem
 	}
 
 protected:
-	using grid_shape = md::extents<-1, -1>;
+#pragma warning(push)
+#pragma warning(disable : 26483) // warning C26483: Value %d is outside the bounds (%d, %d) of variable 'allotemp.2'. Only index into arrays using constant expressions that are within bounds of the array (bounds.2).
+	using grid_shape = md::extents<md::dynamic_extent, md::dynamic_extent>;
+#pragma warning(pop)
 	using grid_type = md::mdspan<uint8_t, grid_shape>;
 
 	std::unique_ptr<uint8_t[]> current;

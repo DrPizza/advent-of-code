@@ -9,7 +9,8 @@
 
 struct advent_2016_8 : problem
 {
-	advent_2016_8() noexcept : problem(2016, 8) {
+	[[gsl::suppress(f.6)]]
+	advent_2016_8() : problem(2016, 8) {
 	}
 
 protected:

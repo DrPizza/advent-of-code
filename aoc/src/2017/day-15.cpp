@@ -65,7 +65,7 @@ protected:
 		return std::to_string(pairs);
 	}
 
-	virtual void tidy_up() noexcept {
+	void tidy_up() noexcept override {
 		a->reset();
 		b->reset();
 	}

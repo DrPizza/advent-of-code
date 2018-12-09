@@ -8,7 +8,7 @@
 #include <gsl/gsl>
 
 #pragma warning(push)
-#pragma warning(disable: 4619 4365 6011 26432 26440 26439 26474 26495 26497 26493 26492 26481 26494 26472 26429 26481 26409 26466 26424 26434 26496)
+#pragma warning(disable: 4619 4365 6011 26432 26433 26439 26440 26443 26447 26455 26474 26495 26497 26493 26492 26481 26494 26472 26429 26481 26409 26466 26424 26434 26496)
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include <cryptopp/md5.h>
 #pragma warning(pop)
@@ -228,7 +228,7 @@ namespace utility {
 			if(&e != e.parent) {
 				e.parent = find_parent(e.parent->value);
 			}
-			return e.parent;
+			return gsl::make_not_null(e.parent);
 		}
 
 		std::unordered_map<T, element> table;

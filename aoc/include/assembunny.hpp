@@ -10,6 +10,8 @@
 
 #include <gsl/gsl>
 
+#pragma warning(disable: 26493) // warning C26493: Don't use C-style casts (type.4).
+
 namespace assembunny {
 
 	struct instruction;
@@ -106,16 +108,17 @@ namespace assembunny {
 			return opcode;
 		}
 
-		nilary_instruction(const std::string& opcode_) noexcept : instruction(opcode_) {
+		nilary_instruction(const std::string& opcode_) : instruction(opcode_) {
 		}
 	};
 
 	struct nop0 : nilary_instruction
 	{
-		nop0() noexcept : nilary_instruction("nop0") {
+		[[gsl::suppress(f.6)]]
+		nop0() : nilary_instruction("nop0") {
 		}
 
-		std::ptrdiff_t execute(processor&) override {
+		std::ptrdiff_t execute(processor&) noexcept override {
 			return 1;
 		}
 	};
@@ -128,7 +131,7 @@ namespace assembunny {
 			return opcode + " " + print_operand(op1);
 		}
 
-		unary_instruction(const std::string& opcode_, operand op1_) noexcept : instruction(opcode_), op1(op1_) {
+		unary_instruction(const std::string& opcode_, operand op1_) : instruction(opcode_), op1(op1_) {
 		}
 	};
 
@@ -141,7 +144,7 @@ namespace assembunny {
 			return opcode + " " + print_operand(op1) + " " + print_operand(op2);
 		}
 
-		binary_instruction(const std::string& opcode_, operand op1_, operand op2_) noexcept : instruction(opcode_), op1(op1_), op2(op2_) {
+		binary_instruction(const std::string& opcode_, operand op1_, operand op2_) : instruction(opcode_), op1(op1_), op2(op2_) {
 		}
 	};
 
@@ -155,13 +158,13 @@ namespace assembunny {
 			return opcode + " " + print_operand(op1) + " " + print_operand(op2) + " " + print_operand(op3);
 		}
 
-		ternary_instruction(const std::string& opcode_, operand op1_, operand op2_, operand op3_) noexcept : instruction(opcode_), op1(op1_), op2(op2_), op3(op3_) {
+		ternary_instruction(const std::string& opcode_, operand op1_, operand op2_, operand op3_) : instruction(opcode_), op1(op1_), op2(op2_), op3(op3_) {
 		}
 	};
 
 	struct inc : unary_instruction
 	{
-		inc(operand op1_) noexcept : unary_instruction("inc", op1_) {
+		inc(operand op1_) : unary_instruction("inc", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -175,7 +178,7 @@ namespace assembunny {
 
 	struct out : unary_instruction
 	{
-		out(operand op1_) noexcept : unary_instruction("out", op1_) {
+		out(operand op1_) : unary_instruction("out", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -186,7 +189,7 @@ namespace assembunny {
 
 	struct snd : unary_instruction
 	{
-		snd(operand op1_) noexcept : unary_instruction("snd", op1_) {
+		snd(operand op1_) : unary_instruction("snd", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -197,7 +200,7 @@ namespace assembunny {
 
 	struct rcv : unary_instruction
 	{
-		rcv(operand op1_) noexcept : unary_instruction("rcv", op1_) {
+		rcv(operand op1_) : unary_instruction("rcv", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -213,7 +216,7 @@ namespace assembunny {
 
 	struct dec : unary_instruction
 	{
-		dec(operand op1_) noexcept : unary_instruction("dec", op1_) {
+		dec(operand op1_) : unary_instruction("dec", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -227,7 +230,7 @@ namespace assembunny {
 
 	struct hlf : unary_instruction
 	{
-		hlf(operand op1_) noexcept : unary_instruction("hlf", op1_) {
+		hlf(operand op1_) : unary_instruction("hlf", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -241,7 +244,7 @@ namespace assembunny {
 
 	struct tpl : unary_instruction
 	{
-		tpl(operand op1_) noexcept : unary_instruction("tpl", op1_) {
+		tpl(operand op1_) : unary_instruction("tpl", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -255,17 +258,17 @@ namespace assembunny {
 
 	struct nop1 : unary_instruction
 	{
-		nop1(operand op1_) noexcept : unary_instruction("nop1", op1_) {
+		nop1(operand op1_) : unary_instruction("nop1", op1_) {
 		}
 
-		std::ptrdiff_t execute(processor&) override {
+		std::ptrdiff_t execute(processor&) noexcept override {
 			return 1;
 		}
 	};
 
 	struct set : binary_instruction
 	{
-		set(operand op1_, operand op2_) noexcept : binary_instruction("set", op1_, op2_) {
+		set(operand op1_, operand op2_) : binary_instruction("set", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -276,7 +279,7 @@ namespace assembunny {
 
 	struct cpy : binary_instruction
 	{
-		cpy(operand op1_, operand op2_) noexcept : binary_instruction("cpy", op1_, op2_) {
+		cpy(operand op1_, operand op2_) : binary_instruction("cpy", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -290,7 +293,7 @@ namespace assembunny {
 
 	struct sub : binary_instruction
 	{
-		sub(operand op1_, operand op2_) noexcept : binary_instruction("sub", op1_, op2_) {
+		sub(operand op1_, operand op2_) : binary_instruction("sub", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -301,7 +304,7 @@ namespace assembunny {
 
 	struct add : binary_instruction
 	{
-		add(operand op1_, operand op2_) noexcept : binary_instruction("add", op1_, op2_) {
+		add(operand op1_, operand op2_) : binary_instruction("add", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -312,7 +315,7 @@ namespace assembunny {
 
 	struct mul : binary_instruction
 	{
-		mul(operand op1_, operand op2_) noexcept : binary_instruction("mul", op1_, op2_) {
+		mul(operand op1_, operand op2_) : binary_instruction("mul", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -323,7 +326,7 @@ namespace assembunny {
 
 	struct mod : binary_instruction
 	{
-		mod(operand op1_, operand op2_) noexcept : binary_instruction("mod", op1_, op2_) {
+		mod(operand op1_, operand op2_) : binary_instruction("mod", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -334,7 +337,7 @@ namespace assembunny {
 
 	struct div : binary_instruction
 	{
-		div(operand op1_, operand op2_) noexcept : binary_instruction("div", op1_, op2_) {
+		div(operand op1_, operand op2_) : binary_instruction("div", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -345,7 +348,7 @@ namespace assembunny {
 
 	struct sqrt : binary_instruction
 	{
-		sqrt(operand op1_, operand op2_) noexcept : binary_instruction("sqrt", op1_, op2_) {
+		sqrt(operand op1_, operand op2_) : binary_instruction("sqrt", op1_, op2_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -356,10 +359,10 @@ namespace assembunny {
 
 	struct nop2 : binary_instruction
 	{
-		nop2(operand op1_, operand op2_) noexcept : binary_instruction("nop2", op1_, op2_) {
+		nop2(operand op1_, operand op2_) : binary_instruction("nop2", op1_, op2_) {
 		}
 
-		std::ptrdiff_t execute(processor&) override {
+		std::ptrdiff_t execute(processor&) noexcept override {
 			return 1;
 		}
 	};
@@ -368,10 +371,10 @@ namespace assembunny {
 	{
 		operand destination;
 
-		jmp(operand destination_) noexcept : jmp("jmp", destination_) {
+		jmp(operand destination_) : jmp("jmp", destination_) {
 		}
 
-		jmp(const std::string& opcode_, operand destination_) noexcept : instruction(opcode_), destination(destination_) {
+		jmp(const std::string& opcode_, operand destination_) : instruction(opcode_), destination(destination_) {
 		}
 
 		std::string emit_asm() override {
@@ -387,7 +390,7 @@ namespace assembunny {
 	{
 		operand control;
 
-		conditional_jump(const std::string& opcode_, operand control_, operand destination_) noexcept : jmp(opcode_, destination_), control(control_) {
+		conditional_jump(const std::string& opcode_, operand control_, operand destination_) : jmp(opcode_, destination_), control(control_) {
 		}
 
 		std::string emit_asm() override {
@@ -409,7 +412,7 @@ namespace assembunny {
 
 	struct jnz : conditional_jump
 	{
-		jnz(operand control_, operand destination_) noexcept : conditional_jump("jnz", control_, destination_) {
+		jnz(operand control_, operand destination_) : conditional_jump("jnz", control_, destination_) {
 		}
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
@@ -419,7 +422,7 @@ namespace assembunny {
 
 	struct jgz : conditional_jump
 	{
-		jgz(operand control_, operand destination_) noexcept : conditional_jump("jgz", control_, destination_) {
+		jgz(operand control_, operand destination_) : conditional_jump("jgz", control_, destination_) {
 		}
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
@@ -429,7 +432,7 @@ namespace assembunny {
 
 	struct jie : conditional_jump
 	{
-		jie(operand control_, operand destination_) noexcept : conditional_jump("jie", control_, destination_) {
+		jie(operand control_, operand destination_) : conditional_jump("jie", control_, destination_) {
 		}
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
@@ -439,7 +442,7 @@ namespace assembunny {
 
 	struct jio : conditional_jump
 	{
-		jio(operand control_, operand destination_) noexcept : conditional_jump("jio", control_, destination_) {
+		jio(operand control_, operand destination_) : conditional_jump("jio", control_, destination_) {
 		}
 
 		bool execute_condition(std::ptrdiff_t control_value) noexcept override {
@@ -449,7 +452,7 @@ namespace assembunny {
 
 	struct tadd : ternary_instruction
 	{
-		tadd(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tadd", op1_, op2_, op3_) {
+		tadd(operand op1_, operand op2_, operand op3_) : ternary_instruction("tadd", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -460,7 +463,7 @@ namespace assembunny {
 
 	struct tsub : ternary_instruction
 	{
-		tsub(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tsub", op1_, op2_, op3_) {
+		tsub(operand op1_, operand op2_, operand op3_) : ternary_instruction("tsub", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -471,7 +474,7 @@ namespace assembunny {
 
 	struct tmul : ternary_instruction
 	{
-		tmul(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmul", op1_, op2_, op3_) {
+		tmul(operand op1_, operand op2_, operand op3_) : ternary_instruction("tmul", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -482,7 +485,7 @@ namespace assembunny {
 
 	struct tdiv : ternary_instruction
 	{
-		tdiv(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tdiv", op1_, op2_, op3_) {
+		tdiv(operand op1_, operand op2_, operand op3_) : ternary_instruction("tdiv", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -493,7 +496,7 @@ namespace assembunny {
 
 	struct tmod : ternary_instruction
 	{
-		tmod(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("tmod", op1_, op2_, op3_) {
+		tmod(operand op1_, operand op2_, operand op3_) : ternary_instruction("tmod", op1_, op2_, op3_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {
@@ -504,17 +507,17 @@ namespace assembunny {
 
 	struct nop3 : ternary_instruction
 	{
-		nop3(operand op1_, operand op2_, operand op3_) noexcept : ternary_instruction("nop3", op1_, op2_, op3_) {
+		nop3(operand op1_, operand op2_, operand op3_) : ternary_instruction("nop3", op1_, op2_, op3_) {
 		}
 
-		std::ptrdiff_t execute(processor&) override {
+		std::ptrdiff_t execute(processor&) noexcept override {
 			return 1;
 		}
 	};
 
 	struct tgl : unary_instruction
 	{
-		tgl(operand op1_) noexcept : unary_instruction("tgl", op1_) {
+		tgl(operand op1_) : unary_instruction("tgl", op1_) {
 		}
 
 		std::ptrdiff_t execute(processor& cpu) override {

@@ -9,6 +9,9 @@
 
 #include "utility.hpp"
 
+#pragma warning(disable: 26434) // warning C26434: Function '%s' hides a non-virtual function '%s' (c.128).
+#pragma warning(disable: 26487) // warning C26487: Don't return a pointer that may be invalid (lifetime.1).
+
 struct coord
 {
 	std::size_t x;

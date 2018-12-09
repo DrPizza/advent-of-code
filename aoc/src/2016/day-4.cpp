@@ -71,7 +71,7 @@ protected:
 
 	std::string decipher(std::string input, std::size_t key) noexcept {
 		for(char& c : input) {
-			c = gsl::narrow_cast<char>((c == '-') ? ' ' : (((c - 'a') + key) % 26) + 'a');
+			c = gsl::narrow_cast<char>((c == '-') ? ' ' : (((c - 'a') + gsl::narrow_cast<char>(key)) % 26) + 'a');
 		}
 		return input;
 	}

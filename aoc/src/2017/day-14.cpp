@@ -13,12 +13,13 @@
 
 struct advent_2017_14 : problem
 {
-	advent_2017_14() noexcept : problem(2017, 14) {
+	[[gsl::suppress(f.6)]]
+	advent_2017_14() : problem(2017, 14) {
 	}
 
 protected:
 	template<typename It>
-	std::array<uint8_t, 256> sparse_hash(It first, It last) noexcept {
+	std::array<uint8_t, 256> sparse_hash(It first, It last) {
 		std::array<uint8_t, 256> sparse;
 		std::iota(std::begin(sparse), std::end(sparse), 0ui8);
 		using cyclic = utility::cyclic_iterator<std::array<uint8_t, 256>::iterator>;
@@ -65,7 +66,7 @@ protected:
 	std::unique_ptr<uint8_t[]> data{ std::make_unique<uint8_t[]>(128 * 128) };
 	grid_type grid{ data.get() };
 
-	void precompute() noexcept override {
+	void precompute() override {
 		for(std::size_t i = 0; i < 128; ++i) {
 			std::string row_input = key_string + "-" + std::to_string(i);
 			std::array<uint8_t, 16> hash = knot_hash(std::begin(row_input), std::end(row_input));

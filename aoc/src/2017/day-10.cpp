@@ -24,7 +24,7 @@ protected:
 		std::getline(fin, raw_input);
 	}
 
-	std::array<std::size_t, 256> partial_hash(std::size_t iterations, std::vector<std::size_t> input) noexcept {
+	std::array<std::size_t, 256> partial_hash(std::size_t iterations, std::vector<std::size_t> input) {
 		std::array<std::size_t, 256> sparse;
 		std::iota(std::begin(sparse), std::end(sparse), 0);
 		using cyclic = utility::cyclic_iterator<std::array<std::size_t, 256>::iterator>;

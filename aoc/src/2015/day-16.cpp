@@ -38,7 +38,11 @@ protected:
 		}
 	}
 
-	using comparison_fn = std::function<bool(std::size_t, std::size_t)>;
+	using comparison_fn = std::function<bool(std::size_t, std::size_t) noexcept(false)>;
+
+#pragma warning(push)
+#pragma warning(disable: 26447)
+
 	std::unordered_map<std::string, std::pair<comparison_fn, std::size_t>> known_properties = {
 		{ "children",    { std::equal_to<std::size_t>{}, 3 } },
 		{ "cats",        { std::greater <std::size_t>{}, 7 } },
@@ -51,6 +55,8 @@ protected:
 		{ "cars",        { std::equal_to<std::size_t>{}, 2 } },
 		{ "perfumes",    { std::equal_to<std::size_t>{}, 1 } }
 	};
+
+#pragma warning(pop)
 
 	std::vector<aunt> find_plausible_aunts(bool exact_match) {
 		std::vector<aunt> plausible_aunts;

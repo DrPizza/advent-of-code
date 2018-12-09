@@ -93,7 +93,7 @@ struct advent_2016_13 : problem
 	}
 
 protected:
-	std::size_t favourite;
+	std::size_t favourite = 0;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string line;

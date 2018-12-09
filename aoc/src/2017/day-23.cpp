@@ -51,8 +51,6 @@ protected:
 		optimize(instructions);
 		devirtualize_jumps(instructions);
 
-		assembunny::print_asm(instructions);
-
 		assembunny::processor cpu = { &instructions };
 		cpu.registers['a'] = 1;
 		cpu.run();

@@ -71,7 +71,7 @@ struct assign : unary_component
 	assign(operand source_, wire target_) : unary_component(source_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return c.resolve_operand(source);
 	}
 };
@@ -81,7 +81,7 @@ struct not_gate : unary_component
 	not_gate(operand source_, wire target_) : unary_component(source_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return gsl::narrow_cast<uint16_t>(~c.resolve_operand(source));
 	}
 };
@@ -100,7 +100,7 @@ struct and_gate : binary_component
 	and_gate(operand op1_, operand op2_, wire target_) : binary_component(op1_, op2_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return gsl::narrow_cast<uint16_t>(c.resolve_operand(op1) & c.resolve_operand(op2));
 	}
 };
@@ -110,7 +110,7 @@ struct or_gate : binary_component
 	or_gate(operand op1_, operand op2_, wire target_) : binary_component(op1_, op2_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return gsl::narrow_cast<uint16_t>(c.resolve_operand(op1) | c.resolve_operand(op2));
 	}
 };
@@ -120,7 +120,7 @@ struct lshift : binary_component
 	lshift(operand op1_, operand op2_, wire target_) : binary_component(op1_, op2_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return gsl::narrow_cast<uint16_t>(c.resolve_operand(op1) << c.resolve_operand(op2));
 	}
 };
@@ -130,7 +130,7 @@ struct rshift : binary_component
 	rshift(operand op1_, operand op2_, wire target_) : binary_component(op1_, op2_, target_) {
 	}
 
-	virtual uint16_t do_execute(circuit& c) override {
+	uint16_t do_execute(circuit& c) override {
 		return gsl::narrow_cast<uint16_t>(c.resolve_operand(op1) >> c.resolve_operand(op2));
 	}
 };

@@ -21,20 +21,23 @@
 #include <type_traits>
 #include <utility>
 
-#pragma warning(disable : 4324) // warning C4234: structure was padded due to alignment specifier
-#pragma warning(disable : 4514) // warning C4514: '%s': unreferenced inline function has been removed
-#pragma warning(disable : 4625) // warning C4625: '%s': copy constructor was implicitly defined as deleted
-#pragma warning(disable : 4626) // warning C4626: '%s': assignment operator was implicitly defined as deleted
-#pragma warning(disable : 4710) // warning C4710: '%s': function not inlined
-#pragma warning(disable : 4820) // warning C4820: '%s': '%d' bytes padding added after data member '%s'
-#pragma warning(disable : 5026) // warning C5026: '%s': move constructor was implicitly defined as deleted
-#pragma warning(disable : 5027) // warning C5027: '%s': move assignment operator was implicitly defined as deleted
+#pragma warning(disable: 4324) // warning C4234: structure was padded due to alignment specifier
+#pragma warning(disable: 4514) // warning C4514: '%s': unreferenced inline function has been removed
+#pragma warning(disable: 4625) // warning C4625: '%s': copy constructor was implicitly defined as deleted
+#pragma warning(disable: 4626) // warning C4626: '%s': assignment operator was implicitly defined as deleted
+#pragma warning(disable: 4710) // warning C4710: '%s': function not inlined
+#pragma warning(disable: 4820) // warning C4820: '%s': '%d' bytes padding added after data member '%s'
+#pragma warning(disable: 5026) // warning C5026: '%s': move constructor was implicitly defined as deleted
+#pragma warning(disable: 5027) // warning C5027: '%s': move assignment operator was implicitly defined as deleted
 
-#pragma warning(disable : 26412) // warning C26412: Do not dereference an invalid pointer (lifetimes rule 1). 'return of %s' was invalidated at line %d by 'no initialization'.
-#pragma warning(disable : 26481) // warning C26481: Don't use pointer arithmetic. Use span instead. (bounds.1: http://go.microsoft.com/fwlink/p/?LinkID=620413)
-#pragma warning(disable : 26485) // warning C26485: Expression '%s::`vbtable'': No array to pointer decay. (bounds.3: http://go.microsoft.com/fwlink/p/?LinkID=620415)
-#pragma warning(disable : 26490) // warning C26490: Don't use reinterpret_cast. (type.1: http://go.microsoft.com/fwlink/p/?LinkID=620417)
-#pragma warning(disable : 26499) // warning C26499: Could not find any lifetime tracking information for '%s'
+#pragma warning(disable: 26412) // warning C26412: Do not dereference an invalid pointer (lifetimes rule 1). 'return of %s' was invalidated at line %d by 'no initialization'.
+#pragma warning(disable: 26434) // warning C26434: Function '%s' hides a non-virtual function '%s' (c.128).
+#pragma warning(disable: 26481) // warning C26481: Don't use pointer arithmetic. Use span instead. (bounds.1: http://go.microsoft.com/fwlink/p/?LinkID=620413)
+#pragma warning(disable: 26483) // warning C26483: Value %d is outside the bounds (%d, %d) of variable 'allotemp.2'. Only index into arrays using constant expressions that are within bounds of the array (bounds.2).
+#pragma warning(disable: 26485) // warning C26485: Expression '%s::`vbtable'': No array to pointer decay. (bounds.3: http://go.microsoft.com/fwlink/p/?LinkID=620415)
+#pragma warning(disable: 26490) // warning C26490: Don't use reinterpret_cast. (type.1: http://go.microsoft.com/fwlink/p/?LinkID=620417)
+#pragma warning(disable: 26499) // warning C26499: Could not find any lifetime tracking information for '%s'
+#pragma warning(disable: 28020) // warning C28020: The expression '0<=_Param_(1)&&_Param_(1)<=2-1' is not true at this call.
 
 #include <gsl/gsl>
 

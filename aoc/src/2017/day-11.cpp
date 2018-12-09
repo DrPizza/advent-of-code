@@ -77,7 +77,7 @@ protected:
 		return gsl::narrow<std::size_t>((std::abs(c.x) + std::abs(c.y) + std::abs(c.z)) / 2);
 	}
 
-	void precompute() noexcept override {
+	void precompute() override {
 		hex_coord position{ 0, 0, 0 };
 		std::for_each(std::begin(directions), std::end(directions), [&](compass d) {
 			position += d;
@@ -86,11 +86,11 @@ protected:
 		});
 	}
 
-	std::string part_1() noexcept override {
+	std::string part_1() override {
 		return std::to_string(current_distance);
 	}
 
-	std::string part_2() noexcept override {
+	std::string part_2() override {
 		return std::to_string(greatest_distance);
 	}
 };

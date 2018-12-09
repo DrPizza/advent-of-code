@@ -269,6 +269,9 @@
     <ClCompile Include="src\2015\day-25.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\2018\day-1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\day-9.txt" />
@@ -347,5 +350,6 @@
     <Text Include="input\2015\day-23.txt" />
     <Text Include="input\2015\day-24.txt" />
     <Text Include="input\2015\day-25.txt" />
+    <Text Include="input\2018\day-1.txt" />
   </ItemGroup>
 </Project>

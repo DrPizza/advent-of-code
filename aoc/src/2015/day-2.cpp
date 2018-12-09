@@ -29,7 +29,7 @@ protected:
 		}
 	}
 
-	std::size_t get_paper_area(box b) noexcept {
+	std::size_t get_paper_area(box b) {
 		const std::size_t areas[] = { b.l * b.w, b.w * b.h, b.h * b.l };
 		const std::size_t smallest = *std::min_element(std::begin(areas), std::end(areas));
 		return 2 * std::accumulate(std::begin(areas), std::end(areas), 0ui64) + smallest;

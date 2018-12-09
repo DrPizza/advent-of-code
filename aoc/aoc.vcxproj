@@ -15,7 +15,7 @@
     <ProjectGuid>{DC640606-2E6D-402C-8C67-B6BAF3E69B7B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>aoc</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -59,6 +59,8 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/experimental:external /external:anglebrackets /external:W0 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -70,6 +72,8 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/experimental:external /external:anglebrackets /external:W0 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,6 +166,7 @@
     <ClInclude Include="include\utility.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\2018\day-1.cpp" />
     <ClCompile Include="src\aoc.cpp" />
     <ClCompile Include="src\2017\day-18.cpp" />
     <ClCompile Include="src\problem.cpp" />
@@ -247,6 +252,7 @@
     <Text Include="input\2017\day-7.txt" />
     <Text Include="input\2017\day-8.txt" />
     <Text Include="input\2017\day-9.txt" />
+    <Text Include="input\2018\day-1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

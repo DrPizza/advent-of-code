@@ -12,7 +12,8 @@
 
 struct advent_2017_21 : problem
 {
-	advent_2017_21() noexcept : problem(2017, 21) {
+	[[gsl::suppress(f.6)]]
+	advent_2017_21() : problem(2017, 21) {
 	}
 
 protected:

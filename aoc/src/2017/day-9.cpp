@@ -66,11 +66,11 @@ protected:
 		}
 	}
 
-	std::string part_1() noexcept override {
+	std::string part_1() override {
 		return std::to_string(total_group_score);
 	}
 
-	std::string part_2() noexcept override {
+	std::string part_2() override {
 		return std::to_string(garbage_count);
 	}
 };

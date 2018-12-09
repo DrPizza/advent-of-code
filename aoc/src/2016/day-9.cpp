@@ -5,6 +5,8 @@
 #include <fstream>
 #include <regex>
 
+#pragma warning(disable: 26451) // warning C26451: Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).
+
 struct advent_2016_9 : problem
 {
 	advent_2016_9() noexcept : problem(2016, 9) {

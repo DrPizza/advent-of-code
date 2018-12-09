@@ -49,7 +49,7 @@ protected:
 				case 'x':
 					{
 						const std::string hex_code = s.substr(i + 1, 2);
-						result += gsl::narrow_cast<char>(std::stol(hex_code, 0, 16));
+						result += gsl::narrow_cast<char>(std::stol(hex_code, nullptr, 16));
 						i += 2;
 						escaped = false;
 					}

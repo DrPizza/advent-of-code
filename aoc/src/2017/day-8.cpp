@@ -7,7 +7,8 @@
 
 struct advent_2017_8 : problem
 {
-	advent_2017_8() noexcept : problem(2017, 8) {
+	[[gsl::suppress(f.6)]]
+	advent_2017_8() : problem(2017, 8) {
 	}
 
 protected:
@@ -86,7 +87,7 @@ protected:
 	std::ptrdiff_t highest_ever   = std::numeric_limits<std::ptrdiff_t>::min();
 	std::ptrdiff_t highest_at_end = std::numeric_limits<std::ptrdiff_t>::min();
 
-	void precompute() noexcept override {
+	void precompute() override {
 		std::unordered_map<std::string, std::ptrdiff_t> registers;
 		for(const instruction& i : instructions) {
 			if(comparisons[i.cmp](registers[i.guard], i.comperand)) {
@@ -103,11 +104,11 @@ protected:
 		}
 	}
 
-	std::string part_1() noexcept override {
+	std::string part_1() override {
 		return std::to_string(highest_at_end);
 	}
 
-	std::string part_2() noexcept override {
+	std::string part_2() override {
 		return std::to_string(highest_ever);
 	}
 };

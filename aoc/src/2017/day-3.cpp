@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <utility>
 
+#pragma warning(disable: 26440) // warning C26440: Function '%s' can be declared 'noexcept' (f.6).
+
 struct advent_2017_3 : problem
 {
 	advent_2017_3() noexcept : problem(2017, 3) {
@@ -21,7 +23,7 @@ protected:
 	}
 
 	template<typename F>
-	void spiral_iterate(F&& fn) noexcept {
+	void spiral_iterate(F&& fn) {
 		std::ptrdiff_t dx = 1;
 		std::ptrdiff_t dy = 0;
 		for(std::ptrdiff_t size = 1; true; ++size) {

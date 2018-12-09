@@ -35,7 +35,7 @@ protected:
 		return "";
 	}
 
-	[[gsl::suppress(f .6)]] virtual std::string part_2() {
+	[[gsl::suppress(f.6)]] virtual std::string part_2() {
 		return "";
 	}
 
@@ -49,6 +49,7 @@ enum struct advent_year
 	year_2015,
 	year_2016,
 	year_2017,
+	year_2018
 };
 
 enum struct advent_day

@@ -11,7 +11,7 @@ struct advent_2016_19 : problem
 	}
 
 protected:
-	std::uint64_t elf_count;
+	std::uint64_t elf_count = 0;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::string line;
@@ -23,9 +23,9 @@ protected:
 		DWORD idx = 0;
 		_BitScanReverse64(&idx, elf_count);
 		std::uint64_t safe_position = elf_count;
-		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position & ((1 << idx) - 1));
-		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position << 1);
-		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position | 1);
+		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position & ((1ui64 << idx) - 1ui64));
+		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position << 1ui64);
+		safe_position = gsl::narrow_cast<std::uint64_t>(safe_position | 1ui64);
 		return std::to_string(safe_position);
 	}
 
