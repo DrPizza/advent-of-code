@@ -18,6 +18,9 @@
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -167,6 +170,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\2018\day-1.cpp" />
+    <ClCompile Include="src\2018\day-10.cpp" />
+    <ClCompile Include="src\2018\day-2.cpp" />
+    <ClCompile Include="src\2018\day-3.cpp" />
+    <ClCompile Include="src\2018\day-4.cpp" />
+    <ClCompile Include="src\2018\day-5.cpp" />
+    <ClCompile Include="src\2018\day-6.cpp" />
+    <ClCompile Include="src\2018\day-7.cpp" />
+    <ClCompile Include="src\2018\day-8.cpp" />
+    <ClCompile Include="src\2018\day-9.cpp" />
     <ClCompile Include="src\aoc.cpp" />
     <ClCompile Include="src\2017\day-18.cpp" />
     <ClCompile Include="src\problem.cpp" />
@@ -253,6 +265,15 @@
     <Text Include="input\2017\day-8.txt" />
     <Text Include="input\2017\day-9.txt" />
     <Text Include="input\2018\day-1.txt" />
+    <Text Include="input\2018\day-10.txt" />
+    <Text Include="input\2018\day-2.txt" />
+    <Text Include="input\2018\day-3.txt" />
+    <Text Include="input\2018\day-4.txt" />
+    <Text Include="input\2018\day-5.txt" />
+    <Text Include="input\2018\day-6.txt" />
+    <Text Include="input\2018\day-7.txt" />
+    <Text Include="input\2018\day-8.txt" />
+    <Text Include="input\2018\day-9.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

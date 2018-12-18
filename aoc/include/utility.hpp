@@ -14,6 +14,40 @@
 #pragma warning(pop)
 
 namespace utility {
+	//std::size_t levenshtein_distance(const std::string& s1, const std::string& s2)
+	//{
+	//	const std::size_t s1len = s1.size();
+	//	const std::size_t s2len = s2.size();
+
+	//	std::vector<std::size_t> column(s1len + 1ui64);
+	//	std::iota(column.begin(), std::next(column.begin(), gsl::narrow_cast<std::ptrdiff_t>(s1len + 1ui64)), 0ui64);
+
+	//	for(std::size_t x = 1ui64; x <= s2len; x++) {
+	//		column[0] = x;
+	//		std::size_t last_diagonal = x - 1ui64;
+	//		for(std::size_t y = 1; y <= s1len; y++) {
+	//			const std::size_t old_diagonal = column[y];
+	//			column[y] = std::min({ column[y       ] + 1ui64,
+	//				column[y - 1i64] + 1ui64,
+	//				last_diagonal + (s1[y - 1ui64] == s2[x - 1ui64] ? 0ui64 : 1ui64) });
+	//			last_diagonal = old_diagonal;
+	//		}
+	//	}
+	//	return column[s1len];
+	//}
+
+	template<typename FwIter, typename Func>
+	void for_all_pairs(FwIter first, FwIter last, Func f) {
+		if(first != last) {
+			FwIter trailer = first;
+			++first;
+			for(; first != last; ++first, ++trailer) {
+				for(FwIter it = first; it != last; ++it) {
+					f(*trailer, *it);
+				}
+			}
+		}
+	}
 
 	template<typename It, typename Pred>
 	It find_odd_one_out(It begin, It end, Pred p) {
@@ -145,6 +179,10 @@ namespace utility {
 			my_type ret(*this);
 			ret -= delta;
 			return ret;
+		}
+
+		constexpr underlying_iterator base() const {
+			return current;
 		}
 
 	private:

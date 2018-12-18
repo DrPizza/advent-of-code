@@ -27,22 +27,21 @@ protected:
 		return std::to_string(frequency);
 	}
 
-	//std::string part_2() override {
-	//	std::ptrdiff_t floor           = 0;
-	//	std::size_t instruction_number = 0;
-	//	for(const char ch : floors) {
-	//		++instruction_number;
-	//		if(ch == '(') {
-	//			++floor;
-	//		} else if(ch == ')') {
-	//			--floor;
-	//		}
-	//		if(floor == -1) {
-	//			break;
-	//		}
-	//	}
-	//	return std::to_string(instruction_number);
-	//}
+	std::string part_2() override {
+		std::ptrdiff_t frequency = 0;
+		std::unordered_set<std::ptrdiff_t> previous_frequencies;
+		for(;;) {
+			for(const std::ptrdiff_t delta : changes) {
+				frequency += delta;
+				if(previous_frequencies.find(frequency) != previous_frequencies.end()) {
+					return std::to_string(frequency);
+				} else {
+					previous_frequencies.insert(frequency);
+				}
+			}
+		}
+		__assume(0);
+	}
 };
 
 template<>
