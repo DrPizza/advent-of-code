@@ -299,6 +299,24 @@
     <ClCompile Include="src\2018\day-10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\2018\day-11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-13.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-14.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-15.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-16.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\day-9.txt" />
@@ -387,5 +405,11 @@
     <Text Include="input\2018\day-8.txt" />
     <Text Include="input\2018\day-9.txt" />
     <Text Include="input\2018\day-10.txt" />
+    <Text Include="input\2018\day-11.txt" />
+    <Text Include="input\2018\day-12.txt" />
+    <Text Include="input\2018\day-13.txt" />
+    <Text Include="input\2018\day-14.txt" />
+    <Text Include="input\2018\day-15.txt" />
+    <Text Include="input\2018\day-16.txt" />
   </ItemGroup>
 </Project>
