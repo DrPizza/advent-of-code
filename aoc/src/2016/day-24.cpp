@@ -6,14 +6,18 @@
 #include <unordered_map>
 #include <queue>
 
-struct coord
+namespace
 {
-	std::size_t r;
-	std::size_t c;
-};
 
-constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
-	return lhs.r == rhs.r && lhs.c == rhs.c;
+	struct coord
+	{
+		std::size_t r;
+		std::size_t c;
+	};
+
+	constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
+		return lhs.r == rhs.r && lhs.c == rhs.c;
+	}
 }
 
 namespace std {
@@ -26,56 +30,60 @@ namespace std {
 	};
 }
 
-struct block
+namespace
 {
-	bool passable;
-	bool has_number;
-	std::size_t number;
-};
 
-using grid_type = std::vector<std::vector<block>>;
-using memo_type = std::vector<std::vector<bool>>;
-struct state_t
-{
-	coord pos;
-	std::size_t distance;
-};
+	struct block
+	{
+		bool passable;
+		bool has_number;
+		std::size_t number;
+	};
 
-std::size_t shortest_path(coord position, coord target, grid_type& grid) {
-	std::queue<state_t> q;
-	q.push(state_t{ position, 0 });
-	memo_type visited;
-	visited.resize(grid.size());
-	for(std::vector<bool>& v : visited) {
-		v.resize(grid[0].size(), false);
+	using grid_type = std::vector<std::vector<block>>;
+	using memo_type = std::vector<std::vector<bool>>;
+	struct state_t
+	{
+		coord pos;
+		std::size_t distance;
+	};
+
+	std::size_t shortest_path(coord position, coord target, grid_type& grid) {
+		std::queue<state_t> q;
+		q.push(state_t{ position, 0 });
+		memo_type visited;
+		visited.resize(grid.size());
+		for(std::vector<bool>& v : visited) {
+			v.resize(grid[0].size(), false);
+		}
+
+		while(!q.empty()) {
+			const state_t s = q.front();
+			q.pop();
+
+			if(s.pos == target) {
+				return s.distance;
+			}
+
+			if(grid[s.pos.r][s.pos.c - 1].passable && !visited[s.pos.r][s.pos.c - 1]) {
+				q.push({ { s.pos.r, s.pos.c - 1 }, s.distance + 1 });
+				visited[s.pos.r][s.pos.c - 1] = true;
+			}
+			if(grid[s.pos.r][s.pos.c + 1].passable && !visited[s.pos.r][s.pos.c + 1]) {
+				q.push({ { s.pos.r, s.pos.c + 1 }, s.distance + 1 });
+				visited[s.pos.r][s.pos.c + 1] = true;
+			}
+			if(grid[s.pos.r - 1][s.pos.c].passable && !visited[s.pos.r - 1][s.pos.c]) {
+				q.push({ { s.pos.r - 1, s.pos.c }, s.distance + 1 });
+				visited[s.pos.r - 1][s.pos.c] = true;
+			}
+			if(grid[s.pos.r + 1][s.pos.c].passable && !visited[s.pos.r + 1][s.pos.c]) {
+				q.push({ { s.pos.r + 1, s.pos.c }, s.distance + 1 });
+				visited[s.pos.r + 1][s.pos.c] = true;
+			}
+		}
+		return std::numeric_limits<std::size_t>::max();
 	}
-
-	while(!q.empty()) {
-		const state_t s = q.front();
-		q.pop();
-
-		if(s.pos == target) {
-			return s.distance;
-		}
-
-		if(grid[s.pos.r][s.pos.c - 1].passable && !visited[s.pos.r][s.pos.c - 1]) {
-			q.push({ { s.pos.r, s.pos.c - 1 }, s.distance + 1 });
-			visited[s.pos.r][s.pos.c - 1] = true;
-		}
-		if(grid[s.pos.r][s.pos.c + 1].passable && !visited[s.pos.r][s.pos.c + 1]) {
-			q.push({ { s.pos.r, s.pos.c + 1 }, s.distance + 1 });
-			visited[s.pos.r][s.pos.c + 1] = true;
-		}
-		if(grid[s.pos.r - 1][s.pos.c].passable && !visited[s.pos.r - 1][s.pos.c]) {
-			q.push({ { s.pos.r - 1, s.pos.c }, s.distance + 1 });
-			visited[s.pos.r - 1][s.pos.c] = true;
-		}
-		if(grid[s.pos.r + 1][s.pos.c].passable && !visited[s.pos.r + 1][s.pos.c]) {
-			q.push({ { s.pos.r + 1, s.pos.c }, s.distance + 1 });
-			visited[s.pos.r + 1][s.pos.c] = true;
-		}
-	}
-	return std::numeric_limits<std::size_t>::max();
 }
 
 #pragma warning(push)

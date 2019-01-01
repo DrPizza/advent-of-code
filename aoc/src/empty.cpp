@@ -5,6 +5,11 @@
 #include <fstream>
 #include <vector>
 
+namespace
+{
+
+}
+
 struct advent_2018_2 : problem
 {
 	advent_2018_2() noexcept : problem(2018, 2) {

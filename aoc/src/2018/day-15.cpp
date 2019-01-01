@@ -7,299 +7,221 @@
 #include <set>
 #include <vector>
 
-#if 0
-
-std::vector<std::vector<char>> raw_cave;
-
-enum struct species
+namespace
 {
-	elf,
-	goblin
-};
-
-struct unit;
-
-std::vector<unit> units;
-
-struct movement
-{
-	std::ptrdiff_t down;
-	std::ptrdiff_t right;
-};
-
-struct point
-{
-	std::ptrdiff_t r;
-	std::ptrdiff_t c;
-
-	friend bool operator<(const point& lhs, const point& rhs) noexcept {
-		return std::tie(lhs.r, lhs.c) < std::tie(rhs.r, rhs.c);
-	}
-
-	friend bool operator==(const point& lhs, const point& rhs) noexcept {
-		return std::tie(lhs.r, lhs.c) == std::tie(rhs.r, rhs.c);
-	}
-
-	point operator+(movement rhs) const noexcept {
-		return point { r + rhs.down, c + rhs.right };
-	}
-};
-
-std::size_t manhattan(const point& lhs, const point& rhs) noexcept {
-	return std::abs(lhs.r - rhs.r) + std::abs(lhs.c - rhs.c);
-}
-
-void breadth_first_search(species needle, point start) {
-	const std::vector<movement> directions = { {0, -1}, {-1, 0}, {1, 0}, {0, 1} };
-
-	std::set<point> visited;
-	visited.insert(start);
-
-
-}
-
-struct unit
-{
-	point position;
-	std::size_t hp;
-	species s;
-
-	friend bool operator<(const unit& lhs, const unit& rhs) noexcept {
-		return lhs.position < rhs.position;
-	}
-
-	void enumerate_targets() {
-
-	}
-
-	void try_move() {
-
-	}
-
-	void try_attack() {
-
-	}
-
-	void act() {
-		enumerate_targets();
-		try_move();
-		try_attack();
-	}
-};
-
-#endif
-
-enum struct species
-{
-	elf,
-	goblin
-};
-
-std::string to_string(species s) {
-	switch(s) {
-	case species::elf:
-		return "E";
-	case species::goblin:
-		return "G";
-	}
-	__assume(0);
-}
-
-species parse_species(const char ch) noexcept {
-	if(ch == 'E') {
-		return species::elf;
-	} else if(ch == 'G') {
-		return species::goblin;
-	}
-	__assume(0);
-}
-
-species get_enemy(species type) noexcept {
-	switch(type) {
-	case species::elf:
-		return species::goblin;
-	case species::goblin:
-		return species::elf;
-	}
-	__assume(0);
-}
-
-struct point
-{
-	int c, r;
-
-	point& operator+=(const point& rhs) noexcept {
-		c += rhs.c;
-		r += rhs.r;
-		return *this;
-	}
-	point operator+(const point& rhs) const noexcept {
-		return { c + rhs.c, r + rhs.r };
-	}
-	bool operator==(const point& rhs) const noexcept {
-		return c == rhs.c && r == rhs.r;
-	}
-	bool operator<(const point& rhs) const noexcept {
-		return std::tie(r, c) < std::tie(rhs.r, rhs.c);
-	}
-};
-
-std::size_t manhattan(const point& lhs, const point& rhs) noexcept {
-	return std::abs(lhs.r - rhs.r) + std::abs(lhs.c - rhs.c);
-}
-
-struct unit {
-	unit(int c, int r, species type_) noexcept : loc{ c, r }, type(type_) {
-	}
-
-	bool is_target_of(species t, point loc_) const noexcept {
-		return hp > 0 && manhattan(loc, loc_) == 1 && t == get_enemy(type);
-	}
-
-	friend bool operator<(const unit& lhs, const unit& rhs) noexcept {
-		return lhs.loc < rhs.loc;
-	}
-
-	point loc;
-	species type;
-	int hp = 200;
-};
-
-struct cave
-{
-	cave(const std::vector<std::vector<char>>& cave, int elfAttack) : raw_cave(cave), elf_attack_damage(elfAttack) {
-		for(int r = 0; r < raw_cave.size(); ++r) {
-			for(int c = 0; c < raw_cave[r].size(); ++c) {
-				if(auto s = raw_cave[r][c]; s == 'E' || s == 'G') {
-					units.emplace_back(c, r, parse_species(s));
-				}
-			}
-		}
-	}
-
-	bool do_round() {
-		std::sort(std::begin(units), std::end(units));
-		for(unit& me : units) {
-			if(me.hp < 1) {
-				continue;
-			}
-			if(!has_opponents(me.type)) {
-				return true;
-			}
-			try_move(me);
-			try_attack(me);
-		}
-		return false;
-	}
-	bool did_elves_die() const {
-		return ranges::any_of(units, [](auto& u) { return u.type == species::elf && u.hp < 1; });
-	}
-	int score() const {
-		return ranges::accumulate(units, 0, [](int i, const unit& u) { return i + (u.hp > 0 ? u.hp : 0); });
-	}
-
-private:
-	struct path
+	enum struct species
 	{
-		point first_step, pos;
-		int length;
-		bool operator<(const path& r) const noexcept {
-			return std::tie(length, pos.r, pos.c, first_step.r, first_step.c)
-			     < std::tie(r.length, r.pos.r, r.pos.c, r.first_step.r, r.first_step.c);
+		elf,
+		goblin
+	};
+
+	std::string to_string(species s) {
+		switch(s) {
+		case species::elf:
+			return "E";
+		case species::goblin:
+			return "G";
 		}
-		bool operator==(const path& r) const noexcept {
-			return std::tie(length, pos.r, pos.c, first_step.r, first_step.c)
-			    == std::tie(r.length, r.pos.r, r.pos.c, r.first_step.r, r.first_step.c);
+		__assume(0);
+	}
+
+	species parse_species(const char ch) noexcept {
+		if(ch == 'E') {
+			return species::elf;
+		} else if(ch == 'G') {
+			return species::goblin;
+		}
+		__assume(0);
+	}
+
+	species get_enemy(species type) noexcept {
+		switch(type) {
+		case species::elf:
+			return species::goblin;
+		case species::goblin:
+			return species::elf;
+		}
+		__assume(0);
+	}
+
+	struct point
+	{
+		int c, r;
+
+		point& operator+=(const point& rhs) noexcept {
+			c += rhs.c;
+			r += rhs.r;
+			return *this;
+		}
+		point operator+(const point& rhs) const noexcept {
+			return { c + rhs.c, r + rhs.r };
+		}
+		bool operator==(const point& rhs) const noexcept {
+			return c == rhs.c && r == rhs.r;
+		}
+		bool operator<(const point& rhs) const noexcept {
+			return std::tie(r, c) < std::tie(rhs.r, rhs.c);
 		}
 	};
 
-	std::vector<path> breadth_first_search(const unit& initial) const {
-		const std::vector<point> dirs{ { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
+	std::size_t manhattan(const point& lhs, const point& rhs) noexcept {
+		return std::abs(lhs.r - rhs.r) + std::abs(lhs.c - rhs.c);
+	}
 
-		std::queue<path> candidates;
-
-		std::set<point> visited;
-		for(const auto& d : dirs) {
-			const auto pos = initial.loc + d;
-			if(at(pos) == '.') {
-				candidates.push(path{ d, pos, 1 });
-				visited.insert({ pos.c, pos.r });
-			}
+	struct unit
+	{
+		unit(int c, int r, species type_) noexcept : loc{ c, r }, type(type_) {
 		}
 
-		std::vector<path> valid_moves;
-		while(!candidates.empty()) {
-			auto spot = candidates.front();
-			candidates.pop();
-			if(has_targets(initial.type, spot.pos)) {
-				valid_moves.push_back(spot);
-				continue;
-			}
-			for(const auto& d : dirs) {
-				const point next = spot.pos + d;
-				if(0 == visited.count(next) && at(next) == '.') {
-					candidates.push(path{ spot.first_step, next, spot.length + 1 });
-					visited.insert(next);
+		bool is_target_of(species t, point loc_) const noexcept {
+			return hp > 0 && manhattan(loc, loc_) == 1 && t == get_enemy(type);
+		}
+
+		friend bool operator<(const unit& lhs, const unit& rhs) noexcept {
+			return lhs.loc < rhs.loc;
+		}
+
+		point loc;
+		species type;
+		int hp = 200;
+	};
+
+	struct cave
+	{
+		cave(const std::vector<std::vector<char>>& cave, int elfAttack) : raw_cave(cave), elf_attack_damage(elfAttack) {
+			for(int r = 0; r < raw_cave.size(); ++r) {
+				for(int c = 0; c < raw_cave[r].size(); ++c) {
+					if(auto s = raw_cave[r][c]; s == 'E' || s == 'G') {
+						units.emplace_back(c, r, parse_species(s));
+					}
 				}
 			}
 		}
-		return valid_moves;
-	}
 
-	void try_move(unit& me) {
-		if(has_targets(me.type, me.loc)) {
-			return;
+		bool do_round() {
+			std::sort(std::begin(units), std::end(units));
+			for(unit& me : units) {
+				if(me.hp < 1) {
+					continue;
+				}
+				if(!has_opponents(me.type)) {
+					return true;
+				}
+				try_move(me);
+				try_attack(me);
+			}
+			return false;
+		}
+		bool did_elves_die() const {
+			return ranges::any_of(units, [] (auto& u) { return u.type == species::elf && u.hp < 1; });
+		}
+		int score() const {
+			return ranges::accumulate(units, 0, [] (int i, const unit& u) { return i + (u.hp > 0 ? u.hp : 0); });
 		}
 
-		std::vector<path> valid_moves = breadth_first_search(me);
-		if(valid_moves.empty()) {
-			return;
+	private:
+		struct path
+		{
+			point first_step, pos;
+			int length;
+			bool operator<(const path& r) const noexcept {
+				return std::tie(length, pos.r, pos.c, first_step.r, first_step.c)
+					< std::tie(r.length, r.pos.r, r.pos.c, r.first_step.r, r.first_step.c);
+			}
+			bool operator==(const path& r) const noexcept {
+				return std::tie(length, pos.r, pos.c, first_step.r, first_step.c)
+					== std::tie(r.length, r.pos.r, r.pos.c, r.first_step.r, r.first_step.c);
+			}
+		};
+
+		std::vector<path> breadth_first_search(const unit& initial) const {
+			const std::vector<point> dirs{ { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 } };
+
+			std::queue<path> candidates;
+
+			std::set<point> visited;
+			for(const auto& d : dirs) {
+				const auto pos = initial.loc + d;
+				if(at(pos) == '.') {
+					candidates.push(path{ d, pos, 1 });
+					visited.insert({ pos.c, pos.r });
+				}
+			}
+
+			std::vector<path> valid_moves;
+			while(!candidates.empty()) {
+				auto spot = candidates.front();
+				candidates.pop();
+				if(has_targets(initial.type, spot.pos)) {
+					valid_moves.push_back(spot);
+					continue;
+				}
+				for(const auto& d : dirs) {
+					const point next = spot.pos + d;
+					if(0 == visited.count(next) && at(next) == '.') {
+						candidates.push(path{ spot.first_step, next, spot.length + 1 });
+						visited.insert(next);
+					}
+				}
+			}
+			return valid_moves;
 		}
-		std::sort(std::begin(valid_moves), std::end(valid_moves));
 
-		at(me.loc) = '.';
-		me.loc     = me.loc + valid_moves.front().first_step;
-		at(me.loc) = ::to_string(me.type)[0];
-	}
+		void try_move(unit& me) {
+			if(has_targets(me.type, me.loc)) {
+				return;
+			}
 
-	void try_attack(const unit& me) {
-		auto targets = units
-		             | ranges::view::filter([&me](const unit& u) noexcept { return u.is_target_of(me.type, me.loc); })
-		             | ranges::view::transform([](unit& u) noexcept { return std::ref(u); })
-		             | ranges::to_vector;
+			std::vector<path> valid_moves = breadth_first_search(me);
+			if(valid_moves.empty()) {
+				return;
+			}
+			std::sort(std::begin(valid_moves), std::end(valid_moves));
 
-		if(!targets.empty()) {
-			ranges::sort(targets, std::less<>(), &unit::hp);
-			auto& target = targets.front().get();
-			target.hp -= (me.type == species::elf ? elf_attack_damage : 3);
-			if(target.hp <= 0) {
-				at(target.loc) = '.';
+			at(me.loc) = '.';
+			me.loc = me.loc + valid_moves.front().first_step;
+			at(me.loc) = ::to_string(me.type)[0];
+		}
+
+		void try_attack(const unit& me) {
+			auto targets = units
+			             | ranges::view::filter([&me] (const unit& u) noexcept { return u.is_target_of(me.type, me.loc); })
+			             | ranges::view::transform([] (unit& u) noexcept { return std::ref(u); })
+			             | ranges::to_vector;
+
+			if(!targets.empty()) {
+				ranges::sort(targets, std::less<>(), &unit::hp);
+				auto& target = targets.front().get();
+				target.hp -= (me.type == species::elf ? elf_attack_damage : 3);
+				if(target.hp <= 0) {
+					at(target.loc) = '.';
+				}
 			}
 		}
-	}
 
-	bool has_targets(species type, point loc) const {
-		auto targets = units
-		             | ranges::view::filter([type, loc](const unit& u) noexcept { return u.is_target_of(type, loc); });
-		return !targets.empty();
-	}
-	bool has_opponents(species type) {
-		auto targets = units
-		             | ranges::view::filter([type](const unit& u) { return u.hp > 0 && type == get_enemy(u.type); });
-		return !targets.empty();
-	}
-	char& at(point loc) {
-		return raw_cave[loc.r][loc.c];
-	}
+		bool has_targets(species type, point loc) const {
+			auto targets = units
+				| ranges::view::filter([type, loc] (const unit& u) noexcept { return u.is_target_of(type, loc); });
+			return !targets.empty();
+		}
+		bool has_opponents(species type) {
+			auto targets = units
+				| ranges::view::filter([type] (const unit& u) { return u.hp > 0 && type == get_enemy(u.type); });
+			return !targets.empty();
+		}
+		char& at(point loc) {
+			return raw_cave[loc.r][loc.c];
+		}
 
-	const char& at(point loc) const {
-		return raw_cave[loc.r][loc.c];
-	}
+		const char& at(point loc) const {
+			return raw_cave[loc.r][loc.c];
+		}
 
-	std::vector<std::vector<char>> raw_cave;
-	std::vector<unit> units;
-	int elf_attack_damage;
-};
+		std::vector<std::vector<char>> raw_cave;
+		std::vector<unit> units;
+		int elf_attack_damage;
+	};
+}
 
 struct advent_2018_15 : problem
 {

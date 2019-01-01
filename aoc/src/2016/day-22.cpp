@@ -6,22 +6,25 @@
 #include <regex>
 #include <map>
 
-struct coord
+namespace
 {
-	std::size_t x;
-	std::size_t y;
-};
+	struct coord
+	{
+		std::size_t x;
+		std::size_t y;
+	};
 
-struct node
-{
-	coord position;
-	std::size_t size;
-	std::size_t used;
-	std::size_t avail;
-};
+	struct node
+	{
+		coord position;
+		std::size_t size;
+		std::size_t used;
+		std::size_t avail;
+	};
 
-constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
-	return lhs.x == rhs.x && lhs.y == rhs.y;
+	constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
+		return lhs.x == rhs.x && lhs.y == rhs.y;
+	}
 }
 
 namespace std {
@@ -34,32 +37,35 @@ namespace std {
 	};
 }
 
-std::string print(const node& n) {
-	if(n.used == 0) {
-		return "_";
+namespace
+{
+	std::string print(const node& n) {
+		if(n.used == 0) {
+			return "_";
+		}
+		if(n.used >= 90) {
+			return "#";
+		}
+		return ".";
 	}
-	if(n.used >= 90) {
-		return "#";
-	}
-	return ".";
-}
 
-using grid_type = std::map<std::size_t, std::map<std::size_t, node>>;
+	using grid_type = std::map<std::size_t, std::map<std::size_t, node>>;
 
-void print(grid_type& grid) {
-	for(std::size_t y = 0; y < grid.size(); ++y) {
-		for(std::size_t x = 0; x < grid[y].size(); ++x) {
-			if(y == 0 && x == 0) {
-				std::cout << "(" << print(grid[y][x]) << ") ";
-			} else if(y == 0 && x == grid[y].size() - 1) {
-				std::cout << " G  ";
-			} else {
-				std::cout << " " << print(grid[y][x]) << "  ";
+	void print(grid_type& grid) {
+		for(std::size_t y = 0; y < grid.size(); ++y) {
+			for(std::size_t x = 0; x < grid[y].size(); ++x) {
+				if(y == 0 && x == 0) {
+					std::cout << "(" << print(grid[y][x]) << ") ";
+				} else if(y == 0 && x == grid[y].size() - 1) {
+					std::cout << " G  ";
+				} else {
+					std::cout << " " << print(grid[y][x]) << "  ";
+				}
 			}
+			std::cout << std::endl;
 		}
 		std::cout << std::endl;
 	}
-	std::cout << std::endl;
 }
 
 struct advent_2016_22 : problem

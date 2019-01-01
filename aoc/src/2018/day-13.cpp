@@ -5,68 +5,71 @@
 #include <fstream>
 #include <vector>
 
-std::vector<std::string> track;
-std::vector<std::string> pristine_track;
-std::vector<std::string> cart_locations;
-std::vector<std::string> pristine_cart_locations;
-struct cart;
-std::vector<cart> carts;
-std::vector<cart> pristine_carts;
-
-struct cart
+namespace
 {
-	cart(std::size_t row, std::size_t col, std::ptrdiff_t dir) noexcept : r(row), c(col), direction(dir) {
-	}
+	std::vector<std::string> track;
+	std::vector<std::string> pristine_track;
+	std::vector<std::string> cart_locations;
+	std::vector<std::string> pristine_cart_locations;
+	struct cart;
+	std::vector<cart> carts;
+	std::vector<cart> pristine_carts;
 
-	bool drive() {
-		if(crashed) {
+	struct cart
+	{
+		cart(std::size_t row, std::size_t col, std::ptrdiff_t dir) noexcept : r(row), c(col), direction(dir) {
+		}
+
+		bool drive() {
+			if(crashed) {
+				return false;
+			}
+
+			cart_locations[r][c] = ' ';
+			c += movements[direction].first;
+			r += movements[direction].second;
+
+			if(cart_locations[r][c] != ' ') {
+				crashed = true;
+				return true;
+			}
+			switch(track[r][c]) {
+			case '/':
+				direction ^= 1;
+				break;
+			case '\\':
+				direction = 3 - direction;
+				break;
+			case '+':
+				direction = (direction + turns[turn_status]) % 4;
+				turn_status = (turn_status + 1) % 3;
+				break;
+			case '-':
+			case '|':
+				break;
+			}
+
+			cart_locations[r][c] = symbols[direction];
 			return false;
 		}
-		
-		cart_locations[r][c] = ' ';
-		c += movements[direction].first;
-		r += movements[direction].second;
 
-		if(cart_locations[r][c] != ' ') {
-			crashed = true;
-			return true;
-		}
-		switch(track[r][c]) {
-		case '/':
-			direction ^= 1;
-			break;
-		case '\\':
-			direction = 3 - direction;
-			break;
-		case '+':
-			direction = (direction + turns[turn_status]) % 4;
-			turn_status = (turn_status + 1) % 3;
-			break;
-		case '-':
-		case '|':
-			break;
+		friend bool operator<(const cart& lhs, const cart& rhs) noexcept {
+			return std::tie(lhs.r, lhs.c) < std::tie(rhs.r, rhs.c);
 		}
 
-		cart_locations[r][c] = symbols[direction];
-		return false;
-	}
+		std::size_t r = 0;
+		std::size_t c = 0;
 
-	friend bool operator<(const cart& lhs, const cart& rhs) noexcept {
-		return std::tie(lhs.r, lhs.c) < std::tie(rhs.r, rhs.c);
-	}
+		bool crashed = false;
 
-	std::size_t r = 0;
-	std::size_t c = 0;
+		std::ptrdiff_t direction = 0;
+		std::ptrdiff_t turn_status = 0;
 
-	bool crashed = false;
-
-	std::ptrdiff_t direction = 0;
-	std::ptrdiff_t turn_status = 0;
-
-	static constexpr std::pair<std::ptrdiff_t, std::ptrdiff_t> movements[4] = { {0, -1}, {1, 0}, {0, 1}, {-1, 0} };
-	static constexpr std::ptrdiff_t turns[3] = { 3, 0, 1 };
-	static constexpr char symbols[4] = { '^', '>', 'v', '<' };
-};
+		static constexpr std::pair<std::ptrdiff_t, std::ptrdiff_t> movements[4] = { {0, -1}, {1, 0}, {0, 1}, {-1, 0} };
+		static constexpr std::ptrdiff_t turns[3] = { 3, 0, 1 };
+		static constexpr char symbols[4] = { '^', '>', 'v', '<' };
+	};
+}
 
 struct advent_2018_13 : problem
 {

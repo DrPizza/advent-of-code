@@ -5,7 +5,6 @@
 #include <fstream>
 #include <vector>
 
-
 struct advent_2016_7 : problem
 {
 	advent_2016_7() noexcept : problem(2016, 7) {

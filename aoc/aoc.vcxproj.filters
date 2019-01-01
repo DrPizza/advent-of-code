@@ -317,6 +317,33 @@
     <ClCompile Include="src\2018\day-16.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\2018\day-17.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-18.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-19.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-20.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-21.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-22.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-23.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-24.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\2018\day-25.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\day-9.txt" />
@@ -411,5 +438,14 @@
     <Text Include="input\2018\day-14.txt" />
     <Text Include="input\2018\day-15.txt" />
     <Text Include="input\2018\day-16.txt" />
+    <Text Include="input\2018\day-17.txt" />
+    <Text Include="input\2018\day-18.txt" />
+    <Text Include="input\2018\day-19.txt" />
+    <Text Include="input\2018\day-20.txt" />
+    <Text Include="input\2018\day-21.txt" />
+    <Text Include="input\2018\day-22.txt" />
+    <Text Include="input\2018\day-23.txt" />
+    <Text Include="input\2018\day-24.txt" />
+    <Text Include="input\2018\day-25.txt" />
   </ItemGroup>
 </Project>

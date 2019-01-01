@@ -7,11 +7,16 @@
 #include <regex>
 #include "utility.hpp"
 
-struct disc
+namespace
 {
-	std::size_t size;
-	std::size_t initial;
-};
+
+	struct disc
+	{
+		std::size_t size;
+		std::size_t initial;
+	};
+
+}
 
 struct advent_2016_15 : problem
 {

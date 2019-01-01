@@ -7,95 +7,96 @@
 #include <array>
 #include <map>
 
-using reg_t = std::size_t;
-using computer_t = std::array<reg_t, 16>;
-
-computer_t the_computer = { 0 };
-
-struct instruction_t
+namespace
 {
-	std::size_t opcode;
-	std::size_t a;
-	std::size_t b;
-	std::size_t c;
-};
+	using reg_t = std::size_t;
+	using computer_t = std::array<reg_t, 4>;
 
-using operation_t = void(*)(computer_t& computer, std::size_t a, std::size_t b, std::size_t c);
+	struct instruction_t
+	{
+		std::size_t opcode;
+		std::size_t a;
+		std::size_t b;
+		std::size_t c;
+	};
 
-void addr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] + computer[b];
-}
-void addi(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] + b;
-}
-void mulr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] * computer[b];
-}
-void muli(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] * b;
-}
-void banr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] & computer[b];
-}
-void bani(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] & b;
-}
-void borr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] | computer[b];
-}
-void bori(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] | b;
-}
-void setr(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
-	computer[c] = computer[a];
-}
-void seti(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
-	computer[c] = a;
-}
-void gtir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = a > computer[b] ? 1ui64 : 0ui64;
-}
-void gtri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] > b ? 1ui64 : 0ui64;
-}
-void gtrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] > computer[b] ? 1ui64 : 0ui64;
-}
-void eqir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = a == computer[b] ? 1ui64 : 0ui64;
-}
-void eqri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] == b ? 1ui64 : 0ui64;
-}
-void eqrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
-	computer[c] = computer[a] == computer[b] ? 1ui64 : 0ui64;
-}
+	using operation_t = void(*)(computer_t& computer, std::size_t a, std::size_t b, std::size_t c);
 
-const operation_t op_table[] = {
-	addr,
-	addi,
-	mulr,
-	muli,
-	banr,
-	bani,
-	borr,
-	bori,
-	setr,
-	seti,
-	gtir,
-	gtri,
-	gtrr,
-	eqir,
-	eqri,
-	eqrr
-};
+	void addr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] + computer[b];
+	}
+	void addi(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] + b;
+	}
+	void mulr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] * computer[b];
+	}
+	void muli(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] * b;
+	}
+	void banr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] & computer[b];
+	}
+	void bani(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] & b;
+	}
+	void borr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] | computer[b];
+	}
+	void bori(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] | b;
+	}
+	void setr(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+		computer[c] = computer[a];
+	}
+	void seti(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+		computer[c] = a;
+	}
+	void gtir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = a > computer[b] ? 1ui64 : 0ui64;
+	}
+	void gtri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] > b ? 1ui64 : 0ui64;
+	}
+	void gtrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] > computer[b] ? 1ui64 : 0ui64;
+	}
+	void eqir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = a == computer[b] ? 1ui64 : 0ui64;
+	}
+	void eqri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] == b ? 1ui64 : 0ui64;
+	}
+	void eqrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+		computer[c] = computer[a] == computer[b] ? 1ui64 : 0ui64;
+	}
 
-struct sample
-{
-	reg_t initial[4];
-	instruction_t op;
-	reg_t result[4];
-};
+	const operation_t op_table[] = {
+		addr,
+		addi,
+		mulr,
+		muli,
+		banr,
+		bani,
+		borr,
+		bori,
+		setr,
+		seti,
+		gtir,
+		gtri,
+		gtrr,
+		eqir,
+		eqri,
+		eqrr
+	};
+
+	struct sample
+	{
+		computer_t initial;
+		instruction_t op;
+		computer_t result;
+	};
+}
 
 struct advent_2018_16 : problem
 {
@@ -141,12 +142,9 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 		for(const sample& s : samples) {
 			std::size_t possible_opcodes = 0ui64;
 			for(const operation_t& op : op_table) {
-				computer_t computer = { s.initial[0], s.initial[1], s.initial[2], s.initial[3] };
+				computer_t computer = s.initial;
 				op(computer, s.op.a, s.op.b, s.op.c);
-				if(computer[0] == s.result[0]
-				&& computer[1] == s.result[1]
-				&& computer[2] == s.result[2]
-				&& computer[3] == s.result[3]) {
+				if(computer == s.result) {
 					++possible_opcodes;
 				}
 			}
@@ -161,12 +159,9 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 		std::map<operation_t, std::set<std::size_t>> candidate_mappings;
 		for(const sample& s : samples) {
 			for(const operation_t& op : op_table) {
-				computer_t computer = { s.initial[0], s.initial[1], s.initial[2], s.initial[3] };
+				computer_t computer = s.initial;
 				op(computer, s.op.a, s.op.b, s.op.c);
-				if(computer[0] == s.result[0]
-				&& computer[1] == s.result[1]
-				&& computer[2] == s.result[2]
-				&& computer[3] == s.result[3]) {
+				if(computer == s.result) {
 					candidate_mappings[op].insert(s.op.opcode);
 				}
 			}

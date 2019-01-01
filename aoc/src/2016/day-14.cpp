@@ -13,58 +13,62 @@
 #include <cryptopp/md5.h>
 #pragma warning(pop)
 
-using digest_type = std::array<std::uint8_t, 16>;
-using hex_digest_type = std::array<std::uint8_t, 32>;
+namespace
+{
 
-std::uint8_t find_trip(const hex_digest_type& d) noexcept {
-	for(std::size_t i = 0; i < d.size() - 2; ++i) {
-		if(d[i + 0] == d[i + 1]
-		&& d[i + 1] == d[i + 2]) {
-			return d[i];
+	using digest_type = std::array<std::uint8_t, 16>;
+	using hex_digest_type = std::array<std::uint8_t, 32>;
+
+	std::uint8_t find_trip(const hex_digest_type& d) noexcept {
+		for(std::size_t i = 0; i < d.size() - 2; ++i) {
+			if(d[i + 0] == d[i + 1]
+				&& d[i + 1] == d[i + 2]) {
+				return d[i];
+			}
 		}
+		return 0xffui8;
 	}
-	return 0xffui8;
-}
 
-bool has_five(const hex_digest_type& d, std::uint8_t needle) noexcept {
-	for(std::size_t i = 0; i < d.size() - 4; ++i) {
-		if(d[i + 0] == needle
-		&& d[i + 1] == needle
-		&& d[i + 2] == needle
-		&& d[i + 3] == needle
-		&& d[i + 4] == needle) {
-			return true;
+	bool has_five(const hex_digest_type& d, std::uint8_t needle) noexcept {
+		for(std::size_t i = 0; i < d.size() - 4; ++i) {
+			if(d[i + 0] == needle
+				&& d[i + 1] == needle
+				&& d[i + 2] == needle
+				&& d[i + 3] == needle
+				&& d[i + 4] == needle) {
+				return true;
+			}
 		}
+		return false;
 	}
-	return false;
-}
 
-hex_digest_type to_hex_digest(const digest_type& d) noexcept {
-	hex_digest_type result = {};
-	for(std::size_t i = 0; i < d.size(); ++i) {
-		result[(i * 2)    ] = gsl::narrow_cast<std::uint8_t>((d[i] & 0xf0ui8) >> 4ui8);
-		result[(i * 2) + 1] = gsl::narrow_cast<std::uint8_t>((d[i] & 0x0fui8) >> 0ui8);
-	}
-	for(std::size_t l = 0; l < result.size(); ++l) {
-		if(result[l] < 10) {
-			result[l] += '0';
-		} else {
-			result[l] += 'a' - 10;
+	hex_digest_type to_hex_digest(const digest_type& d) noexcept {
+		hex_digest_type result = {};
+		for(std::size_t i = 0; i < d.size(); ++i) {
+			result[(i * 2)] = gsl::narrow_cast<std::uint8_t>((d[i] & 0xf0ui8) >> 4ui8);
+			result[(i * 2) + 1] = gsl::narrow_cast<std::uint8_t>((d[i] & 0x0fui8) >> 0ui8);
 		}
+		for(std::size_t l = 0; l < result.size(); ++l) {
+			if(result[l] < 10) {
+				result[l] += '0';
+			} else {
+				result[l] += 'a' - 10;
+			}
+		}
+		return result;
 	}
-	return result;
-}
 
-hex_digest_type generate_digest(const std::string& salt, std::size_t i, const std::size_t stretch_factor) {
-	CryptoPP::Weak::MD5 md5;
-	std::string trial = salt + std::to_string(i);
-	digest_type digest;
-	md5.CalculateDigest(digest.data(), reinterpret_cast<const byte*>(trial.data()), trial.size());
-	for(std::size_t k = 0; k < stretch_factor; ++k) {
-		hex_digest_type hd = to_hex_digest(digest);
-		md5.CalculateDigest(digest.data(), hd.data(), hd.size());
+	hex_digest_type generate_digest(const std::string& salt, std::size_t i, const std::size_t stretch_factor) {
+		CryptoPP::Weak::MD5 md5;
+		std::string trial = salt + std::to_string(i);
+		digest_type digest;
+		md5.CalculateDigest(digest.data(), reinterpret_cast<const byte*>(trial.data()), trial.size());
+		for(std::size_t k = 0; k < stretch_factor; ++k) {
+			hex_digest_type hd = to_hex_digest(digest);
+			md5.CalculateDigest(digest.data(), hd.data(), hd.size());
+		}
+		return to_hex_digest(digest);
 	}
-	return to_hex_digest(digest);
 }
 
 struct advent_2016_14 : problem

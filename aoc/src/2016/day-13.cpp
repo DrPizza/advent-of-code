@@ -6,14 +6,18 @@
 #include <unordered_map>
 #include <unordered_set>
 
-struct coord
+namespace
 {
-	std::size_t x;
-	std::size_t y;
-};
 
-constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
-	return lhs.x == rhs.x && lhs.y == rhs.y;
+	struct coord
+	{
+		std::size_t x;
+		std::size_t y;
+	};
+
+	constexpr bool operator==(const coord& lhs, const coord& rhs) noexcept {
+		return lhs.x == rhs.x && lhs.y == rhs.y;
+	}
 }
 
 namespace std {
@@ -26,65 +30,70 @@ namespace std {
 	};
 }
 
-enum struct block_type
+namespace
 {
-	open,
-	wall
-};
 
-block_type get_block_type(const coord& c, std::size_t favourite) noexcept {
-	std::size_t eqn = (c.x * c.x) + (3 * c.x) + (2 * c.x * c.y) + c.y + (c.y * c.y);
-	eqn += favourite;
-
-	return gsl::narrow_cast<block_type>(__popcnt64(eqn) % 2);
-}
-
-using office_type = std::unordered_map<coord, block_type>;
-using memo_type   = std::unordered_set<coord>;
-
-std::size_t shortest_path(const coord& position, const coord& destination, std::size_t dist, std::size_t favourite, office_type& office, memo_type& memo, memo_type& all_visited, std::size_t recursion_limit) {
-	if(position == destination) {
-		return dist;
-	}
-	if(memo.end() !=  memo.find(position)) {
-		return std::numeric_limits<std::size_t>::max();
-	}
-	if(position.x == std::numeric_limits<std::size_t>::max()) {
-		return std::numeric_limits<std::size_t>::max();
-	}
-	if(position.y == std::numeric_limits<std::size_t>::max()) {
-		return std::numeric_limits<std::size_t>::max();
-	}
-	auto it = office.find(position);
-	if(it == office.end()) {
-		it = office.insert(std::make_pair(position, get_block_type(position, favourite))).first;
-	}
-	if(it->second == block_type::wall) {
-		return std::numeric_limits<std::size_t>::max();
-	}
-
-	all_visited.insert(position);
-	if(0 == recursion_limit) {
-		return std::numeric_limits<std::size_t>::max();
-	}
-
-	const coord next_locations[] = {
-		{ position.x + 1ui64, position.y         },
-		{ position.x        , position.y + 1ui64 },
-		{ position.x - 1ui64, position.y         },
-		{ position.x        , position.y - 1ui64 }
+	enum struct block_type
+	{
+		open,
+		wall
 	};
 
-	memo.insert(position);
-	std::size_t trials[] = {
-		shortest_path(next_locations[0], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
-		shortest_path(next_locations[1], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
-		shortest_path(next_locations[2], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
-		shortest_path(next_locations[3], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1)
-	};
-	memo.erase(position);
+	block_type get_block_type(const coord& c, std::size_t favourite) noexcept {
+		std::size_t eqn = (c.x * c.x) + (3 * c.x) + (2 * c.x * c.y) + c.y + (c.y * c.y);
+		eqn += favourite;
 
-	return *std::min_element(std::begin(trials), std::end(trials));
+		return gsl::narrow_cast<block_type>(__popcnt64(eqn) % 2);
+	}
+
+	using office_type = std::unordered_map<coord, block_type>;
+	using memo_type = std::unordered_set<coord>;
+
+	std::size_t shortest_path(const coord& position, const coord& destination, std::size_t dist, std::size_t favourite, office_type& office, memo_type& memo, memo_type& all_visited, std::size_t recursion_limit) {
+		if(position == destination) {
+			return dist;
+		}
+		if(memo.end() != memo.find(position)) {
+			return std::numeric_limits<std::size_t>::max();
+		}
+		if(position.x == std::numeric_limits<std::size_t>::max()) {
+			return std::numeric_limits<std::size_t>::max();
+		}
+		if(position.y == std::numeric_limits<std::size_t>::max()) {
+			return std::numeric_limits<std::size_t>::max();
+		}
+		auto it = office.find(position);
+		if(it == office.end()) {
+			it = office.insert(std::make_pair(position, get_block_type(position, favourite))).first;
+		}
+		if(it->second == block_type::wall) {
+			return std::numeric_limits<std::size_t>::max();
+		}
+
+		all_visited.insert(position);
+		if(0 == recursion_limit) {
+			return std::numeric_limits<std::size_t>::max();
+		}
+
+		const coord next_locations[] = {
+			{ position.x + 1ui64, position.y         },
+			{ position.x        , position.y + 1ui64 },
+			{ position.x - 1ui64, position.y         },
+			{ position.x        , position.y - 1ui64 }
+		};
+
+		memo.insert(position);
+		std::size_t trials[] = {
+			shortest_path(next_locations[0], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
+			shortest_path(next_locations[1], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
+			shortest_path(next_locations[2], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1),
+			shortest_path(next_locations[3], destination, dist + 1, favourite, office, memo, all_visited, recursion_limit - 1)
+		};
+		memo.erase(position);
+
+		return *std::min_element(std::begin(trials), std::end(trials));
+	}
+
 }
 
 struct advent_2016_13 : problem
