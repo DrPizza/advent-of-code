@@ -16,11 +16,11 @@ struct advent_2018_3 : problem
 protected:
 	struct claim
 	{
-		std::size_t id;
-		std::size_t left;
-		std::size_t top;
-		std::size_t width;
-		std::size_t height;
+		std::uintmax_t id;
+		std::uintmax_t left;
+		std::uintmax_t top;
+		std::uintmax_t width;
+		std::uintmax_t height;
 	};
 
 	std::vector<claim> claims;
@@ -30,23 +30,23 @@ protected:
 		for(std::string line; std::getline(fin, line);) {
 			std::smatch m;
 			std::regex_search(line, m, pattern);
-			const std::size_t id = std::stoull(m[1]);
-			const std::size_t left = std::stoull(m[2]);
-			const std::size_t top = std::stoull(m[3]);
-			const std::size_t width = std::stoull(m[4]);
-			const std::size_t height = std::stoull(m[5]);
+			const std::uintmax_t id = std::stoull(m[1]);
+			const std::uintmax_t left = std::stoull(m[2]);
+			const std::uintmax_t top = std::stoull(m[3]);
+			const std::uintmax_t width = std::stoull(m[4]);
+			const std::uintmax_t height = std::stoull(m[5]);
 
 			claim c = { id, left, top, width, height };
 			claims.push_back(c);
 		}
 	}
 
-	std::map<std::size_t, std::map<std::size_t, std::size_t>> quilt;
+	std::map<std::uintmax_t, std::map<std::uintmax_t, std::uintmax_t>> quilt;
 
 	void precompute() override {
 		for(const claim& c : claims) {
-			for(std::size_t w = c.left; w != c.left + c.width; ++w) {
-				for(std::size_t h = c.top; h != c.top + c.height; ++h) {
+			for(std::uintmax_t w = c.left; w != c.left + c.width; ++w) {
+				for(std::uintmax_t h = c.top; h != c.top + c.height; ++h) {
 					++quilt[w][h];
 				}
 			}
@@ -54,7 +54,7 @@ protected:
 	}
 
 	std::string part_1() override {
-		std::size_t overlaps = 0;
+		std::uintmax_t overlaps = 0;
 		for(const auto& r : quilt) {
 			for(const auto& c : r.second) {
 				if(c.second > 1) {
@@ -68,8 +68,8 @@ protected:
 	std::string part_2() override {
 		for(const claim& c : claims) {
 			bool intact = true;
-			for(std::size_t w = c.left; w != c.left + c.width; ++w) {
-				for(std::size_t h = c.top; h != c.top + c.height; ++h) {
+			for(std::uintmax_t w = c.left; w != c.left + c.width; ++w) {
+				for(std::uintmax_t h = c.top; h != c.top + c.height; ++h) {
 					if(quilt[w][h] != 1) {
 						intact = false;
 					}

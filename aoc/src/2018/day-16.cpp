@@ -9,65 +9,65 @@
 
 namespace
 {
-	using reg_t = std::size_t;
+	using reg_t = std::uintmax_t;
 	using computer_t = std::array<reg_t, 4>;
 
 	struct instruction_t
 	{
-		std::size_t opcode;
-		std::size_t a;
-		std::size_t b;
-		std::size_t c;
+		std::uintmax_t opcode;
+		std::uintmax_t a;
+		std::uintmax_t b;
+		std::uintmax_t c;
 	};
 
-	using operation_t = void(*)(computer_t& computer, std::size_t a, std::size_t b, std::size_t c);
+	using operation_t = void(*)(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c);
 
-	void addr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void addr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] + computer[b];
 	}
-	void addi(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void addi(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] + b;
 	}
-	void mulr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void mulr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] * computer[b];
 	}
-	void muli(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void muli(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] * b;
 	}
-	void banr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void banr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] & computer[b];
 	}
-	void bani(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void bani(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] & b;
 	}
-	void borr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void borr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] | computer[b];
 	}
-	void bori(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void bori(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] | b;
 	}
-	void setr(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+	void setr(computer_t& computer, std::uintmax_t a, std::uintmax_t, std::uintmax_t c) noexcept {
 		computer[c] = computer[a];
 	}
-	void seti(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+	void seti(computer_t& computer, std::uintmax_t a, std::uintmax_t, std::uintmax_t c) noexcept {
 		computer[c] = a;
 	}
-	void gtir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtir(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = a > computer[b] ? 1ui64 : 0ui64;
 	}
-	void gtri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtri(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] > b ? 1ui64 : 0ui64;
 	}
-	void gtrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtrr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] > computer[b] ? 1ui64 : 0ui64;
 	}
-	void eqir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqir(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = a == computer[b] ? 1ui64 : 0ui64;
 	}
-	void eqri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqri(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] == b ? 1ui64 : 0ui64;
 	}
-	void eqrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqrr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] == computer[b] ? 1ui64 : 0ui64;
 	}
 
@@ -138,7 +138,7 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 	}
 
 	std::string part_1() override {
-		std::size_t ambiguous_opcodes = 0ui64;
+		std::uintmax_t ambiguous_opcodes = 0ui64;
 		for(const sample& s : samples) {
 			std::size_t possible_opcodes = 0ui64;
 			for(const operation_t& op : op_table) {
@@ -156,7 +156,7 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 	}
 
 	std::string part_2() override {
-		std::map<operation_t, std::set<std::size_t>> candidate_mappings;
+		std::map<operation_t, std::set<std::uintmax_t>> candidate_mappings;
 		for(const sample& s : samples) {
 			for(const operation_t& op : op_table) {
 				computer_t computer = s.initial;
@@ -182,7 +182,7 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 				}
 			}
 		} while(made_change);
-		std::map<std::size_t, operation_t> opcode_mapping;
+		std::map<std::uintmax_t, operation_t> opcode_mapping;
 		for(const auto& p : candidate_mappings) {
 			opcode_mapping[*p.second.begin()] = p.first;
 		}

@@ -40,8 +40,8 @@ protected:
 		}
 	}
 
-	static std::ptrdiff_t get_value(std::ptrdiff_t zero_index, const std::string& state) {
-		std::ptrdiff_t value = 0i64;
+	static std::intmax_t get_value(std::ptrdiff_t zero_index, const std::string& state) {
+		std::intmax_t value = 0i64;
 		for(std::size_t i = 0; i < state.size(); ++i) {
 			if(state[i] == '#') {
 				value += gsl::narrow_cast<std::ptrdiff_t>(i) - zero_index;
@@ -97,8 +97,8 @@ protected:
 			}
 			state.swap(next_state);
 
-			const std::ptrdiff_t value = get_value(zero_index, state);
-			const std::ptrdiff_t delta = value - previous_value;
+			const std::intmax_t value = get_value(zero_index, state);
+			const std::intmax_t delta = value - previous_value;
 
 			if(delta == previous_delta_1 && previous_delta_1 == previous_delta_2) {
 				running_total -= delta;
@@ -111,7 +111,7 @@ protected:
 			previous_delta_2 = previous_delta_1;
 			previous_delta_1 = delta;
 		}
-		const std::ptrdiff_t computed_score = ((50'000'000'000 - generation) * previous_delta_1) + running_total;
+		const std::intmax_t computed_score = ((50'000'000'000i64 - generation) * previous_delta_1) + running_total;
 		return std::to_string(computed_score);
 	}
 };

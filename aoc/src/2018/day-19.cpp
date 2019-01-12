@@ -9,71 +9,71 @@
 
 namespace
 {
-	using reg_t = std::size_t;
+	using reg_t = std::uintmax_t;
 	using computer_t = std::array<reg_t, 6>;
 
-	using operation_t = void(*)(computer_t& computer, std::size_t a, std::size_t b, std::size_t c);
+	using operation_t = void(*)(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c);
 
 	struct instruction_t
 	{
 		operation_t op;
-		std::size_t a;
-		std::size_t b;
-		std::size_t c;
+		std::uintmax_t a;
+		std::uintmax_t b;
+		std::uintmax_t c;
 	};
 
-	void addr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void addr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] + computer[b];
 	}
-	void addi(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void addi(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] + b;
 	}
-	void mulr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void mulr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] * computer[b];
 	}
-	void muli(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void muli(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] * b;
 	}
-	void banr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void banr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] & computer[b];
 	}
-	void bani(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void bani(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] & b;
 	}
-	void borr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void borr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] | computer[b];
 	}
-	void bori(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void bori(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] | b;
 	}
-	void setr(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+	void setr(computer_t& computer, std::uintmax_t a, std::uintmax_t, std::uintmax_t c) noexcept {
 		computer[c] = computer[a];
 	}
-	void seti(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+	void seti(computer_t& computer, std::uintmax_t a, std::uintmax_t, std::uintmax_t c) noexcept {
 		computer[c] = a;
 	}
-	void gtir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtir(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = a > computer[b] ? 1ui64 : 0ui64;
 	}
-	void gtri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtri(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] > b ? 1ui64 : 0ui64;
 	}
-	void gtrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void gtrr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] > computer[b] ? 1ui64 : 0ui64;
 	}
-	void eqir(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqir(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = a == computer[b] ? 1ui64 : 0ui64;
 	}
-	void eqri(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqri(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] == b ? 1ui64 : 0ui64;
 	}
-	void eqrr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void eqrr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] == computer[b] ? 1ui64 : 0ui64;
 	}
-	void jmpr(computer_t& computer, std::size_t a, std::size_t b, std::size_t c) noexcept {
+	void jmpr(computer_t& computer, std::uintmax_t a, std::uintmax_t b, std::uintmax_t c) noexcept {
 		computer[c] = computer[a] + b;
 	}
-	void jmpa(computer_t& computer, std::size_t a, std::size_t, std::size_t c) noexcept {
+	void jmpa(computer_t& computer, std::uintmax_t a, std::uintmax_t, std::uintmax_t c) noexcept {
 		computer[c] = computer[a];
 	}
 
@@ -142,24 +142,6 @@ protected:
 	}
 
 	std::string part_2() override {
-		//for(std::size_t i = 0; i < program.size(); ++i) {
-		//	if(program[i].op == addi
-		//	&& program[i].a == ip_register
-		//	&& program[i].c == ip_register) {
-		//		program[i].op = jmpr;
-		//	}
-		//}
-		//for(std::size_t i = 0; i < program.size(); ++i) {
-		//	if(program[i].op == setr
-		//	&& program[i].c == ip_register) {
-		//		program[i].op = jmpa;
-		//	}
-		//}
-		//std::size_t i = 0;
-		//for(const instruction_t& ins : program) {
-		//	std::cout << i++ << ": " << opcode_names[ins.op] << " " << ins.a << " " << ins.b << " " << ins.c << std::endl;
-		//}
-
 		computer_t computer = { 0 };
 		computer[4] = 2;
 		computer[4] *= computer[4];
@@ -176,15 +158,6 @@ protected:
 		computer[3] *= 14;
 		computer[3] *= 32;
 		computer[4] += computer[3]; // 10551261;
-		
-		//for(computer[5] = 1; computer[5] <= computer[4]; ++computer[5]) {
-		//	for(computer[2] = 1; computer[2] <= computer[4]; ++computer[2]) {
-		//		computer[3] = computer[2] * computer[5];
-		//		if(computer[3] == computer[4]) {
-		//			computer[0] += computer[5];
-		//		}
-		//	}
-		//}
 
 		for(computer[5] = 1; computer[5] <= computer[4]; ++computer[5]) {
 			if(computer[4] % computer[5] == 0) {
@@ -192,14 +165,6 @@ protected:
 			}
 		}
 
-
-			//if(computer[ip_register] > program.size()) {
-			//	break;
-			//}
-			//const instruction_t& ins = program[computer[ip_register]];
-			//ins.op(computer, ins.a, ins.b, ins.c);
-
-			//++computer[ip_register];
 		return std::to_string(computer[0]);
 	}
 };

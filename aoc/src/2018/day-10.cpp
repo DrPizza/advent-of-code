@@ -15,8 +15,8 @@ struct advent_2018_10 : problem
 protected:
 	struct point
 	{
-		std::ptrdiff_t x;
-		std::ptrdiff_t y;
+		std::intmax_t x;
+		std::intmax_t y;
 
 		friend bool operator==(const point& lhs, const point& rhs) noexcept {
 			return lhs.x == rhs.x && lhs.y == rhs.y;
@@ -44,8 +44,8 @@ protected:
 
 	struct bounding_box
 	{
-		point top_right   = { std::numeric_limits<std::ptrdiff_t>::min(), std::numeric_limits<std::ptrdiff_t>::min() };
-		point bottom_left = { std::numeric_limits<std::ptrdiff_t>::max(), std::numeric_limits<std::ptrdiff_t>::max() };
+		point top_right   = { std::numeric_limits<std::intmax_t>::min(), std::numeric_limits<std::intmax_t>::min() };
+		point bottom_left = { std::numeric_limits<std::intmax_t>::max(), std::numeric_limits<std::intmax_t>::max() };
 
 		void update(const point& p) noexcept {
 			top_right   = { std::max(p.x, top_right.x  ), std::max(p.y, top_right.y  ) };
@@ -62,7 +62,7 @@ protected:
 		}
 	};
 
-	std::ptrdiff_t time_taken = 0;
+	std::intmax_t time_taken = 0;
 	std::vector<point> lights;
 
 	void prepare_input(std::ifstream& fin) override {
@@ -71,19 +71,19 @@ protected:
 		          			static const std::regex pattern(R"(position=< ?(-?[[:digit:]]+),  ?(-?[[:digit:]]+)> velocity=< ?(-?[[:digit:]]+),  ?(-?[[:digit:]]+)>)");
 		          			std::smatch m;
 		          			std::regex_match(line, m, pattern);
-		          			std::ptrdiff_t x = std::stoll(m[1]);
-		          			std::ptrdiff_t y = std::stoll(m[2]);
-		          			std::ptrdiff_t dx = std::stoll(m[3]);
-		          			std::ptrdiff_t dy = std::stoll(m[4]);
+		          			std::intmax_t x  = std::stoll(m[1]);
+		          			std::intmax_t y  = std::stoll(m[2]);
+		          			std::intmax_t dx = std::stoll(m[3]);
+		          			std::intmax_t dy = std::stoll(m[4]);
 		          			return particle{ {x, y}, {dx, dy} };
 		          		})
 		          | ranges::to_vector;
 
-		std::ptrdiff_t t_min = std::numeric_limits<std::ptrdiff_t>::max();
-		std::ptrdiff_t t_max = 0ui64;
+		std::intmax_t t_min = std::numeric_limits<std::intmax_t>::max();
+		std::intmax_t t_max = 0ui64;
 		ranges::for_each(particles, [&t_min, &t_max] (const particle& p) noexcept {
-			const std::ptrdiff_t approx_x_time = std::abs(p.position.x / p.velocity.x);
-			const std::ptrdiff_t approx_y_time = std::abs(p.position.x / p.velocity.x);
+			const std::intmax_t approx_x_time = std::abs(p.position.x / p.velocity.x);
+			const std::intmax_t approx_y_time = std::abs(p.position.x / p.velocity.x);
 			t_min = std::min({ t_min, approx_x_time, approx_y_time });
 			t_max = std::max({ t_max, approx_x_time, approx_y_time });
 		});
@@ -127,21 +127,21 @@ protected:
 	}};
 
 	std::string part_1() override {
-		const std::ptrdiff_t x_min = ranges::min(lights, ranges::less{}, &point::x).x;
-		const std::ptrdiff_t x_max = ranges::max(lights, ranges::less{}, &point::x).x;
-		const std::ptrdiff_t y_min = ranges::min(lights, ranges::less{}, &point::y).y;
-		const std::ptrdiff_t y_max = ranges::max(lights, ranges::less{}, &point::y).y;
+		const std::intmax_t x_min = ranges::min(lights, ranges::less{}, &point::x).x;
+		const std::intmax_t x_max = ranges::max(lights, ranges::less{}, &point::x).x;
+		const std::intmax_t y_min = ranges::min(lights, ranges::less{}, &point::y).y;
+		const std::intmax_t y_max = ranges::max(lights, ranges::less{}, &point::y).y;
 
 		using screen_type = std::valarray<char>;
 
-		const std::size_t letter_width = 6ui64;
-		const std::size_t letter_gap = 2ui64;
-		const std::size_t letter_height = 10ui64;
-		const std::size_t pixels_per_letter = letter_width * letter_height;
-		const std::size_t width  = x_max - x_min + 1ui64;
-		const std::size_t height = y_max - y_min + 1ui64;
-		const std::size_t total_letters = (width + letter_gap) / (letter_width + letter_gap);
-		const std::size_t total_pixels = width * height;
+		const std::uintmax_t letter_width = 6ui64;
+		const std::uintmax_t letter_gap = 2ui64;
+		const std::uintmax_t letter_height = 10ui64;
+		const std::uintmax_t pixels_per_letter = letter_width * letter_height;
+		const std::uintmax_t width  = x_max - x_min + 1ui64;
+		const std::uintmax_t height = y_max - y_min + 1ui64;
+		const std::uintmax_t total_letters = (width + letter_gap) / (letter_width + letter_gap);
+		const std::uintmax_t total_pixels = width * height;
 
 		screen_type screen = screen_type(total_pixels);
 

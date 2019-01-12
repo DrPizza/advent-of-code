@@ -99,9 +99,11 @@ protected:
 				}
 			}
 		}
+	}
+
+	void precompute() override {
 		y_min = survey.begin()->first;
 		y_max = std::prev(survey.end())->first;
-
 		flow(500, 0, direction::down);
 	}
 

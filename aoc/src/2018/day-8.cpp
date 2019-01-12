@@ -16,10 +16,10 @@ protected:
 	struct node
 	{
 		std::vector<node> children;
-		std::vector<std::size_t> metadata;
+		std::vector<std::uintmax_t> metadata;
 	};
 
-	node read_node(std::istream_iterator<std::size_t>& it) {
+	node read_node(std::istream_iterator<std::uintmax_t>& it) {
 		node n;
 		const std::size_t child_count = *it++;
 		const std::size_t metadata_count = *it++;
@@ -35,11 +35,11 @@ protected:
 	node root;
 
 	void prepare_input(std::ifstream& fin) override {
-		std::istream_iterator<std::size_t> it(fin);
+		std::istream_iterator<std::uintmax_t> it(fin);
 		root = read_node(it);
 	}
 
-	static std::size_t sum_metadata(const node& n) {
+	static std::uintmax_t sum_metadata(const node& n) {
 		return ranges::accumulate(n.children | ranges::view::transform(sum_metadata), 0)
 		     + ranges::accumulate(n.metadata, 0ui64);
 	}
@@ -48,7 +48,7 @@ protected:
 		return std::to_string(sum_metadata(root));
 	}
 
-	static std::size_t calc_value(const node& n) {
+	static std::uintmax_t calc_value(const node& n) {
 		return n.children.size() == 0 ? sum_metadata(n)
 		                              : ranges::accumulate(n.metadata
 		                                                  | ranges::view::filter   ([&](std::size_t idx) { return idx > 0 && idx <= n.children.size(); })

@@ -22,8 +22,8 @@ protected:
 		}
 	}
 
-	std::map<char, std::size_t> get_counts(const std::string& s) const {
-		std::map<char, std::size_t> counts;
+	std::map<char, std::uintmax_t> get_counts(const std::string& s) const {
+		std::map<char, std::uintmax_t> counts;
 		for(const char ch : s) {
 			counts[ch]++;
 		}
@@ -31,13 +31,13 @@ protected:
 	}
 
 	std::string part_1() override {
-		std::size_t pairs = 0;
-		std::size_t triples = 0;
+		std::uintmax_t pairs = 0;
+		std::uintmax_t triples = 0;
 		for(const std::string& id : ids) {
-			std::map<char, std::size_t> counts = get_counts(id);
+			std::map<char, std::uintmax_t> counts = get_counts(id);
 			bool has_pair = false;
 			bool has_triple = false;
-			for(const std::pair<char, std::size_t>& p : counts) {
+			for(const std::pair<char, std::uintmax_t>& p : counts) {
 				if(p.second == 2) {
 					has_pair = true;
 				}
@@ -48,7 +48,7 @@ protected:
 			pairs += has_pair ? 1 : 0;
 			triples += has_triple ? 1 : 0;
 		}
-		const std::size_t checksum = pairs * triples;
+		const std::uintmax_t checksum = pairs * triples;
 		return std::to_string(checksum);
 	}
 

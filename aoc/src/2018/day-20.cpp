@@ -45,6 +45,9 @@ protected:
 	
 	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, expression);
+	}
+
+	void precompute() override {
 		maze[0][0] = 'X';
 		generate_map(expression.begin(), expression.end(), { 0, 0 });
 		const auto tup = breadth_first_search({ 0, 0 });

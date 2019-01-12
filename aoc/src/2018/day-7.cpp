@@ -63,11 +63,11 @@ protected:
 	struct worker
 	{
 		char work_id;
-		std::size_t time;
+		std::uintmax_t time;
 	};
 
 	std::string part_2() override {
-		std::size_t time = 0ui64;
+		std::uintmax_t time = 0ui64;
 		std::vector<worker> workers(5);
 
 		std::map<char, std::set<char>> my_flow(flow);

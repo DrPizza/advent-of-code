@@ -15,7 +15,7 @@ struct advent_2018_4 : problem
 	}
 
 protected:
-	std::map<std::size_t, std::array<std::size_t, 60>> sleep_schedule;
+	std::map<std::uintmax_t, std::array<std::uintmax_t, 60>> sleep_schedule;
 
 	void prepare_input(std::ifstream& fin) override {
 		std::vector<std::string> raw_lines;
@@ -28,9 +28,9 @@ protected:
 		std::regex falls_asleep_pattern(R"(.*:([[:digit:]]{2})\] falls asleep)");
 		std::regex wakes_up_pattern    (R"(.*:([[:digit:]]{2})\] wakes up)");
 
-		std::size_t chosen_guard = 0xffff'ffff'ffff'ffff;
-		std::size_t sleep_time   = 0xffff'ffff'ffff'ffff;
-		std::size_t wake_time    = 0xffff'ffff'ffff'ffff;
+		std::uintmax_t chosen_guard = 0xffff'ffff'ffff'ffff;
+		std::uintmax_t sleep_time   = 0xffff'ffff'ffff'ffff;
+		std::uintmax_t wake_time    = 0xffff'ffff'ffff'ffff;
 
 		for(const std::string& line : raw_lines) {
 			std::smatch m;

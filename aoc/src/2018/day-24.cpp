@@ -51,16 +51,17 @@ namespace
 		if(s == "cold") {
 			return damage_t::cold;
 		}
+		__assume(0);
 	}
 
 	struct group_t
 	{
 		affiliation_t side;
-		std::size_t units;
-		std::size_t hit_points;
-		std::size_t attack_damage;
+		std::uintmax_t units;
+		std::uintmax_t hit_points;
+		std::uintmax_t attack_damage;
 		damage_t damage_type;
-		std::size_t initiative;
+		std::uintmax_t initiative;
 		std::vector<damage_t> immunities;
 		std::vector<damage_t> weaknesses;
 
@@ -122,9 +123,9 @@ protected:
 		}
 	}
 
-	group_t* find_target(const group_t& warrior, const std::vector<group_t>& groups, const std::vector<std::pair<group_t*, group_t*>> match_ups) const {
+	group_t* find_target(const group_t& warrior, std::vector<group_t>& groups, const std::vector<std::pair<group_t*, group_t*>> match_ups) const {
 		auto targets = groups
-		             | ranges::view::filter([&warrior, &match_ups] (const group_t& candidate) {
+		             | ranges::view::filter([&warrior, &match_ups] (group_t& candidate) {
 		               	if(&candidate == &warrior
 		               	|| candidate.side == warrior.side
 		               	|| candidate.units == 0) {
@@ -140,20 +141,20 @@ protected:
 		               	}
 		               	return true;
 		               })
-		             | ranges::view::transform([&warrior] (const group_t& candidate) {
-		               	std::size_t effective_damage = warrior.effective_power();
+		             | ranges::view::transform([&warrior] (group_t& candidate) {
+		               	std::uintmax_t effective_damage = warrior.effective_power();
 		               	if(std::find(std::begin(candidate.weaknesses), std::end(candidate.weaknesses), warrior.damage_type) != std::end(candidate.weaknesses)) {
-		               		effective_damage *= 2;
+		               		effective_damage *= 2ui64;
 		               	}
-		               	return std::make_pair(effective_damage, const_cast<group_t*>(&candidate));
+		               	return std::make_pair(effective_damage, &candidate);
 		               })
 		             | ranges::view::filter([](const auto& p) {
-		               	return p.first != 0;
+		               	return p.first != 0ui64;
 		               })
 		             | ranges::to_vector;
 		ranges::sort(targets, [](const auto& lhs, const auto& rhs) {
-			const std::size_t lep = lhs.second->effective_power();
-			const std::size_t rep = rhs.second->effective_power();
+			const std::uintmax_t lep = lhs.second->effective_power();
+			const std::uintmax_t rep = rhs.second->effective_power();
 			return std::tie(lhs.first, lep, lhs.second->initiative) > std::tie(rhs.first, rep, rhs.second->initiative);
 		});
 		if(targets.empty()) {
@@ -165,9 +166,9 @@ protected:
 
 	std::vector<group_t> run_simulation(std::vector<group_t>& groups) const {
 		for(;;) {
-			ranges::sort(groups, [] (const group_t& lhs, const group_t& rhs) {
-				const std::size_t lep = lhs.effective_power();
-				const std::size_t rep = rhs.effective_power();
+			ranges::sort(groups, [] (const group_t& lhs, const group_t& rhs) noexcept {
+				const std::uintmax_t lep = lhs.effective_power();
+				const std::uintmax_t rep = rhs.effective_power();
 				return std::tie(lep, lhs.initiative) > std::tie(rep, rhs.initiative);
 			});
 
@@ -189,14 +190,14 @@ protected:
 
 			const std::vector<group_t> before = groups;
 			for(auto& p : match_ups) {
-				group_t* warrior = p.first;
-				group_t* victim = p.second;
-				std::size_t effective_damage = warrior->effective_power();
+				const group_t* const warrior = p.first;
+				group_t* const victim = p.second;
+				std::uintmax_t effective_damage = warrior->effective_power();
 				if(std::find(std::begin(victim->weaknesses), std::end(victim->weaknesses), warrior->damage_type) != std::end(victim->weaknesses)) {
 					effective_damage *= 2;
 				}
-				std::size_t damage_remaining = effective_damage;
-				std::size_t killed = 0;
+				std::uintmax_t damage_remaining = effective_damage;
+				std::uintmax_t killed = 0ui64;
 				for(std::size_t i = 0; i < victim->units; ++i) {
 					if(damage_remaining >= victim->hit_points) {
 						damage_remaining -= victim->hit_points;
@@ -216,12 +217,12 @@ protected:
 	std::string part_1() override {
 		std::vector<group_t> groups = original_groups;
 		groups = run_simulation(groups);
-		const std::size_t remaining_units = ranges::accumulate(groups, 0ui64, std::plus<void>{}, &group_t::units);
+		const std::uintmax_t remaining_units = ranges::accumulate(groups, 0ui64, std::plus<void>{}, &group_t::units);
 		return std::to_string(remaining_units);
 	}
 
 	std::string part_2() override {
-		for(std::size_t boost = 0ui64; ; ++boost) {
+		for(std::uintmax_t boost = 0ui64; ; ++boost) {
 			std::vector<group_t> groups = original_groups;
 			for(group_t& g : groups) {
 				if(g.side == affiliation_t::immune) {
@@ -232,11 +233,11 @@ protected:
 			if(groups.empty()) {
 				continue;
 			}
-			const std::size_t remaining_immune = ranges::count_if(groups, [] (const group_t& g) {
-				return g.side == affiliation_t::immune && g.units > 0;
-			});
+			const std::uintmax_t remaining_immune = gsl::narrow_cast<std::uintmax_t>(ranges::count_if(groups, [] (const group_t& g) {
+				return g.side == affiliation_t::immune && g.units > 0ui64;
+			}));
 			if(remaining_immune > 0ui64) {
-				const std::size_t remaining_units = ranges::accumulate(groups, 0ui64, std::plus<void>{}, &group_t::units);
+				const std::uintmax_t remaining_units = ranges::accumulate(groups, 0ui64, std::plus<void>{}, &group_t::units);
 				return std::to_string(remaining_units);
 			}
 		}

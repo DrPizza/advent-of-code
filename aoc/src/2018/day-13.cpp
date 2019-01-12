@@ -17,7 +17,7 @@ namespace
 
 	struct cart
 	{
-		cart(std::size_t row, std::size_t col, std::ptrdiff_t dir) noexcept : r(row), c(col), direction(dir) {
+		cart(std::size_t row, std::size_t col, std::intmax_t dir) noexcept : r(row), c(col), direction(dir) {
 		}
 
 		bool drive() {
@@ -62,11 +62,11 @@ namespace
 
 		bool crashed = false;
 
-		std::ptrdiff_t direction = 0;
-		std::ptrdiff_t turn_status = 0;
+		std::intmax_t direction = 0;
+		std::intmax_t turn_status = 0;
 
-		static constexpr std::pair<std::ptrdiff_t, std::ptrdiff_t> movements[4] = { {0, -1}, {1, 0}, {0, 1}, {-1, 0} };
-		static constexpr std::ptrdiff_t turns[3] = { 3, 0, 1 };
+		static constexpr std::pair<std::intmax_t, std::intmax_t> movements[4] = { {0, -1}, {1, 0}, {0, 1}, {-1, 0} };
+		static constexpr std::intmax_t turns[3] = { 3, 0, 1 };
 		static constexpr char symbols[4] = { '^', '>', 'v', '<' };
 	};
 }

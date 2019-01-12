@@ -15,53 +15,56 @@ struct advent_2018_6 : problem
 protected:
 	struct point
 	{
-		int r;
-		int c;
-		int id;
+		std::intmax_t r;
+		std::intmax_t c;
+		std::intmax_t id;
 	};
 
 	std::vector<point> locations;
 
 	struct area
 	{
-		int r;
-		int c;
-		int closest_id;
-		int all_points_distance;
+		std::intmax_t r;
+		std::intmax_t c;
+		std::intmax_t closest_id;
+		std::intmax_t all_points_distance;
 	};
 
 	std::vector<area> grid;
 
-	int rmin = std::numeric_limits<int>::max();
-	int rmax = std::numeric_limits<int>::min();
-	int cmin = std::numeric_limits<int>::max();
-	int cmax = std::numeric_limits<int>::min();
+	std::intmax_t rmin = std::numeric_limits<std::intmax_t>::max();
+	std::intmax_t rmax = std::numeric_limits<std::intmax_t>::min();
+	std::intmax_t cmin = std::numeric_limits<std::intmax_t>::max();
+	std::intmax_t cmax = std::numeric_limits<std::intmax_t>::min();
 
 	void prepare_input(std::ifstream& fin) override {
 		std::regex pattern(R"(([[:digit:]]+), ([[:digit:]]+))");
 		for(std::string line; std::getline(fin, line);) {
 			std::smatch m;
 			if(std::regex_match(line, m, pattern)) {
-				int c = std::stoi(m[1]);
-				int r = std::stoi(m[2]);
+				std::intmax_t c = std::stoll(m[1]);
+				std::intmax_t r = std::stoll(m[2]);
 
 				rmin = std::min(rmin, r);
 				rmax = std::max(rmax, r);
 				cmin = std::min(cmin, c);
 				cmax = std::max(cmax, c);
 
-				locations.push_back({ r, c, gsl::narrow_cast<int>(locations.size() + 1) });
+				locations.push_back({ r, c, gsl::narrow_cast<std::intmax_t>(locations.size() + 1) });
 			}
 		}
-		for(int c = cmin; c < cmax + 1; ++c) {
-			for(int r = rmin; r < rmax + 1; ++r) {
-				grid.push_back({ r, c, std::numeric_limits<int>::max(), 0 });
+	}
+
+	void precompute() override {
+		for(std::intmax_t c = cmin; c < cmax + 1; ++c) {
+			for(std::intmax_t r = rmin; r < rmax + 1; ++r) {
+				grid.push_back({ r, c, std::numeric_limits<std::intmax_t>::max(), 0 });
 			}
 		}
 		for(area& a : grid) {
-			int shortest_distance = std::numeric_limits<int>::max();
+			std::intmax_t shortest_distance = std::numeric_limits<std::intmax_t>::max();
 			for(const point& p : locations) {
-				const int distance = std::abs(p.r - a.r) + std::abs(p.c - a.c);
+				const std::intmax_t distance = std::abs(p.r - a.r) + std::abs(p.c - a.c);
 				if(distance == shortest_distance) {
 					a.closest_id = 0;
 				} else if(distance < shortest_distance) {
@@ -74,10 +77,10 @@ protected:
 	}
 
 	std::string part_1() override {
-		std::vector<int> sizes(locations.size() + 1, 0);
+		std::vector<std::intmax_t> sizes(locations.size() + 1, 0);
 		for(const area& a : grid) {
 			if(a.r == rmin || a.r == rmax || a.c == cmin || a.c == cmax) {
-				sizes[a.closest_id] = std::numeric_limits<int>::min();
+				sizes[a.closest_id] = std::numeric_limits<std::intmax_t>::min();
 			} else {
 				++sizes[a.closest_id];
 			}

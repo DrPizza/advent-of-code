@@ -46,7 +46,7 @@ namespace
 
 	struct point
 	{
-		int c, r;
+		std::intmax_t c, r;
 
 		point& operator+=(const point& rhs) noexcept {
 			c += rhs.c;
@@ -70,7 +70,7 @@ namespace
 
 	struct unit
 	{
-		unit(int c, int r, species type_) noexcept : loc{ c, r }, type(type_) {
+		unit(std::intmax_t c, std::intmax_t r, species type_) noexcept : loc{ c, r }, type(type_) {
 		}
 
 		bool is_target_of(species t, point loc_) const noexcept {
@@ -83,14 +83,14 @@ namespace
 
 		point loc;
 		species type;
-		int hp = 200;
+		std::intmax_t hp = 200;
 	};
 
 	struct cave
 	{
-		cave(const std::vector<std::vector<char>>& cave, int elfAttack) : raw_cave(cave), elf_attack_damage(elfAttack) {
-			for(int r = 0; r < raw_cave.size(); ++r) {
-				for(int c = 0; c < raw_cave[r].size(); ++c) {
+		cave(const std::vector<std::vector<char>>& cave, std::intmax_t elf_attack) : raw_cave(cave), elf_attack_damage(elf_attack) {
+			for(std::size_t r = 0; r < raw_cave.size(); ++r) {
+				for(std::size_t c = 0; c < raw_cave[r].size(); ++c) {
 					if(auto s = raw_cave[r][c]; s == 'E' || s == 'G') {
 						units.emplace_back(c, r, parse_species(s));
 					}
@@ -201,12 +201,12 @@ namespace
 
 		bool has_targets(species type, point loc) const {
 			auto targets = units
-				| ranges::view::filter([type, loc] (const unit& u) noexcept { return u.is_target_of(type, loc); });
+			             | ranges::view::filter([type, loc] (const unit& u) noexcept { return u.is_target_of(type, loc); });
 			return !targets.empty();
 		}
 		bool has_opponents(species type) {
 			auto targets = units
-				| ranges::view::filter([type] (const unit& u) { return u.hp > 0 && type == get_enemy(u.type); });
+			             | ranges::view::filter([type] (const unit& u) { return u.hp > 0 && type == get_enemy(u.type); });
 			return !targets.empty();
 		}
 		char& at(point loc) {
@@ -219,7 +219,7 @@ namespace
 
 		std::vector<std::vector<char>> raw_cave;
 		std::vector<unit> units;
-		int elf_attack_damage;
+		std::intmax_t elf_attack_damage;
 	};
 }
 
@@ -248,7 +248,7 @@ protected:
 	}
 
 	std::string part_2() override {
-		for(int elf_damage = 4;; ++elf_damage) {
+		for(std::intmax_t elf_damage = 4;; ++elf_damage) {
 			cave cavern(raw_cave, elf_damage);
 			std::size_t steps = 0;
 			while(!cavern.do_round()) {

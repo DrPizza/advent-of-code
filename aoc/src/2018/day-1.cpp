@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <vector>
+#include <cstddef>
 
 struct advent_2018_1 : problem
 {
@@ -11,7 +12,7 @@ struct advent_2018_1 : problem
 	}
 
 protected:
-	std::vector<std::ptrdiff_t> changes;
+	std::vector<std::intmax_t> changes;
 
 	void prepare_input(std::ifstream& fin) override {
 		for(std::string line; std::getline(fin, line);) {
@@ -20,18 +21,18 @@ protected:
 	}
 
 	std::string part_1() override {
-		std::ptrdiff_t frequency = 0;
-		for(const std::ptrdiff_t delta : changes) {
+		std::intmax_t frequency = 0;
+		for(const std::intmax_t delta : changes) {
 			frequency += delta;
 		}
 		return std::to_string(frequency);
 	}
 
 	std::string part_2() override {
-		std::ptrdiff_t frequency = 0;
-		std::unordered_set<std::ptrdiff_t> previous_frequencies;
+		std::intmax_t frequency = 0;
+		std::unordered_set<std::intmax_t> previous_frequencies;
 		for(;;) {
-			for(const std::ptrdiff_t delta : changes) {
+			for(const std::intmax_t delta : changes) {
 				frequency += delta;
 				if(previous_frequencies.find(frequency) != previous_frequencies.end()) {
 					return std::to_string(frequency);

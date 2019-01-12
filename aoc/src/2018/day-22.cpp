@@ -189,15 +189,14 @@ protected:
 
 		struct hash_point
 		{
-			inline std::size_t operator()(const point& p) const {
+			inline std::size_t operator()(const point& p) const noexcept {
 				return std::hash<std::uint32_t>()((std::uint32_t(p.r) << 16) + p.c);
 			}
 		};
 
 		struct hash_visit_state
 		{
-			inline std::size_t operator()(const visit_state_t& s) const
-			{
+			inline std::size_t operator()(const visit_state_t& s) const noexcept {
 				return hash_point()(s.pos) ^ std::hash<std::uint8_t>()(uint8_t(s.tool));
 			}
 		};
@@ -208,7 +207,7 @@ protected:
 		// it is important to note that the heuristic is exact for adjacent squares,
 		// because we also use it for updating the tentative g score (below) which uses
 		// an exact cost, not just a heuristic.
-		const auto heuristic = [] (const visit_state_t& lhs, const visit_state_t& rhs) {
+		const auto heuristic = [] (const visit_state_t& lhs, const visit_state_t& rhs) noexcept {
 			return (move_cost * manhattan(lhs.pos, rhs.pos))
 			     + (change_tool_cost * (lhs.tool != rhs.tool));
 		};
@@ -245,13 +244,12 @@ protected:
 
 		while(!open_queue.empty()) {
 			std::pop_heap(std::begin(open_queue), std::end(open_queue), rank_by_f_score);
-			visit_state_t current = open_queue.back();
+			const visit_state_t current = open_queue.back();
 			open_queue.pop_back();
 
 			closed_set.insert(current);
 
-			if(current.pos == destination
-			&& current.tool == required) {
+			if(current == goal) {
 				break;
 			}
 
@@ -344,15 +342,14 @@ protected:
 		};
 		struct hash_point
 		{
-			inline std::size_t operator()(const point& p) const {
+			inline std::size_t operator()(const point& p) const noexcept {
 				return std::hash<std::uint32_t>()((std::uint32_t(p.r) << 16) + p.c);
 			}
 		};
 
 		struct hash_visit_state
 		{
-			inline std::size_t operator()(const visit_state_t& s) const
-			{
+			inline std::size_t operator()(const visit_state_t& s) const noexcept {
 				return hash_point()(s.pos) ^ std::hash<std::uint8_t>()(uint8_t(s.tool));
 			}
 		};
@@ -367,11 +364,11 @@ protected:
 		candidates.insert(init);
 		while(!candidates.empty()) {
 			auto it = candidates.begin();
-			visit_state_t u = *it;
+			const visit_state_t current = *it;
 			candidates.erase(it);
 
-			if(u == goal) {
-				return u.lowest_score;
+			if(current == goal) {
+				return current.lowest_score;
 			}
 
 			std::vector<visit_state_t> neighbours;
@@ -382,30 +379,30 @@ protected:
 				}
 			};
 
-			if(u.pos != destination) {
-				if(u.pos.c > 0) {
-					add_if_legal({ { u.pos.c - 1, u.pos.r }, u.tool, u.lowest_score + 1ui64 });
+			if(current.pos != destination) {
+				if(current.pos.c > 0) {
+					add_if_legal({ { current.pos.c - 1, current.pos.r }, current.tool, current.lowest_score + 1ui64 });
 				}
-				if(u.pos.r > 0) {
-					add_if_legal({ { u.pos.c, u.pos.r - 1 }, u.tool, u.lowest_score + 1ui64 });
+				if(current.pos.r > 0) {
+					add_if_legal({ { current.pos.c, current.pos.r - 1 }, current.tool, current.lowest_score + 1ui64 });
 				}
-				add_if_legal({ { u.pos.c + 1, u.pos.r }, u.tool, u.lowest_score + 1ui64 });
-				add_if_legal({ { u.pos.c, u.pos.r + 1 }, u.tool, u.lowest_score + 1ui64 });
+				add_if_legal({ { current.pos.c + 1, current.pos.r }, current.tool, current.lowest_score + 1ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r + 1 }, current.tool, current.lowest_score + 1ui64 });
 			}
 
-			const state_t state = get_erosion_state(u.pos);
-			switch(u.tool) {
+			const state_t state = get_erosion_state(current.pos);
+			switch(current.tool) {
 			case tool_t::neither:
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::torch  , u.lowest_score + 7ui64 });
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::gear   , u.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::torch  , current.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::gear   , current.lowest_score + 7ui64 });
 				break;
 			case tool_t::torch:
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::neither, u.lowest_score + 7ui64 });
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::gear   , u.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::neither, current.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::gear   , current.lowest_score + 7ui64 });
 				break;
 			case tool_t::gear:
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::torch  , u.lowest_score + 7ui64 });
-				add_if_legal({ { u.pos.c, u.pos.r }, tool_t::neither, u.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::torch  , current.lowest_score + 7ui64 });
+				add_if_legal({ { current.pos.c, current.pos.r }, tool_t::neither, current.lowest_score + 7ui64 });
 				break;
 			}
 
@@ -416,7 +413,7 @@ protected:
 				|| alt < dist[v]) {
 					dist[v] = alt;
 
-					auto v_it = std::find_if(std::begin(candidates), std::end(candidates), [=] (const visit_state_t& vis) {
+					auto v_it = std::find_if(std::begin(candidates), std::end(candidates), [=] (const visit_state_t& vis) noexcept {
 						return vis.pos == v.pos && vis.tool == v.tool;
 					});
 					if(v_it == std::end(candidates)) {

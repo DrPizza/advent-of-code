@@ -10,17 +10,17 @@ namespace
 {
 	struct point
 	{
-		std::ptrdiff_t x;
-		std::ptrdiff_t y;
-		std::ptrdiff_t z;
-		std::ptrdiff_t t;
+		std::intmax_t x;
+		std::intmax_t y;
+		std::intmax_t z;
+		std::intmax_t t;
 
 		friend bool operator==(const point& lhs, const point& rhs) noexcept {
 			return std::tie(lhs.x, lhs.y, lhs.z, lhs.t) == std::tie(rhs.x, rhs.y, rhs.z, rhs.t);
 		}
 	};
 
-	std::ptrdiff_t manhattan(const point& lhs, const point& rhs) noexcept {
+	std::intmax_t manhattan(const point& lhs, const point& rhs) noexcept {
 		return std::abs(lhs.x - rhs.x) + std::abs(lhs.y - rhs.y) + std::abs(lhs.z - rhs.z) + std::abs(lhs.t - rhs.t);
 	}
 }
@@ -30,7 +30,10 @@ namespace std {
 	struct hash<point>
 	{
 		std::size_t operator()(const point& c) const noexcept {
-			return std::hash<std::size_t>{}(c.x) ^ std::hash<std::size_t>{}(c.y) ^ std::hash<std::size_t>{}(c.z) ^ std::hash<std::size_t>{}(c.t);
+			return std::hash<std::size_t>{}(gsl::narrow_cast<std::size_t>(c.x))
+			     ^ std::hash<std::size_t>{}(gsl::narrow_cast<std::size_t>(c.y))
+			     ^ std::hash<std::size_t>{}(gsl::narrow_cast<std::size_t>(c.z))
+			     ^ std::hash<std::size_t>{}(gsl::narrow_cast<std::size_t>(c.t));
 		}
 	};
 }

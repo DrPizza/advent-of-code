@@ -45,8 +45,7 @@ protected:
 
 	std::string part_2() override {
 		const auto smallest = ranges::min(ranges::view::closed_iota('a', 'z')
-		                                | ranges::view::transform([&] (char C)
-		                                {
+		                                | ranges::view::transform([&] (char C) {
 		                                	return react(polymer
 		                                	           | ranges::view::filter([&] (char c) noexcept { return std::tolower(c) != C; })).size();
 		                                }
