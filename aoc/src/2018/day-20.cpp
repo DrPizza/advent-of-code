@@ -42,7 +42,7 @@ protected:
 	std::map<std::ptrdiff_t, std::map<std::ptrdiff_t, char>> maze;
 	std::size_t longest = 0ui64;
 	std::size_t at_least_1000 = 0ui64;
-	
+
 	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, expression);
 	}
@@ -68,7 +68,7 @@ protected:
 			{ 'S', '-' },
 			{ 'W', '|' }
 		};
-		
+
 		for(; it != end; ++it) {
 			switch(*it) {
 			case '^':
@@ -201,8 +201,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_20>() {
-	advent_2018_20 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 20);

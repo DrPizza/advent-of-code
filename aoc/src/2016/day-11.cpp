@@ -207,8 +207,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2016, advent_day::day_11>() {
-	advent_2016_11 a;
-	a.solve();
-}
+REGISTER_SOLVER(2016, 11);

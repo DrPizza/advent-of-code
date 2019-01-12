@@ -60,7 +60,7 @@ protected:
 		lengths.insert(lengths.end(), { 17u, 31u, 73u, 47u, 23u });
 
 		std::array<std::size_t, 256> sparse = partial_hash(64, lengths);
-		
+
 		std::vector<std::size_t> dense;
 		dense.reserve(16);
 		for(auto it = std::begin(sparse); it != std::end(sparse); std::advance(it, 16)) {
@@ -75,8 +75,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2017, advent_day::day_10>() {
-	advent_2017_10 a;
-	a.solve();
-}
+REGISTER_SOLVER(2017, 10);

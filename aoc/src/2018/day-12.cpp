@@ -64,7 +64,7 @@ protected:
 				rule[2] = state[i    ];
 				rule[3] = state[i + 1];
 				rule[4] = state[i + 2];
-				
+
 				next_state[i] = rules[pattern_to_index(rule)];
 			}
 			state.swap(next_state);
@@ -116,8 +116,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_12>() {
-	advent_2018_12 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 12);

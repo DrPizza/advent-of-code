@@ -52,7 +52,7 @@ protected:
 		if(y > y_max) {
 			return true;
 		}
-		
+
 		char& sq = survey[y][x];
 		if(sq != '\0' && sq != '.') {
 			return (sq != '#') && (sq != '~');
@@ -63,7 +63,7 @@ protected:
 		if(flowing) {
 			return true;
 		}
-		
+
 		flowing  = d != direction::right && flow(x - 1, y, direction::left );
 		flowing |= d != direction::left  && flow(x + 1, y, direction::right);
 
@@ -137,8 +137,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_17>() {
-	advent_2018_17 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 17);

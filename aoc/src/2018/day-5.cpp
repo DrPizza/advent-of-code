@@ -15,7 +15,7 @@ struct advent_2018_5 : problem
 
 protected:
 	std::string polymer;
-	
+
 	void prepare_input(std::ifstream& fin) override {
 		std::getline(fin, polymer);
 	}
@@ -54,8 +54,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_5>() {
-	advent_2018_5 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 5);

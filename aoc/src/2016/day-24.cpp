@@ -107,7 +107,7 @@ protected:
 			grid.push_back(row);
 		}
 	}
-	
+
 	std::unordered_map<coord, std::size_t> pairwise_distances;
 
 	void precompute() override {
@@ -167,8 +167,4 @@ protected:
 
 #pragma warning(pop)
 
-template<>
-void solve<advent_year::year_2016, advent_day::day_24>() {
-	advent_2016_24 a;
-	a.solve();
-}
+REGISTER_SOLVER(2016, 24);

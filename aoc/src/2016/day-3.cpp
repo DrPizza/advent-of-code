@@ -42,10 +42,10 @@ protected:
 		const std::ptrdiff_t valid_triangles = count_valid_triangles(triangles);
 		return std::to_string(valid_triangles);
 	}
-	
+
 	std::string part_2() override {
 		std::vector<triangle> vertical_triangles;
-		
+
 		for(std::size_t i = 0; i < triangles.size(); i += 3) {
 			vertical_triangles.push_back(triangle{
 				{ triangles[i].sides[0], triangles[i + 1].sides[0], triangles[i + 2].sides[0] }
@@ -62,8 +62,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2016, advent_day::day_3>() {
-	advent_2016_3 a;
-	a.solve();
-}
+REGISTER_SOLVER(2016, 3);

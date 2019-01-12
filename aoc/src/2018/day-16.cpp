@@ -112,7 +112,7 @@ protected:
 R"(Before: \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\]
 ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+)
 After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
-		
+
 		std::string file;
 		for(std::string line; std::getline(fin, line);) {
 			file += line;
@@ -127,7 +127,7 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 			});
 			file = m.suffix();
 		}
-		
+
 		const std::regex program_pattern(R"(([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+) ([[:digit:]]+))");
 		for(; std::regex_search(file, m, program_pattern); ) {
 			program.push_back({
@@ -176,7 +176,7 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 							if(q.second.erase(*p.second.begin()) > 0ui64) {
 								made_change = true;
 							}
-							
+
 						}
 					}
 				}
@@ -194,8 +194,4 @@ After:  \[([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+), ([[:digit:]]+)\])");
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_16>() {
-	advent_2018_16 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 16);

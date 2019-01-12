@@ -118,7 +118,7 @@ protected:
 		grid_t my_grid = original_grid;
 		std::vector<grid_t> historic_grids;
 		historic_grids.push_back(my_grid);
-		for(;;) { 
+		for(;;) {
 			perform_round(my_grid);
 			auto it = std::find(std::begin(historic_grids), std::end(historic_grids), my_grid);
 			if(it != historic_grids.end()) {
@@ -132,8 +132,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2018, advent_day::day_18>() {
-	advent_2018_18 a;
-	a.solve();
-}
+REGISTER_SOLVER(2018, 18);

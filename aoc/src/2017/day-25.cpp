@@ -96,8 +96,4 @@ R"(In state ([[:upper:]]):
 	}
 };
 
-template<>
-void solve<advent_year::year_2017, advent_day::day_25>() {
-	advent_2017_25 a;
-	a.solve();
-}
+REGISTER_SOLVER(2017, 25);

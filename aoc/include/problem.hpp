@@ -3,6 +3,8 @@
 
 #include <gsl/gsl>
 #include <string>
+#include <map>
+#include <tuple>
 
 struct problem
 {
@@ -44,44 +46,12 @@ private:
 	std::size_t day;
 };
 
-enum struct advent_year
-{
-	year_2015,
-	year_2016,
-	year_2017,
-	year_2018
-};
+using problem_factory_t = std::function<std::shared_ptr<problem> ()>;
 
-enum struct advent_day
-{
-	day_1,
-	day_2,
-	day_3,
-	day_4,
-	day_5,
-	day_6,
-	day_7,
-	day_8,
-	day_9,
-	day_10,
-	day_11,
-	day_12,
-	day_13,
-	day_14,
-	day_15,
-	day_16,
-	day_17,
-	day_18,
-	day_19,
-	day_20,
-	day_21,
-	day_22,
-	day_23,
-	day_24,
-	day_25
-};
+std::map<std::tuple<std::size_t, std::size_t>, problem_factory_t>& get_registrations();
 
-template<advent_year year, advent_day day>
-inline void solve();
+bool register_solver(std::size_t year, std::size_t day, problem_factory_t factory);
+
+#define REGISTER_SOLVER(YEAR, DAY) static bool registered = register_solver(YEAR, DAY, [] () -> std::shared_ptr<problem> { return std::make_shared<advent_##YEAR##_##DAY>(); })
 
 #endif

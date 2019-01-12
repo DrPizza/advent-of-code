@@ -183,8 +183,4 @@ struct advent_2017_22 : problem
 	}
 };
 
-template<>
-void solve<advent_year::year_2017, advent_day::day_22>() {
-	advent_2017_22 a;
-	a.solve();
-}
+REGISTER_SOLVER(2017, 22);

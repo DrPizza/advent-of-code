@@ -109,7 +109,7 @@ protected:
 		const std::size_t required_size = grid_type::required_span_size(width, height);
 		std::unique_ptr<char[]> data(std::make_unique<char[]>(required_size));
 		const grid_type network(data.get(), width, height);
-		
+
 		for(std::size_t i = 0; i < raw_map.size(); ++i) {
 			for(std::size_t j = 0; j < raw_map[i].size(); ++j) {
 				network(i, j) = raw_map[i][j];
@@ -146,8 +146,4 @@ protected:
 	}
 };
 
-template<>
-void solve<advent_year::year_2017, advent_day::day_19>() {
-	advent_2017_19 a;
-	a.solve();
-}
+REGISTER_SOLVER(2017, 19);
