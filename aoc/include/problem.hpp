@@ -48,7 +48,7 @@ private:
 
 using problem_factory_t = std::function<std::shared_ptr<problem> ()>;
 
-std::map<std::tuple<std::size_t, std::size_t>, problem_factory_t>& get_registrations();
+std::map<std::size_t, std::map<std::size_t, problem_factory_t>>& get_registrations();
 
 bool register_solver(std::size_t year, std::size_t day, problem_factory_t factory);
 

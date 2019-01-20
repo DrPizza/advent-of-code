@@ -6,7 +6,7 @@
 #include <chrono>
 #include <tuple>
 
-template<class...Durations, class DurationIn>
+template<typename... Durations, typename DurationIn>
 std::tuple<Durations...> break_down_durations(DurationIn d) noexcept {
 	std::tuple<Durations...> result;
 	(
@@ -40,13 +40,13 @@ void problem::solve() {
 	run_part(2, &problem::part_2);
 }
 
-std::map<std::tuple<std::size_t, std::size_t>, problem_factory_t>& get_registrations() {
-	static std::map<std::tuple<std::size_t, std::size_t>, problem_factory_t> registrations;
+std::map<std::size_t, std::map<std::size_t, problem_factory_t>>& get_registrations() {
+	static std::map<std::size_t, std::map<std::size_t, problem_factory_t>> registrations;
 	return registrations;
 }
 
 bool register_solver(std::size_t year, std::size_t day, problem_factory_t factory)
 {
-	get_registrations()[std::make_tuple(year, day)] = factory;
+	get_registrations()[year][day] = factory;
 	return true;
 }
